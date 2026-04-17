@@ -1,0 +1,34 @@
+[
+  {
+    "regNo": "HIFZ2025001",
+    "exam": "Annual",
+    "year": "2025",
+    "name": "Abdullah ibn Umar",
+    "class": "Hifz Level 3",
+    "marks": {
+      "Quran Memorization": 95,
+      "Tajweed": 92,
+      "Islamic Studies": 88,
+      "Arabic Language": 85
+    },
+    "total": 360,
+    "grade": "A+",
+    "status": "Pass"
+  },
+  {
+    "regNo": "HIFZ2025002",
+    "exam": "Annual",
+    "year": "2025",
+    "name": "Zaid bin Thabit",
+    "class": "Hifz Level 2",
+    "marks": {
+      "Quran Memorization": 88,
+      "Tajweed": 85,
+      "Islamic Studies": 90,
+      "Arabic Language": 82
+    },
+    "total": 345,
+    "grade": "A",
+    "status": "Pass"
+  }
+]

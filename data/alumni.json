@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Hafiz Muhammad Anas",
+    "batch": "2023",
+    "currentStatus": "Imam at Central Mosque, City",
+    "image": "https://images.unsplash.com/photo-1589156229687-496a31ad1d1f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    "id": 2,
+    "name": "Hafiz Ahmad Raza",
+    "batch": "2022",
+    "currentStatus": "Pursuing Higher Islamic Studies at Al-Azhar",
+    "image": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+  },
+  {
+    "id": 3,
+    "name": "Hafiz Bilal Ahmed",
+    "batch": "2024",
+    "currentStatus": "Teaching Hifz at IDI",
+    "image": "https://images.unsplash.com/photo-1600486913747-55e5470d6f40?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80"
+  }
+]

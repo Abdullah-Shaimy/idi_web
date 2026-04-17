@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alumni - Institute of Da'wa Islamiyya</title>
+    <meta name="description" content="Meet our proud Hafiz alumni.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-header {
+            background-color: var(--primary-green-dark);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--bg-white);
+        }
+        .alumni-card {
+            text-align: center;
+            padding: 2rem;
+        }
+        .alumni-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 1.5rem;
+            border: 3px solid var(--secondary-gold);
+        }
+        .alumni-batch {
+            display: inline-block;
+            background-color: var(--bg-light);
+            color: var(--primary-green);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        #loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-light);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
+            </div>
+            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="hifz.html">Hifz Program</a>
+                <a href="students.html">Students</a>
+                <a href="alumni.html">Alumni</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <h1>Our Proud Alumni</h1>
+        <p>Torchbearers of the Quran spreading light across the world.</p>
+    </div>
+
+    <section class="section-container">
+        <div id="loading"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br>Loading Alumni Data...</div>
+        <div class="grid-container" id="alumni-grid">
+            <!-- Data will be populated here via JS -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul style="line-height: 2;">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="hifz.html">Hifz Program</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
+                <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
+                <p><i class="fa-solid fa-envelope"></i> info@idi.edu</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            fetch('data/alumni.json')
+                .then(response => response.json())
+                .then(data => {
+                    const grid = document.getElementById('alumni-grid');
+                    const loading = document.getElementById('loading');
+                    loading.style.display = 'none';
+                    
+                    data.forEach(alumnus => {
+                        const card = document.createElement('div');
+                        card.className = 'card alumni-card';
+                        card.innerHTML = `
+                            <img src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='https://via.placeholder.com/120/cccccc/ffffff?text=User'">
+                            <h3>${alumnus.name}</h3>
+                            <span class="alumni-batch">Batch of ${alumnus.batch}</span>
+                            <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">${alumnus.currentStatus}</p>
+                        `;
+                        grid.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error loading alumni:', error);
+                    document.getElementById('loading').innerHTML = 'Failed to load alumni data.';
+                });
+        });
+    </script>
+</body>
+</html>

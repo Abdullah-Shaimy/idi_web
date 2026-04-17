@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Results - Institute of Da'wa Islamiyya</title>
+    <meta name="description" content="Check student results online.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .page-header {
+            background-color: var(--primary-green-dark);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: var(--bg-white);
+        }
+        .result-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+        }
+        .result-card {
+            display: none;
+            margin-top: 2rem;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .result-header {
+            background-color: var(--primary-green);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        .result-body {
+            padding: 1.5rem;
+        }
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .result-row:last-child {
+            border-bottom: none;
+        }
+        .result-total {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: var(--primary-green);
+        }
+        .error-msg {
+            color: #dc2626;
+            margin-top: 1rem;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation -->
+    <header>
+        <div class="nav-container">
+            <div class="logo-container">
+                <img src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
+            </div>
+            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <nav class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="hifz.html">Hifz Program</a>
+                <a href="students.html">Students</a>
+                <a href="alumni.html">Alumni</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="page-header">
+        <h1>Examination Results</h1>
+        <p>Enter your registration details to view your marks.</p>
+    </div>
+
+    <section class="section-container">
+        <div class="result-container">
+            <form id="result-form">
+                <div class="form-group">
+                    <label for="regNo" class="form-label">Registration Number</label>
+                    <input type="text" id="regNo" class="form-control" required placeholder="e.g. HIFZ2025001">
+                </div>
+                <div class="form-group">
+                    <label for="exam" class="form-label">Examination</label>
+                    <select id="exam" class="form-control" required>
+                        <option value="Annual">Annual Exam</option>
+                        <option value="Half-Yearly">Half-Yearly Exam</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="year" class="form-label">Year</label>
+                    <select id="year" class="form-control" required>
+                        <option value="2025">2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Check Result</button>
+            </form>
+            
+            <div id="error-msg" class="error-msg">Result not found. Please check your details.</div>
+            
+            <div id="result-card" class="result-card">
+                <div class="result-header">
+                    <h2 id="student-name">Student Name</h2>
+                    <p id="student-class">Class</p>
+                </div>
+                <div class="result-body" id="result-body">
+                    <!-- Marks rows will be injected here -->
+                </div>
+                <div class="result-body" style="background-color: var(--bg-light); border-top: 1px solid var(--border-color);">
+                    <div class="result-row result-total">
+                        <span>Total Marks</span>
+                        <span id="student-total">0</span>
+                    </div>
+                    <div class="result-row" style="font-weight: 600;">
+                        <span>Grade</span>
+                        <span id="student-grade">-</span>
+                    </div>
+                    <div class="result-row" style="font-weight: 600;">
+                        <span>Status</span>
+                        <span id="student-status">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <ul style="line-height: 2;">
+                    <li><a href="about.html">About Us</a></li>
+                    <li><a href="hifz.html">Hifz Program</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
+                <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
+                <p><i class="fa-solid fa-envelope"></i> info@idi.edu</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('result-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const regNo = document.getElementById('regNo').value.trim().toUpperCase();
+            const exam = document.getElementById('exam').value;
+            const year = document.getElementById('year').value;
+            
+            const errorMsg = document.getElementById('error-msg');
+            const resultCard = document.getElementById('result-card');
+            
+            errorMsg.style.display = 'none';
+            resultCard.style.display = 'none';
+            
+            fetch('data/results.json')
+                .then(res => res.json())
+                .then(data => {
+                    const studentResult = data.find(r => 
+                        r.regNo.toUpperCase() === regNo && 
+                        r.exam === exam && 
+                        r.year === year
+                    );
+                    
+                    if(studentResult) {
+                        document.getElementById('student-name').textContent = studentResult.name;
+                        document.getElementById('student-class').textContent = studentResult.class;
+                        
+                        const marksBody = document.getElementById('result-body');
+                        marksBody.innerHTML = '';
+                        
+                        for (const [subject, mark] of Object.entries(studentResult.marks)) {
+                            marksBody.innerHTML += `
+                                <div class="result-row">
+                                    <span>${subject}</span>
+                                    <span>${mark}</span>
+                                </div>
+                            `;
+                        }
+                        
+                        document.getElementById('student-total').textContent = studentResult.total;
+                        document.getElementById('student-grade').textContent = studentResult.grade;
+                        document.getElementById('student-status').textContent = studentResult.status;
+                        
+                        resultCard.style.display = 'block';
+                    } else {
+                        errorMsg.style.display = 'block';
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    errorMsg.textContent = "Error loading result database.";
+                    errorMsg.style.display = 'block';
+                });
+        });
+    </script>
+</body>
+</html>
