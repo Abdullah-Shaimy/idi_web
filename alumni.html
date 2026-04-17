@@ -49,7 +49,7 @@
     <header>
         <div class="nav-container">
             <div class="logo-container">
-                <img src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
             </div>
             <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
             <nav class="nav-links">
@@ -117,7 +117,7 @@
                         const card = document.createElement('div');
                         card.className = 'card alumni-card';
                         card.innerHTML = `
-                            <img src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='https://via.placeholder.com/120/cccccc/ffffff?text=User'">
+                            <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='https://via.placeholder.com/120/cccccc/ffffff?text=User'">
                             <h3>${alumnus.name}</h3>
                             <span class="alumni-batch">Batch of ${alumnus.batch}</span>
                             <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">${alumnus.currentStatus}</p>

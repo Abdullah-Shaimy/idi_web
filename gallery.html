@@ -64,7 +64,7 @@
     <header>
         <div class="nav-container">
             <div class="logo-container">
-                <img src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
             </div>
             <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
             <nav class="nav-links">
@@ -132,7 +132,7 @@
                         const item = document.createElement('div');
                         item.className = 'gallery-item';
                         item.innerHTML = `
-                            <img src="${imgData.src}" alt="${imgData.caption}" class="gallery-img">
+                            <img loading="lazy" src="${imgData.src}" alt="${imgData.caption}" class="gallery-img">
                             <div class="gallery-caption">
                                 <p>${imgData.caption}</p>
                             </div>
