@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Check Results | Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="Official result checking portal for students of the Institute of Da'wa Islamiyya.">
+    <meta name="description"
+        content="Official result checking portal for students of the Institute of Da'wa Islamiyya.">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/png" href="assets/images/idi_logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .result-search-card {
@@ -17,6 +20,120 @@
             box-shadow: var(--shadow-md);
             border: 1px solid var(--border-light);
         }
+        @media (max-width: 600px) {
+            .result-search-card {
+                padding: 2.5rem 1.5rem;
+                margin: 2rem 1rem;
+            }
+            .form-group {
+                margin-bottom: 2rem;
+            }
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 2.5rem;
+        }
+        .form-input {
+            width: 100%;
+            padding: 1rem 0;
+            border: none;
+            border-bottom: 1.5px solid var(--border-light);
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            transition: var(--transition);
+        }
+        .form-input:focus {
+            outline: none;
+            border-bottom-color: var(--accent-emerald);
+        }
+        .form-label {
+            position: absolute;
+            top: 1rem;
+            left: 0;
+            color: var(--text-muted);
+            pointer-events: none;
+            transition: var(--transition);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+        }
+        .form-input:focus ~ .form-label,
+        .form-input:not(:placeholder-shown) ~ .form-label {
+            top: -1.2rem;
+            font-size: 0.75rem;
+            color: var(--accent-emerald);
+            font-weight: 600;
+        }
+        /* Custom Select Container */
+        .custom-select {
+            position: relative;
+            width: 100%;
+        }
+        .select-selected {
+            width: 100%;
+            padding: 1rem 0;
+            border-bottom: 1.5px solid var(--border-light);
+            background: transparent;
+            font-family: var(--font-body);
+            font-size: 1.05rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+        }
+        .select-selected:after {
+            content: "\f107";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--accent-emerald);
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+        .select-selected.select-arrow-active:after {
+            transform: rotate(180deg);
+        }
+        .select-items {
+            position: absolute;
+            background-color: white;
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            box-shadow: var(--shadow-md);
+            border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+            overflow: hidden;
+            display: none;
+            border: 1px solid var(--border-light);
+        }
+        .select-items div {
+            color: var(--text-primary);
+            padding: 1.2rem 1.5rem;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 0.95rem;
+        }
+        .select-items div:hover {
+            background-color: var(--bg-secondary);
+            color: var(--accent-emerald);
+        }
+        .select-hide {
+            display: none;
+        }
+        .form-group.active .select-selected {
+            border-bottom-color: var(--accent-emerald);
+        }
+        .form-group.active .form-label,
+        .custom-select ~ .form-label {
+            top: -1.2rem;
+            font-size: 0.75rem;
+            color: var(--accent-emerald);
+            font-weight: 600;
+        }
+
         .result-display-card {
             max-width: 800px;
             margin: 4rem auto;
@@ -28,29 +145,42 @@
             border: 1px solid var(--border-light);
             animation: slideUp 0.6s ease-out;
         }
+
         @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         .result-header {
             background-color: var(--accent-emerald);
             color: white;
             padding: 3rem;
             text-align: center;
         }
+
         .result-header h2 {
             font-family: var(--font-heading);
             font-size: 2rem;
             margin-bottom: 0.5rem;
         }
+
         .result-content {
             padding: 3rem;
         }
+
         .marks-table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 3rem;
         }
+
         .marks-table th {
             text-align: left;
             padding: 1.2rem;
@@ -60,11 +190,13 @@
             font-size: 0.85rem;
             letter-spacing: 1px;
         }
+
         .marks-table td {
             padding: 1.2rem;
             border-bottom: 1px solid var(--border-light);
             font-size: 1.05rem;
         }
+
         .summary-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -72,21 +204,50 @@
             padding-top: 2rem;
             border-top: 1px dashed var(--border-light);
         }
+
+        @media (max-width: 600px) {
+            .summary-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+                padding: 1.5rem 1rem;
+            }
+
+            .summary-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                text-align: left;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            }
+
+            .summary-item:last-child {
+                border-bottom: none;
+            }
+
+            .summary-value {
+                margin-top: 0;
+            }
+        }
+
         .summary-item {
             text-align: center;
         }
+
         .summary-label {
             display: block;
             font-size: 0.85rem;
             color: var(--text-muted);
             margin-bottom: 0.5rem;
         }
+
         .summary-value {
             font-size: 1.5rem;
             font-weight: 700;
             color: var(--accent-emerald);
             font-family: var(--font-heading);
         }
+
         .status-badge {
             display: inline-block;
             padding: 0.4rem 1.2rem;
@@ -95,7 +256,12 @@
             font-weight: 600;
             text-transform: uppercase;
         }
-        .status-pass { background-color: rgba(0, 109, 68, 0.1); color: var(--accent-emerald); }
+
+        .status-pass {
+            background-color: rgba(0, 109, 68, 0.1);
+            color: var(--accent-emerald);
+        }
+
         .error-message {
             color: #d32f2f;
             text-align: center;
@@ -105,13 +271,15 @@
         }
     </style>
 </head>
+
 <body>
 
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo"
+                    onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
             </a>
             <button class="mobile-menu-btn" aria-label="Toggle Menu">
                 <i class="fa-solid fa-bars-staggered"></i>
@@ -129,7 +297,8 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" style="height: 50vh; min-height: 400px; background: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
+    <section class="hero"
+        style="height: 50vh; min-height: 400px; background: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <span class="subtitle">Examination Portal</span>
@@ -141,33 +310,42 @@
     <!-- Search Form -->
     <section class="section-container">
         <div class="result-search-card">
-            <h2 style="margin-bottom: 2rem; text-align: center; font-family: var(--font-heading);">Student Inquiry</h2>
+            <h2 style="margin-bottom: 3rem; text-align: center; font-family: var(--font-heading);">Student Inquiry</h2>
             <form id="result-form">
-                <div style="margin-bottom: 2rem;">
-                    <label class="subtitle" style="display: block; margin-bottom: 0.5rem; font-size: 0.8rem;">Registration Number</label>
-                    <input type="text" id="regNo" class="btn btn-outline" style="width: 100%; padding: 1rem; text-align: left;" required placeholder="e.g. HIFZ2025001">
+                <div class="form-group">
+                    <input type="text" id="regNo" class="form-input" placeholder=" " required>
+                    <label for="regNo" class="form-label">Registration Number</label>
                 </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
-                    <div>
-                        <label class="subtitle" style="display: block; margin-bottom: 0.5rem; font-size: 0.8rem;">Examination</label>
-                        <select id="exam" style="width: 100%; padding: 1rem; border: 1.5px solid var(--border-light); border-radius: var(--radius-sm); font-family: var(--font-body);">
-                            <option value="Annual">Annual Exam</option>
-                            <option value="Half-Yearly">Half-Yearly Exam</option>
-                        </select>
+                <div class="responsive-grid" style="gap: 2rem; margin-bottom: 2rem;">
+                    <div class="form-group" id="exam-group">
+                        <div class="custom-select">
+                            <div class="select-selected" id="exam-display">Select Exam</div>
+                            <div class="select-items" id="exam-items">
+                                <div data-value="Annual">Annual Exam</div>
+                                <div data-value="Mid-Term">Mid-Term Exam</div>
+                                <div data-value="Monthly">Monthly Test</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="exam" value="" required>
+                        <label class="form-label">Examination</label>
                     </div>
-                    <div>
-                        <label class="subtitle" style="display: block; margin-bottom: 0.5rem; font-size: 0.8rem;">Academic Year</label>
-                        <select id="year" style="width: 100%; padding: 1rem; border: 1.5px solid var(--border-light); border-radius: var(--radius-sm); font-family: var(--font-body);">
-                            <option value="2025">2025</option>
-                            <option value="2024">2024</option>
-                        </select>
+                    <div class="form-group" id="year-group">
+                        <div class="custom-select">
+                            <div class="select-selected" id="year-display">Select Year</div>
+                            <div class="select-items" id="year-items">
+                                <div data-value="2025">2025</div>
+                                <div data-value="2024">2024</div>
+                            </div>
+                        </div>
+                        <input type="hidden" id="year" value="" required>
+                        <label class="form-label">Academic Year</label>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">Generate Report</button>
             </form>
-            <div id="error-message" class="error-message">Information not found. Please verify your Registration Number.</div>
+            <p id="error-message" style="color: #e74c3c; display: none; margin-top: 2rem; text-align: center; font-size: 0.9rem;"></p>
         </div>
-
+    </section>
         <!-- Result Card -->
         <div id="result-display" class="result-display-card">
             <div class="result-header">
@@ -176,18 +354,20 @@
                 <p id="student-info" style="font-size: 1.1rem; opacity: 0.9;">Registration No: HIFZ2025001 | Class 5</p>
             </div>
             <div class="result-content">
-                <table class="marks-table">
-                    <thead>
-                        <tr>
-                            <th>Subject / Area</th>
-                            <th style="text-align: right;">Marks Obtained</th>
-                        </tr>
-                    </thead>
-                    <tbody id="marks-body">
-                        <!-- Injected -->
-                    </tbody>
-                </table>
-                
+                <div style="overflow-x: auto;">
+                    <table class="marks-table">
+                        <thead>
+                            <tr>
+                                <th>Subject / Area</th>
+                                <th style="text-align: right;">Marks Obtained</th>
+                            </tr>
+                        </thead>
+                        <tbody id="marks-body">
+                            <!-- Injected -->
+                        </tbody>
+                    </table>
+                </div>
+
                 <div class="summary-grid">
                     <div class="summary-item">
                         <span class="summary-label">Aggregate Total</span>
@@ -204,9 +384,11 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <div style="margin-top: 4rem; text-align: center;">
-                    <button onclick="window.print()" class="btn btn-outline" style="padding: 0.8rem 2rem; font-size: 0.9rem;"><i class="fa-solid fa-print" style="margin-right: 10px;"></i> Print Marksheet</button>
+                    <button onclick="window.print()" class="btn btn-outline"
+                        style="padding: 0.8rem 2rem; font-size: 0.9rem;"><i class="fa-solid fa-print"
+                            style="margin-right: 10px;"></i> Print Marksheet</button>
                 </div>
             </div>
         </div>
@@ -216,8 +398,9 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>IDI Madrasa</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation
+                    of scholars.</p>
                 <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
                     <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
                     <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
@@ -251,18 +434,67 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a
+                    href="https://abdullahshaimy.lk" target="_blank"
+                    style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
     <script>
+        // Custom Select Logic
+        function setupCustomSelect(groupId, displayId, itemsId, inputId) {
+            const group = document.getElementById(groupId);
+            const display = document.getElementById(displayId);
+            const items = document.getElementById(itemsId);
+            const input = document.getElementById(inputId);
+
+            display.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeAllSelects(display);
+                items.style.display = items.style.display === 'block' ? 'none' : 'block';
+                display.classList.toggle('select-arrow-active');
+            });
+
+            items.querySelectorAll('div').forEach(item => {
+                item.addEventListener('click', () => {
+                    const value = item.getAttribute('data-value');
+                    const text = item.textContent;
+                    display.textContent = text;
+                    input.value = value;
+                    items.style.display = 'none';
+                    display.classList.remove('select-arrow-active');
+                    group.classList.add('active');
+                });
+            });
+        }
+
+        function closeAllSelects(except) {
+            document.querySelectorAll('.select-items').forEach(item => {
+                if (item.previousElementSibling !== except) {
+                    item.style.display = 'none';
+                    item.previousElementSibling.classList.remove('select-arrow-active');
+                }
+            });
+        }
+
+        document.addEventListener('click', () => closeAllSelects());
+
+        setupCustomSelect('exam-group', 'exam-display', 'exam-items', 'exam');
+        setupCustomSelect('year-group', 'year-display', 'year-items', 'year');
+
+        // Form Submit Logic
         document.getElementById('result-form').addEventListener('submit', function (e) {
             e.preventDefault();
 
             const regNo = document.getElementById('regNo').value.trim().toUpperCase();
             const exam = document.getElementById('exam').value;
             const year = document.getElementById('year').value;
+
+            if (!exam || !year) {
+                alert("Please select both Examination and Academic Year");
+                return;
+            }
 
             const errorMsg = document.getElementById('error-message');
             const resultDisplay = document.getElementById('result-display');
@@ -298,7 +530,7 @@
                         document.getElementById('student-total').textContent = studentResult.total;
                         document.getElementById('student-grade').textContent = studentResult.grade;
                         document.getElementById('student-status').textContent = studentResult.status;
-                        
+
                         const statusBadge = document.getElementById('student-status');
                         statusBadge.className = 'status-badge ' + (studentResult.status.toLowerCase() === 'pass' ? 'status-pass' : '');
 
@@ -310,10 +542,15 @@
                 })
                 .catch(err => {
                     console.error(err);
-                    errorMsg.textContent = "Error accessing result database. Please try again later.";
+                    if (window.location.protocol === 'file:') {
+                        errorMsg.innerHTML = "<strong>Local File Access Blocked:</strong> To check results, this website must be run through a local server (e.g., Live Server in VS Code) or hosted online. Browsers block database access when opening files directly.";
+                    } else {
+                        errorMsg.textContent = "Error accessing result database. Please try again later.";
+                    }
                     errorMsg.style.display = 'block';
                 });
         });
     </script>
 </body>
+
 </html>
