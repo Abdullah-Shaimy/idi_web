@@ -42,12 +42,20 @@
         }
         .timeline-content {
             width: 45%;
-            padding: 3rem;
+            padding: 1.5rem 2rem; /* More compact for large lists */
             background: white;
             border-radius: var(--radius-md);
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-light);
             transition: var(--transition);
+        }
+        .timeline-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+        .timeline-item p {
+            font-size: 0.9rem;
+            line-height: 1.4;
         }
         .timeline-item:hover .timeline-content {
             transform: translateY(-5px);
@@ -165,82 +173,74 @@
 
         <!-- Weekdays Timeline -->
         <div id="weekdays" class="timeline-wrapper active">
-            <div class="timeline-item">
-                <div class="time-label">4:30 AM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Wake up & Prep</h3><p>Early morning preparation followed by the Subah (Fajr) prayer and a refreshing morning tea.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">5:25 AM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Sabaq (New Lesson)</h3><p>Focused Quran memorization until 6:30 AM, followed by cleaning sessions and academy preparation.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">7:30 AM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Academy Hours</h3><p>Academic classes and structured learning until 2:00 PM, followed by Zuhr prayer preparation.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">2:30 PM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Lunch & Rest</h3><p>Nutritious lunch followed by compulsory midday rest (Qailulah) to recharge for evening study.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">4:10 PM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Dour (Revision)</h3><p>After Asr, systematic revision of previously memorized portions to ensure long-term retention.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">6:30 PM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Quran Session</h3><p>Post-Maghrib memorization and self-study sessions continuing until Isha prayer and dinner.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">10:00 PM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Night Rest</h3><p>The day concludes with compulsory rest for a fresh start the next morning.</p></div>
-            </div>
+            <div class="timeline-item"><div class="time-label">4:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Wake up & Prep</h3><p>Rising early and preparing for the day's spiritual journey.</p></div></div>
+            <div class="timeline-item"><div class="time-label">4:50 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Subah (Fajr) Prayer</h3><p>Congregational morning prayer in the academy mosque.</p></div></div>
+            <div class="timeline-item"><div class="time-label">5:15 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Morning Tea</h3><p>A light morning refreshment before the first session.</p></div></div>
+            <div class="timeline-item"><div class="time-label">5:25 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>New Lesson (Sabaq)</h3><p>Intense memorization of new portions of the Holy Quran.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Cleaning & Academy Prep</h3><p>Cleaning the academy premises and preparing for school hours.</p></div></div>
+            <div class="timeline-item"><div class="time-label">7:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Academy / School</h3><p>Regular academic curriculum and structured learning.</p></div></div>
+            <div class="timeline-item"><div class="time-label">2:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Body Wash & Prep</h3><p>Personal hygiene and preparation for Zuhr prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">2:15 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Zuhr Prayer</h3><p>Midday congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">2:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Lunch Break</h3><p>Nutritious midday meal with the student community.</p></div></div>
+            <div class="timeline-item"><div class="time-label">3:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Compulsory Rest</h3><p>Qailulah (midday nap) for physical and mental recovery.</p></div></div>
+            <div class="timeline-item"><div class="time-label">4:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Asr & Tea</h3><p>Afternoon prayer followed by a light tea break.</p></div></div>
+            <div class="timeline-item"><div class="time-label">4:10 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Revision (Dour)</h3><p>Systematic revision of previously memorized lessons.</p></div></div>
+            <div class="timeline-item"><div class="time-label">5:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Rest & Leisure</h3><p>Free time for students to relax or engage in personal study.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Maghrib Prep</h3><p>Preparation for the evening congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:10 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Evening Adhkar & Maghrib</h3><p>Spiritual reflection followed by Maghrib prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Memorization Session</h3><p>Evening session for memorizing new Quranic portions.</p></div></div>
+            <div class="timeline-item"><div class="time-label">8:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>School & Self Study</h3><p>Academic revision and personal study hour.</p></div></div>
+            <div class="timeline-item"><div class="time-label">9:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Isha Prayer</h3><p>The final congregational prayer of the day.</p></div></div>
+            <div class="timeline-item"><div class="time-label">9:20 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Dinner</h3><p>Evening meal before preparing for rest.</p></div></div>
+            <div class="timeline-item"><div class="time-label">9:45 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Sleep Prep</h3><p>Final hygiene routine and preparing for bed.</p></div></div>
+            <div class="timeline-item"><div class="time-label">10:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Compulsory Sleep</h3><p>Ensuring adequate rest for a fresh early start.</p></div></div>
         </div>
 
         <!-- Friday Timeline -->
         <div id="friday" class="timeline-wrapper">
-            <div class="timeline-item">
-                <div class="time-label">4:30 AM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Early Morning</h3><p>Wake up, Subah prayer, and morning Sabaq session until school starts at 7:30 AM.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">11:30 AM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Jumu'ah Prep</h3><p>Special preparation for Friday Jumu'ah prayer, followed by the Khutbah and congregational prayer.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">1:30 PM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Friday Lunch</h3><p>Traditional Friday lunch followed by a period of rest and relaxation.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">4:00 PM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Parents Meeting</h3><p>Dedicated time for parents to visit and meet with faculty and students.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">7:30 PM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Isha & Dinner</h3><p>Evening prayers followed by dinner and early rest for the weekend.</p></div>
-            </div>
+            <div class="timeline-item"><div class="time-label">4:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Wake up & Prep</h3><p>Rising early and preparing for the day.</p></div></div>
+            <div class="timeline-item"><div class="time-label">4:50 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Subah Prayer</h3><p>Morning congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">5:15 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Morning Tea</h3><p>A light morning refreshment.</p></div></div>
+            <div class="timeline-item"><div class="time-label">5:25 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>New Lesson (Sabaq)</h3><p>Quran memorization session.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Cleaning & Prep</h3><p>Cleaning academy and preparing for school.</p></div></div>
+            <div class="timeline-item"><div class="time-label">7:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Academy / School</h3><p>Morning academic sessions.</p></div></div>
+            <div class="timeline-item"><div class="time-label">11:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Jumu'ah Prep</h3><p>Special preparation for Friday congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">11:50 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Jumu'ah Prayer</h3><p>Friday Khutbah and congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">1:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Friday Lunch</h3><p>Special Friday midday meal.</p></div></div>
+            <div class="timeline-item"><div class="time-label">2:15 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Compulsory Rest</h3><p>Midday nap for physical recovery.</p></div></div>
+            <div class="timeline-item"><div class="time-label">3:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Asr Prayer</h3><p>Afternoon congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">4:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Parents Meeting</h3><p>Visiting hours and parent-faculty meetings.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Maghrib Prayer</h3><p>Evening congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Rest Period</h3><p>Free time for relaxation and personal study.</p></div></div>
+            <div class="timeline-item"><div class="time-label">7:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Isha Prayer</h3><p>Final congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">8:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Dinner</h3><p>Evening meal with the community.</p></div></div>
+            <div class="timeline-item"><div class="time-label">8:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Sleep Preparation</h3><p>Preparing for early rest.</p></div></div>
+            <div class="timeline-item"><div class="time-label">9:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Compulsory Sleep</h3><p>Night rest until 4:30 AM.</p></div></div>
         </div>
 
         <!-- Weekend Timeline -->
         <div id="weekend" class="timeline-wrapper">
-            <div class="timeline-item">
-                <div class="time-label">5:25 AM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Weekend Sabaq</h3><p>Weekend morning memorization sessions followed by breakfast at 8:00 AM.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">8:30 AM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Detailed Dour</h3><p>Extended revision sessions for solidifying all previously learned Quranic portions.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">11:00 AM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Arabic Class</h3><p>Dedicated hours for Arabic language study and linguistic development.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">1:15 PM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Rest & Recreation</h3><p>Afternoon rest followed by Asr prayer and revision at 4:15 PM.</p></div>
-            </div>
-            <div class="timeline-item">
-                <div class="time-label">6:30 PM</div><div class="timeline-dot"></div>
-                <div class="timeline-content"><h3>Memorization</h3><p>Evening session for new lessons until dinner and sleep prep at 9:30 PM.</p></div>
-            </div>
+            <div class="timeline-item"><div class="time-label">4:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Wake up & Prep</h3><p>Early morning rising and preparation.</p></div></div>
+            <div class="timeline-item"><div class="time-label">4:50 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Subah Prayer</h3><p>Morning congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">5:15 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Morning Tea</h3><p>Refreshing morning tea break.</p></div></div>
+            <div class="timeline-item"><div class="time-label">5:25 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>New Lesson (Sabaq)</h3><p>Intense Quran memorization session.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:45 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Cleaning & Prep</h3><p>Academy cleaning and preparation.</p></div></div>
+            <div class="timeline-item"><div class="time-label">8:00 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Breakfast</h3><p>Morning meal with the academy community.</p></div></div>
+            <div class="timeline-item"><div class="time-label">8:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Revision (Dour)</h3><p>Detailed revision of memorized portions.</p></div></div>
+            <div class="timeline-item"><div class="time-label">10:30 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Rest Period</h3><p>Mid-morning leisure and relaxation.</p></div></div>
+            <div class="timeline-item"><div class="time-label">11:00 AM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Arabic Class</h3><p>Arabic language and linguistic study.</p></div></div>
+            <div class="timeline-item"><div class="time-label">12:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Zuhr Prayer</h3><p>Midday congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">12:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Lunch Break</h3><p>Midday meal with fellow students.</p></div></div>
+            <div class="timeline-item"><div class="time-label">1:15 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Compulsory Rest</h3><p>Extended afternoon nap for recovery.</p></div></div>
+            <div class="timeline-item"><div class="time-label">3:45 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Asr Prayer</h3><p>Afternoon congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">4:15 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Revision (Dour)</h3><p>Late afternoon Quranic revision.</p></div></div>
+            <div class="timeline-item"><div class="time-label">5:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Rest Period</h3><p>Free time before Maghrib.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Evening Adhkar & Maghrib</h3><p>Evening spiritual session and prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">6:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Memorization Session</h3><p>Evening intense memorization session.</p></div></div>
+            <div class="timeline-item"><div class="time-label">8:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Isha Prayer</h3><p>Final congregational prayer.</p></div></div>
+            <div class="timeline-item"><div class="time-label">9:00 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Dinner</h3><p>Evening meal before rest.</p></div></div>
+            <div class="timeline-item"><div class="time-label">9:30 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Sleep Preparation</h3><p>Night hygiene and preparation.</p></div></div>
+            <div class="timeline-item"><div class="time-label">9:45 PM</div><div class="timeline-dot"></div><div class="timeline-content"><h3>Compulsory Sleep</h3><p>Full night's rest until 4:30 AM.</p></div></div>
         </div>
     </section>
 
