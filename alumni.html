@@ -15,11 +15,34 @@
             padding: 2.5rem 1.5rem;
             border-radius: var(--radius-md);
             border: 1px solid var(--border-light);
+            position: relative; /* For order number badge */
         }
         .alumni-card:hover {
             border-color: var(--accent-gold);
             transform: translateY(-8px);
             box-shadow: var(--shadow-md);
+        }
+        .alumni-order-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            width: 28px;
+            height: 28px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        .alumni-card:hover .alumni-order-badge {
+            background: var(--accent-gold);
+            color: white;
+            border-color: var(--accent-gold);
         }
         .alumni-img-wrapper {
             width: 130px;
@@ -182,6 +205,7 @@
                         const card = document.createElement('div');
                         card.className = 'alumni-card';
                         card.innerHTML = `
+                            <div class="alumni-order-badge">${alumnus.id}</div>
                             <div class="alumni-img-wrapper">
                                 <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='assets/images/placeholder-alumni.png'">
                             </div>
