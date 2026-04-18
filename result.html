@@ -348,10 +348,39 @@
     </section>
         <!-- Result Card -->
         <div id="result-display" class="result-display-card">
+            <!-- Official Print Header (Visible on Print) -->
+            <div class="print-header">
+                <div class="print-header-content">
+                    <img src="assets/images/idi_logo.png" alt="IDI Logo" class="print-logo">
+                    <div class="print-institute-details">
+                        <h1>INSTITUTE OF DA'WA ISLAMIYYA</h1>
+                        <p>123 Madrasa Lane, City | +1 234 567 890 | info@idi.edu</p>
+                        <div class="print-document-title">OFFICIAL STATEMENT OF RESULTS</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="result-header">
                 <p class="subtitle" style="color: rgba(255,255,255,0.8); margin-bottom: 0.5rem;">Academic Report</p>
                 <h2 id="student-name">Student Name</h2>
-                <p id="student-info" style="font-size: 1.1rem; opacity: 0.9;">Registration No: HIFZ2025001 | Class 5</p>
+                <div id="student-details-grid" class="student-details-grid">
+                    <div class="detail-item">
+                        <span class="detail-label">Registration No</span>
+                        <span id="student-reg" class="detail-value">---</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Class / Level</span>
+                        <span id="student-class" class="detail-value">---</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Examination</span>
+                        <span id="student-exam" class="detail-value">---</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-label">Academic Year</span>
+                        <span id="student-year" class="detail-value">---</span>
+                    </div>
+                </div>
             </div>
             <div class="result-content">
                 <div style="overflow-x: auto;">
@@ -383,6 +412,26 @@
                             <span id="student-status" class="status-badge status-pass">Pass</span>
                         </div>
                     </div>
+                </div>
+
+                <!-- Print Footer (Visible on Print) -->
+                <div class="print-signatures">
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <p>Class Teacher</p>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <p>Controller of Examinations</p>
+                    </div>
+                    <div class="signature-box">
+                        <div class="signature-line"></div>
+                        <p>Principal</p>
+                    </div>
+                </div>
+
+                <div class="print-date">
+                    Generated on: <span id="current-date"></span>
                 </div>
 
                 <div style="margin-top: 4rem; text-align: center;">
@@ -513,7 +562,11 @@
 
                     if (studentResult) {
                         document.getElementById('student-name').textContent = studentResult.name;
-                        document.getElementById('student-info').textContent = `Registration No: ${studentResult.regNo} | Class: ${studentResult.class} | ${studentResult.exam} ${studentResult.year}`;
+                        document.getElementById('student-reg').textContent = studentResult.regNo;
+                        document.getElementById('student-class').textContent = studentResult.class;
+                        document.getElementById('student-exam').textContent = studentResult.exam;
+                        document.getElementById('student-year').textContent = studentResult.year;
+                        document.getElementById('current-date').textContent = new Date().toLocaleDateString();
 
                         const marksBody = document.getElementById('marks-body');
                         marksBody.innerHTML = '';

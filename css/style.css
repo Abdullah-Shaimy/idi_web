@@ -610,3 +610,158 @@ footer {
 .mt-4 {
   margin-top: 2rem;
 }
+
+/* Marksheet Specific Styles */
+.student-details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.detail-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.8;
+}
+
+.detail-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.print-header, .print-signatures, .print-date {
+    display: none;
+}
+
+/* Print Styles */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 15mm;
+    }
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    /* Hide non-essential UI */
+    header, footer, .hero, .result-search-card, .btn, .subtitle, .mobile-menu-btn {
+        display: none !important;
+    }
+
+    /* Show print elements */
+    .print-header, .print-signatures, .print-date {
+        display: block;
+    }
+
+    .result-display-card {
+        display: block !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        box-shadow: none !important;
+        border: 2px solid #eee !important;
+        border-radius: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        animation: none !important;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+
+    .result-header {
+        background-color: var(--accent-emerald) !important;
+        color: white !important;
+        padding: 2rem !important;
+        border-bottom: 5px solid var(--accent-gold) !important;
+    }
+
+    .result-content {
+        padding: 2rem !important;
+    }
+
+    .print-header {
+        padding: 1rem 2rem;
+        border-bottom: 1px solid #eee;
+        margin-bottom: 1rem;
+    }
+
+    .print-header-content {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+
+    .print-logo {
+        height: 80px;
+        width: auto;
+    }
+
+    .print-institute-details h1 {
+        font-size: 1.8rem;
+        margin-bottom: 0.2rem;
+        color: var(--accent-emerald) !important;
+    }
+
+    .print-document-title {
+        font-weight: 700;
+        margin-top: 0.5rem;
+        letter-spacing: 2px;
+        color: var(--accent-gold) !important;
+    }
+
+    .marks-table {
+        margin-bottom: 2rem !important;
+    }
+
+    .marks-table th {
+        background: #f8f9fa !important;
+        color: black !important;
+        border-bottom: 2px solid #333 !important;
+    }
+
+    .marks-table td {
+        border-bottom: 1px solid #eee !important;
+    }
+
+    .summary-grid {
+        border-top: 2px solid #eee !important;
+        margin-bottom: 3rem !important;
+    }
+
+    .summary-value {
+        color: var(--accent-emerald) !important;
+    }
+
+    .print-signatures {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 4rem;
+        text-align: center;
+    }
+
+    .signature-box {
+        width: 200px;
+    }
+
+    .signature-line {
+        border-top: 1px solid #333;
+        margin-bottom: 0.5rem;
+    }
+
+    .print-date {
+        margin-top: 3rem;
+        font-size: 0.8rem;
+        color: #666;
+        text-align: right;
+    }
+}

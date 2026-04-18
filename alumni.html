@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,48 +11,76 @@
         .alumni-card {
             text-align: center;
             transition: var(--transition);
+            background: white;
+            padding: 2.5rem 1.5rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+        }
+        .alumni-card:hover {
+            border-color: var(--accent-gold);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
         }
         .alumni-img-wrapper {
-            width: 150px;
-            height: 150px;
-            margin: 0 auto 2rem;
+            width: 130px;
+            height: 130px;
+            margin: 0 auto 1.5rem;
             position: relative;
         }
         .alumni-img-wrapper::after {
             content: '';
             position: absolute;
-            inset: -5px;
-            border: 1.5px solid var(--accent-gold);
+            inset: -4px;
+            border: 1px solid var(--accent-gold);
             border-radius: 50%;
-            opacity: 0.3;
+            opacity: 0.2;
+            transition: var(--transition);
+        }
+        .alumni-card:hover .alumni-img-wrapper::after {
+            opacity: 0.6;
+            inset: -6px;
         }
         .alumni-img {
             width: 100%;
             height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            border: 5px solid white;
+            border: 4px solid white;
             box-shadow: var(--shadow-sm);
+            background: var(--bg-secondary);
         }
         .alumni-batch {
             display: inline-block;
             color: var(--accent-emerald);
-            font-size: 0.85rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
             margin-bottom: 0.5rem;
+            padding: 0.2rem 0.8rem;
+            background: rgba(0, 109, 68, 0.05);
+            border-radius: 20px;
         }
         .alumni-name {
             font-family: var(--font-heading);
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             margin-bottom: 0.5rem;
             color: var(--text-primary);
+        }
+        .alumni-status {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            opacity: 0.8;
         }
         #loading {
             text-align: center;
             padding: 10rem 0;
             color: var(--accent-emerald);
+        }
+        .grid-container {
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 2rem;
         }
     </style>
 </head>
@@ -152,14 +180,14 @@
 
                     data.forEach(alumnus => {
                         const card = document.createElement('div');
-                        card.className = 'card alumni-card';
+                        card.className = 'alumni-card';
                         card.innerHTML = `
                             <div class="alumni-img-wrapper">
-                                <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='https://via.placeholder.com/150/f9f9f9/006d44?text=${alumnus.name.charAt(0)}'">
+                                <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='assets/images/placeholder-alumni.png'">
                             </div>
                             <span class="alumni-batch">Batch of ${alumnus.batch}</span>
                             <h3 class="alumni-name">${alumnus.name}</h3>
-                            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">${alumnus.currentStatus}</p>
+                            <p class="alumni-status">${alumnus.currentStatus}</p>
                         `;
                         grid.appendChild(card);
                     });
