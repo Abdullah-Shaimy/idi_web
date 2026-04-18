@@ -7,19 +7,44 @@
     <meta name="description" content="Learn about the history and mission of the Institute of Da'wa Islamiyya.">
     <link rel="stylesheet" href="css/style.css">    <link rel="icon" type="image/png" href="assets/images/idi_logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@400;500;600;700;800&family=Arima+Madurai:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <style>
         .tamil-text {
-            font-family: 'Mukta Malar', sans-serif;
+            font-family: 'Arima Madurai', cursive;
             line-height: 1.6;
-            color: #1a1a1a; /* High contrast dark gray */
+            color: #1a1a1a;
         }
         .card-title-tamil {
-            font-family: 'Mukta Malar', sans-serif;
-            font-weight: 800;
-            font-size: 1.8rem !important;
-            color: #004d30 !important; /* Deeper emerald */
+            font-family: 'Arima Madurai', cursive;
+            font-weight: 900;
+            font-size: 2rem !important;
+            color: #004d30 !important;
             margin-bottom: 0.5rem;
+        }
+        .goal-list {
+            list-style: none;
+            padding: 0;
+        }
+        .goal-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: var(--radius-sm);
+            border-left: 5px solid var(--accent-emerald);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+        .goal-item:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-md);
+        }
+        .goal-icon {
+            color: var(--accent-gold);
+            font-size: 1.5rem;
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -104,6 +129,46 @@
                     </ul>
                 </div>
             </div>
+        </div>
+    </section>
+
+    <!-- Goals Section -->
+    <section class="section-container" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+        <div class="section-title-wrapper">
+            <h2 class="card-title-tamil" style="font-size: 3rem !important; text-align: center;">இலக்குகள்</h2>
+            <span class="subtitle" style="display: block; text-align: center; margin-bottom: 3rem; color: var(--accent-emerald); font-weight: 700;">(GOALS)</span>
+        </div>
+        <div style="max-width: 900px; margin: 0 auto;">
+            <ul class="goal-list">
+                <li class="goal-item">
+                    <i class="fa-solid fa-star-and-crescent goal-icon"></i>
+                    <p class="tamil-text" style="font-size: 1.3rem; font-weight: 700;">அல்-குர்ஆனை மனனம் செய்து அதற்கு பணிவிடை செய்யும் ஒரு பரம்பரையை உருவாக்கல்.</p>
+                </li>
+                <li class="goal-item">
+                    <i class="fa-solid fa-star-and-crescent goal-icon"></i>
+                    <p class="tamil-text" style="font-size: 1.3rem; font-weight: 700;">அல்-குர்ஆனிய அறிவைப் பெற்ற பல்துறை சார்ந்த ஆளுமைகளை உருவாக்கல்.</p>
+                </li>
+                <li class="goal-item">
+                    <i class="fa-solid fa-star-and-crescent goal-icon"></i>
+                    <p class="tamil-text" style="font-size: 1.3rem; font-weight: 700;">ஆன்மீக மற்றும் பண்பாட்டு ரீதியாக பயிற்றுவிக்கப்பட்ட ஆளுமைகளை உருவாக்கல்.</p>
+                </li>
+                <li class="goal-item">
+                    <i class="fa-solid fa-star-and-crescent goal-icon"></i>
+                    <p class="tamil-text" style="font-size: 1.3rem; font-weight: 700;">நடுநிலைமைத் தன்மை, முழுமைத் தன்மை என்ற பண்புகளின் அடிப்படையில் இஸ்லாமிய சிந்தனையைப் பரப்பல்.</p>
+                </li>
+                <li class="goal-item">
+                    <i class="fa-solid fa-star-and-crescent goal-icon"></i>
+                    <p class="tamil-text" style="font-size: 1.3rem; font-weight: 700;">இலங்கை சமூகத்தில் அரபு மொழியைப் பரப்பல்.</p>
+                </li>
+                <li class="goal-item">
+                    <i class="fa-solid fa-star-and-crescent goal-icon"></i>
+                    <p class="tamil-text" style="font-size: 1.3rem; font-weight: 700;">தீனுக்கும் சமூகத்திற்கும் நற்பணி புரியும் சாலிஹான பிரஜைகளை உருவாக்கல்.</p>
+                </li>
+                <li class="goal-item">
+                    <i class="fa-solid fa-star-and-crescent goal-icon"></i>
+                    <p class="tamil-text" style="font-size: 1.3rem; font-weight: 700;">இலங்கையின் பொதுக்கல்வியின் இலக்குகளை அடைந்து தேசிய தொழில் தகைமைகளை அடைவதற்கான வழிகாட்டல்.</p>
+                </li>
+            </ul>
         </div>
     </section>
 
