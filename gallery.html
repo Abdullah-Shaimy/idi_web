@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -68,6 +68,32 @@
             font-size: 1.2rem;
             color: var(--accent-emerald);
         }
+
+        /* Category Filter Styles */
+        .filter-bar {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 0.8rem 2rem;
+            border-radius: 30px;
+            background: white;
+            border: 1px solid var(--border-light);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent-emerald);
+            color: white;
+            border-color: var(--accent-emerald);
+            box-shadow: 0 4px 15px rgba(0, 109, 68, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -105,6 +131,12 @@
 
     <!-- Gallery Grid -->
     <section class="section-container">
+        <div class="filter-bar" id="filter-bar">
+            <button class="filter-btn active" data-filter="All">All Moments</button>
+            <button class="filter-btn" data-filter="Life at IDI">Life at IDI</button>
+            <button class="filter-btn" data-filter="Campus">Our Campus</button>
+            <button class="filter-btn" data-filter="Events">Special Events</button>
+        </div>
         <div id="loading"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Unfolding Memories...</div>
         <div class="gallery-grid" id="gallery-grid">
             <!-- Images will be populated here via JS -->
@@ -157,29 +189,53 @@
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            let galleryData = [];
+            const grid = document.getElementById('gallery-grid');
+            const loading = document.getElementById('loading');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+
+            function renderGallery(filter = 'All') {
+                grid.innerHTML = '';
+                const filteredData = filter === 'All' 
+                    ? galleryData 
+                    : galleryData.filter(item => item.category === filter);
+
+                filteredData.forEach(imgData => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `
+                        <img loading="lazy" src="${imgData.src}" alt="${imgData.caption}" class="gallery-img">
+                        <div class="gallery-overlay">
+                            <p class="gallery-caption">${imgData.caption}</p>
+                        </div>
+                    `;
+                    grid.appendChild(item);
+                });
+
+                if (filteredData.length === 0) {
+                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">No images found in this category yet.</div>';
+                }
+            }
+
             fetch('data/gallery.json')
                 .then(response => response.json())
                 .then(data => {
-                    const grid = document.getElementById('gallery-grid');
-                    const loading = document.getElementById('loading');
+                    galleryData = data;
                     loading.style.display = 'none';
-                    
-                    data.forEach(imgData => {
-                        const item = document.createElement('div');
-                        item.className = 'gallery-item';
-                        item.innerHTML = `
-                            <img loading="lazy" src="${imgData.src}" alt="${imgData.caption}" class="gallery-img">
-                            <div class="gallery-overlay">
-                                <p class="gallery-caption">${imgData.caption}</p>
-                            </div>
-                        `;
-                        grid.appendChild(item);
-                    });
+                    renderGallery();
                 })
                 .catch(error => {
                     console.error('Error loading gallery:', error);
-                    document.getElementById('loading').innerHTML = 'Failed to load images.';
+                    loading.innerHTML = 'Failed to load images.';
                 });
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderGallery(btn.getAttribute('data-filter'));
+                });
+            });
         });
     </script>
 </body>

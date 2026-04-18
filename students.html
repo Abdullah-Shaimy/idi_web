@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,74 +8,74 @@
     <link rel="stylesheet" href="css/style.css">    <link rel="icon" type="image/png" href="assets/images/idi_logo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .timeline-wrapper {
-            position: relative;
-            max-width: 900px;
-            margin: 4rem auto;
-            padding: 2rem 0;
-        }
-        .timeline-wrapper::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: linear-gradient(to bottom, transparent, var(--accent-emerald), transparent);
-            transform: translateX(-50%);
-        }
-        .timeline-item {
+        /* Schedule Tab Styles */
+        .schedule-tabs {
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 1rem 2.5rem;
+            border-radius: 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            color: var(--text-muted);
+            cursor: pointer;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: var(--transition);
+        }
+        .tab-btn.active {
+            background: var(--accent-emerald);
+            color: white;
+            border-color: var(--accent-emerald);
+        }
+        .schedule-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        .schedule-content.active {
+            display: block;
+        }
+        .schedule-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .schedule-item {
+            display: flex;
             align-items: center;
-            margin-bottom: 6rem;
-            width: 100%;
-            position: relative;
-        }
-        .timeline-item:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-        .timeline-content {
-            width: 45%;
-            padding: 3rem;
+            gap: 1.5rem;
+            padding: 1.5rem;
             background: white;
-            border-radius: var(--radius-md);
-            box-shadow: var(--shadow-sm);
+            border-radius: var(--radius-sm);
             border: 1px solid var(--border-light);
             transition: var(--transition);
         }
-        .timeline-item:hover .timeline-content {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-md);
-            border-color: var(--accent-emerald);
+        .schedule-item:hover {
+            border-color: var(--accent-gold);
+            transform: scale(1.02);
+            box-shadow: var(--shadow-sm);
         }
-        .timeline-dot {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 20px;
-            height: 20px;
-            background: white;
-            border: 4px solid var(--accent-emerald);
-            border-radius: 50%;
-            z-index: 2;
+        .schedule-time {
+            min-width: 100px;
+            font-weight: 700;
+            color: var(--accent-emerald);
+            font-size: 0.9rem;
+            border-right: 2px solid var(--bg-secondary);
+            padding-right: 1rem;
         }
-        .time-label {
-            width: 45%;
-            font-family: var(--font-heading);
-            font-size: 2rem;
-            color: var(--accent-gold);
-            text-align: right;
+        .schedule-activity {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 1rem;
         }
-        .timeline-item:nth-child(even) .time-label {
-            text-align: left;
-        }
-        @media (max-width: 768px) {
-            .timeline-wrapper::before { left: 30px; }
-            .timeline-item, .timeline-item:nth-child(even) { flex-direction: column; align-items: flex-start; }
-            .timeline-content, .time-label { width: 100%; padding-left: 70px; text-align: left !important; }
-            .timeline-dot { left: 30px; }
-            .time-label { margin-bottom: 1rem; font-size: 1.5rem; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
@@ -112,62 +112,78 @@
         </div>
     </section>
 
-    <!-- Timeline Section -->
+    <!-- Schedule Section -->
     <section class="section-container">
         <div class="section-title-wrapper">
             <span class="subtitle">Routine</span>
-            <h2 class="section-title">A Day of Devotion</h2>
+            <h2 class="section-title">Life at IDI: Daily Schedule</h2>
+            <p style="max-width: 700px; margin: 0 auto; color: var(--text-secondary);">A disciplined yet nurturing routine designed to balance academic excellence, spiritual growth, and physical well-being.</p>
         </div>
 
-        <div class="timeline-wrapper">
-            <!-- Item 1 -->
-            <div class="timeline-item">
-                <div class="time-label">4:30 AM</div>
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <h3 style="margin-bottom: 1rem;">Tahajjud & Fajr</h3>
-                    <p style="color: var(--text-secondary);">The day begins with congregational Tahajjud and Fajr prayers, followed by morning Adhkar to set a spiritual tone.</p>
-                </div>
-            </div>
+        <div class="schedule-tabs">
+            <button class="tab-btn active" data-tab="weekdays">Mon - Thu</button>
+            <button class="tab-btn" data-tab="friday">Friday</button>
+            <button class="tab-btn" data-tab="weekend">Sat - Sun</button>
+        </div>
 
-            <!-- Item 2 -->
-            <div class="timeline-item">
-                <div class="time-label">6:00 AM</div>
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <h3 style="margin-bottom: 1rem;">Sabaq (New Lesson)</h3>
-                    <p style="color: var(--text-secondary);">Early morning focus is dedicated to memorizing new portions of the Quran with personalized teacher guidance.</p>
-                </div>
+        <!-- Weekdays Schedule -->
+        <div id="weekdays" class="schedule-content active">
+            <div class="schedule-grid">
+                <div class="schedule-item"><div class="schedule-time">04:30 AM</div><div class="schedule-activity">Wake up & Preparation</div></div>
+                <div class="schedule-item"><div class="schedule-time">04:50 AM</div><div class="schedule-activity">Subah (Fajr) Prayer</div></div>
+                <div class="schedule-item"><div class="schedule-time">05:15 AM</div><div class="schedule-activity">Morning Tea</div></div>
+                <div class="schedule-item"><div class="schedule-time">05:25 AM</div><div class="schedule-activity">New Lesson (Sabaq)</div></div>
+                <div class="schedule-item"><div class="schedule-time">06:30 AM</div><div class="schedule-activity">Cleaning & School Prep</div></div>
+                <div class="schedule-item"><div class="schedule-time">07:30 AM</div><div class="schedule-activity">Academy / School Hours</div></div>
+                <div class="schedule-item"><div class="schedule-time">02:00 PM</div><div class="schedule-activity">Body Wash & Zuhr Prep</div></div>
+                <div class="schedule-item"><div class="schedule-time">02:15 PM</div><div class="schedule-activity">Zuhr Prayer</div></div>
+                <div class="schedule-item"><div class="schedule-time">02:30 PM</div><div class="schedule-activity">Lunch Break</div></div>
+                <div class="schedule-item"><div class="schedule-time">03:00 PM</div><div class="schedule-activity">Compulsory Rest (Qailulah)</div></div>
+                <div class="schedule-item"><div class="schedule-time">04:00 PM</div><div class="schedule-activity">Asr Prayer & Afternoon Tea</div></div>
+                <div class="schedule-item"><div class="schedule-time">04:10 PM</div><div class="schedule-activity">Lesson Revision (Dour)</div></div>
+                <div class="schedule-item"><div class="schedule-time">05:30 PM</div><div class="schedule-activity">Leisure / Personal Time</div></div>
+                <div class="schedule-item"><div class="schedule-time">06:00 PM</div><div class="schedule-activity">Maghrib Preparation</div></div>
+                <div class="schedule-item"><div class="schedule-time">06:10 PM</div><div class="schedule-activity">Evening Adhkar & Maghrib</div></div>
+                <div class="schedule-item"><div class="schedule-time">06:30 PM</div><div class="schedule-activity">Quran Memorization Session</div></div>
+                <div class="schedule-item"><div class="schedule-time">08:00 PM</div><div class="schedule-activity">School Study & Self Revision</div></div>
+                <div class="schedule-item"><div class="schedule-time">09:00 PM</div><div class="schedule-activity">Isha Prayer</div></div>
+                <div class="schedule-item"><div class="schedule-time">09:20 PM</div><div class="schedule-activity">Dinner</div></div>
+                <div class="schedule-item"><div class="schedule-time">09:45 PM</div><div class="schedule-activity">Sleep Preparation</div></div>
+                <div class="schedule-item"><div class="schedule-time">10:00 PM</div><div class="schedule-activity">Compulsory Sleep</div></div>
             </div>
+        </div>
 
-            <!-- Item 3 -->
-            <div class="timeline-item">
-                <div class="time-label">10:00 AM</div>
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <h3 style="margin-bottom: 1rem;">Revision Sessions</h3>
-                    <p style="color: var(--text-secondary);">Mid-morning hours are spent in 'Dour' (revision) to solidify previously memorized Juz and ensure retention.</p>
-                </div>
+        <!-- Friday Schedule -->
+        <div id="friday" class="schedule-content">
+            <div class="schedule-grid">
+                <div class="schedule-item"><div class="schedule-time">04:30 AM</div><div class="schedule-activity">Wake up & Preparation</div></div>
+                <div class="schedule-item"><div class="schedule-time">04:50 AM</div><div class="schedule-activity">Subah Prayer</div></div>
+                <div class="schedule-item"><div class="schedule-time">05:25 AM</div><div class="schedule-activity">New Lesson (Sabaq)</div></div>
+                <div class="schedule-item"><div class="schedule-time">07:30 AM</div><div class="schedule-activity">Academy Hours (Partial)</div></div>
+                <div class="schedule-item"><div class="schedule-time">11:30 AM</div><div class="schedule-activity">Jumu'ah Preparation</div></div>
+                <div class="schedule-item"><div class="schedule-time">11:50 AM</div><div class="schedule-activity">Jumu'ah Khutbah & Prayer</div></div>
+                <div class="schedule-item"><div class="schedule-time">01:30 PM</div><div class="schedule-activity">Friday Special Lunch</div></div>
+                <div class="schedule-item"><div class="schedule-time">02:15 PM</div><div class="schedule-activity">Afternoon Rest</div></div>
+                <div class="schedule-item"><div class="schedule-time">03:30 PM</div><div class="schedule-activity">Asr Prayer</div></div>
+                <div class="schedule-item"><div class="schedule-time">04:00 PM</div><div class="schedule-activity">Parents Meeting / Visiting</div></div>
+                <div class="schedule-item"><div class="schedule-time">06:00 PM</div><div class="schedule-activity">Maghrib Prayer</div></div>
+                <div class="schedule-item"><div class="schedule-time">07:30 PM</div><div class="schedule-activity">Isha Prayer</div></div>
+                <div class="schedule-item"><div class="schedule-time">09:00 PM</div><div class="schedule-activity">Night Rest</div></div>
             </div>
+        </div>
 
-            <!-- Item 4 -->
-            <div class="timeline-item">
-                <div class="time-label">1:30 PM</div>
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <h3 style="margin-bottom: 1rem;">Rest & Nutrition</h3>
-                    <p style="color: var(--text-secondary);">Zuhr prayer is followed by a nutritious lunch and a period of 'Qailulah' (midday nap) for physical recovery.</p>
-                </div>
-            </div>
-
-            <!-- Item 5 -->
-            <div class="timeline-item">
-                <div class="time-label">4:30 PM</div>
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <h3 style="margin-bottom: 1rem;">Physical Activity</h3>
-                    <p style="color: var(--text-secondary);">After Asr, students engage in recreational sports and physical activities to maintain a healthy body and mind.</p>
-                </div>
+        <!-- Weekend Schedule -->
+        <div id="weekend" class="schedule-content">
+            <div class="schedule-grid">
+                <div class="schedule-item"><div class="schedule-time">05:25 AM</div><div class="schedule-activity">Weekend Sabaq Session</div></div>
+                <div class="schedule-item"><div class="schedule-time">08:00 AM</div><div class="schedule-activity">Breakfast</div></div>
+                <div class="schedule-item"><div class="schedule-time">08:30 AM</div><div class="schedule-activity">Detailed Revision (Dour)</div></div>
+                <div class="schedule-item"><div class="schedule-time">11:00 AM</div><div class="schedule-activity">Arabic Language Class</div></div>
+                <div class="schedule-item"><div class="schedule-time">12:30 PM</div><div class="schedule-activity">Lunch & Zuhr</div></div>
+                <div class="schedule-item"><div class="schedule-time">01:15 PM</div><div class="schedule-activity">Extended Rest</div></div>
+                <div class="schedule-item"><div class="schedule-time">04:15 PM</div><div class="schedule-activity">Asr & Revision</div></div>
+                <div class="schedule-item"><div class="schedule-time">06:30 PM</div><div class="schedule-activity">New Lesson Memorization</div></div>
+                <div class="schedule-item"><div class="schedule-time">09:30 PM</div><div class="schedule-activity">Dinner & Sleep</div></div>
             </div>
         </div>
     </section>
@@ -215,6 +231,22 @@
         </div>
     </footer>
 
-    <script src="js/main.js"></script>
+    <script>
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const tabId = btn.getAttribute('data-tab');
+                
+                // Update buttons
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                
+                // Update content
+                document.querySelectorAll('.schedule-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
 </body>
 </html>

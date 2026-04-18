@@ -2,21 +2,25 @@
   {
     "id": 1,
     "src": "https://images.unsplash.com/photo-1585036156171-384164a8c675?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    "caption": "Students studying the Quran in the main hall."
+    "caption": "Students studying the Quran in the main hall.",
+    "category": "Life at IDI"
   },
   {
     "id": 2,
     "src": "https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    "caption": "Beautiful interior of the Madrasa Mosque."
+    "caption": "Beautiful interior of the Madrasa Mosque.",
+    "category": "Campus"
   },
   {
     "id": 3,
     "src": "https://images.unsplash.com/photo-1606820864387-e23a41e975ac?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    "caption": "Annual gathering and prize distribution."
+    "caption": "Annual gathering and prize distribution.",
+    "category": "Events"
   },
   {
     "id": 4,
     "src": "https://images.unsplash.com/photo-1628189871790-2527fc69537d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    "caption": "Evening Dua after Maghrib prayers."
+    "caption": "Evening Dua after Maghrib prayers.",
+    "category": "Life at IDI"
   }
 ]
