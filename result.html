@@ -3,63 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Check Results - Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="Check student results online.">
+    <title>Check Results | Institute of Da'wa Islamiyya</title>
+    <meta name="description" content="Official result checking portal for students of the Institute of Da'wa Islamiyya.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .page-header {
-            background-color: var(--primary-green-dark);
-            padding: 4rem 2rem;
-            text-align: center;
-            color: var(--bg-white);
-        }
-        .result-container {
+        .result-search-card {
             max-width: 600px;
-            margin: 0 auto;
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 2.5rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
+            margin: 4rem auto;
+            padding: 4rem;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-light);
         }
-        .result-card {
+        .result-display-card {
+            max-width: 800px;
+            margin: 4rem auto;
             display: none;
-            margin-top: 2rem;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            background: white;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
             overflow: hidden;
+            border: 1px solid var(--border-light);
+            animation: slideUp 0.6s ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .result-header {
-            background-color: var(--primary-green);
+            background-color: var(--accent-emerald);
             color: white;
-            padding: 1.5rem;
+            padding: 3rem;
             text-align: center;
         }
-        .result-body {
-            padding: 1.5rem;
+        .result-header h2 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
         }
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 1px solid var(--border-color);
+        .result-content {
+            padding: 3rem;
         }
-        .result-row:last-child {
-            border-bottom: none;
+        .marks-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 3rem;
         }
-        .result-total {
+        .marks-table th {
+            text-align: left;
+            padding: 1.2rem;
+            border-bottom: 2px solid var(--border-light);
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        .marks-table td {
+            padding: 1.2rem;
+            border-bottom: 1px solid var(--border-light);
+            font-size: 1.05rem;
+        }
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding-top: 2rem;
+            border-top: 1px dashed var(--border-light);
+        }
+        .summary-item {
+            text-align: center;
+        }
+        .summary-label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+        .summary-value {
+            font-size: 1.5rem;
             font-weight: 700;
-            font-size: 1.2rem;
-            color: var(--primary-green);
+            color: var(--accent-emerald);
+            font-family: var(--font-heading);
         }
-        .error-msg {
-            color: #dc2626;
-            margin-top: 1rem;
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .status-pass { background-color: rgba(0, 109, 68, 0.1); color: var(--accent-emerald); }
+        .error-message {
+            color: #d32f2f;
             text-align: center;
+            margin-top: 2rem;
             display: none;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -68,10 +110,12 @@
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
-            </div>
-            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <a href="index.html" class="logo-container">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
@@ -84,58 +128,85 @@
         </div>
     </header>
 
-    <div class="page-header">
-        <h1>Examination Results</h1>
-        <p>Enter your registration details to view your marks.</p>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" style="height: 50vh; min-height: 400px; background: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="subtitle">Examination Portal</span>
+            <h1>Check Results</h1>
+            <p>Access your academic performance and progress reports securely.</p>
+        </div>
+    </section>
 
+    <!-- Search Form -->
     <section class="section-container">
-        <div class="result-container">
+        <div class="result-search-card">
+            <h2 style="margin-bottom: 2rem; text-align: center; font-family: var(--font-heading);">Student Inquiry</h2>
             <form id="result-form">
-                <div class="form-group">
-                    <label for="regNo" class="form-label">Registration Number</label>
-                    <input type="text" id="regNo" class="form-control" required placeholder="e.g. HIFZ2025001">
+                <div style="margin-bottom: 2rem;">
+                    <label class="subtitle" style="display: block; margin-bottom: 0.5rem; font-size: 0.8rem;">Registration Number</label>
+                    <input type="text" id="regNo" class="btn btn-outline" style="width: 100%; padding: 1rem; text-align: left;" required placeholder="e.g. HIFZ2025001">
                 </div>
-                <div class="form-group">
-                    <label for="exam" class="form-label">Examination</label>
-                    <select id="exam" class="form-control" required>
-                        <option value="Annual">Annual Exam</option>
-                        <option value="Half-Yearly">Half-Yearly Exam</option>
-                    </select>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 3rem;">
+                    <div>
+                        <label class="subtitle" style="display: block; margin-bottom: 0.5rem; font-size: 0.8rem;">Examination</label>
+                        <select id="exam" style="width: 100%; padding: 1rem; border: 1.5px solid var(--border-light); border-radius: var(--radius-sm); font-family: var(--font-body);">
+                            <option value="Annual">Annual Exam</option>
+                            <option value="Half-Yearly">Half-Yearly Exam</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="subtitle" style="display: block; margin-bottom: 0.5rem; font-size: 0.8rem;">Academic Year</label>
+                        <select id="year" style="width: 100%; padding: 1rem; border: 1.5px solid var(--border-light); border-radius: var(--radius-sm); font-family: var(--font-body);">
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="year" class="form-label">Year</label>
-                    <select id="year" class="form-control" required>
-                        <option value="2025">2025</option>
-                        <option value="2024">2024</option>
-                    </select>
-                </div>
-                <button type="submit" class="btn btn-primary" style="width: 100%;">Check Result</button>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Generate Report</button>
             </form>
-            
-            <div id="error-msg" class="error-msg">Result not found. Please check your details.</div>
-            
-            <div id="result-card" class="result-card">
-                <div class="result-header">
-                    <h2 id="student-name">Student Name</h2>
-                    <p id="student-class">Class</p>
+            <div id="error-message" class="error-message">Information not found. Please verify your Registration Number.</div>
+        </div>
+
+        <!-- Result Card -->
+        <div id="result-display" class="result-display-card">
+            <div class="result-header">
+                <p class="subtitle" style="color: rgba(255,255,255,0.8); margin-bottom: 0.5rem;">Academic Report</p>
+                <h2 id="student-name">Student Name</h2>
+                <p id="student-info" style="font-size: 1.1rem; opacity: 0.9;">Registration No: HIFZ2025001 | Class 5</p>
+            </div>
+            <div class="result-content">
+                <table class="marks-table">
+                    <thead>
+                        <tr>
+                            <th>Subject / Area</th>
+                            <th style="text-align: right;">Marks Obtained</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marks-body">
+                        <!-- Injected -->
+                    </tbody>
+                </table>
+                
+                <div class="summary-grid">
+                    <div class="summary-item">
+                        <span class="summary-label">Aggregate Total</span>
+                        <span id="student-total" class="summary-value">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Letter Grade</span>
+                        <span id="student-grade" class="summary-value">A+</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Final Status</span>
+                        <div style="margin-top: 0.5rem;">
+                            <span id="student-status" class="status-badge status-pass">Pass</span>
+                        </div>
+                    </div>
                 </div>
-                <div class="result-body" id="result-body">
-                    <!-- Marks rows will be injected here -->
-                </div>
-                <div class="result-body" style="background-color: var(--bg-light); border-top: 1px solid var(--border-color);">
-                    <div class="result-row result-total">
-                        <span>Total Marks</span>
-                        <span id="student-total">0</span>
-                    </div>
-                    <div class="result-row" style="font-weight: 600;">
-                        <span>Grade</span>
-                        <span id="student-grade">-</span>
-                    </div>
-                    <div class="result-row" style="font-weight: 600;">
-                        <span>Status</span>
-                        <span id="student-status">-</span>
-                    </div>
+                
+                <div style="margin-top: 4rem; text-align: center;">
+                    <button onclick="window.print()" class="btn btn-outline" style="padding: 0.8rem 2rem; font-size: 0.9rem;"><i class="fa-solid fa-print" style="margin-right: 10px;"></i> Print Marksheet</button>
                 </div>
             </div>
         </div>
@@ -145,17 +216,33 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+                <h3>IDI Madrasa</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul style="line-height: 2;">
+                <ul class="footer-links">
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="hifz.html">Hifz Program</a></li>
+                    <li><a href="students.html">Student Life</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
                 </ul>
             </div>
             <div class="footer-section">
+                <h3>Information</h3>
+                <ul class="footer-links">
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="alumni.html">Our Alumni</a></li>
+                    <li><a href="result.html">Check Results</a></li>
+                    <li><a href="#">Admissions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-contact">
                 <h3>Contact</h3>
                 <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
                 <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
@@ -164,62 +251,66 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
     <script>
-        document.getElementById('result-form').addEventListener('submit', function(e) {
+        document.getElementById('result-form').addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             const regNo = document.getElementById('regNo').value.trim().toUpperCase();
             const exam = document.getElementById('exam').value;
             const year = document.getElementById('year').value;
-            
-            const errorMsg = document.getElementById('error-msg');
-            const resultCard = document.getElementById('result-card');
-            
+
+            const errorMsg = document.getElementById('error-message');
+            const resultDisplay = document.getElementById('result-display');
+
             errorMsg.style.display = 'none';
-            resultCard.style.display = 'none';
-            
+            resultDisplay.style.display = 'none';
+
             fetch('data/results.json')
                 .then(res => res.json())
                 .then(data => {
-                    const studentResult = data.find(r => 
-                        r.regNo.toUpperCase() === regNo && 
-                        r.exam === exam && 
+                    const studentResult = data.find(r =>
+                        r.regNo.toUpperCase() === regNo &&
+                        r.exam === exam &&
                         r.year === year
                     );
-                    
-                    if(studentResult) {
+
+                    if (studentResult) {
                         document.getElementById('student-name').textContent = studentResult.name;
-                        document.getElementById('student-class').textContent = studentResult.class;
-                        
-                        const marksBody = document.getElementById('result-body');
+                        document.getElementById('student-info').textContent = `Registration No: ${studentResult.regNo} | Class: ${studentResult.class} | ${studentResult.exam} ${studentResult.year}`;
+
+                        const marksBody = document.getElementById('marks-body');
                         marksBody.innerHTML = '';
-                        
+
                         for (const [subject, mark] of Object.entries(studentResult.marks)) {
                             marksBody.innerHTML += `
-                                <div class="result-row">
-                                    <span>${subject}</span>
-                                    <span>${mark}</span>
-                                </div>
+                                <tr>
+                                    <td>${subject}</td>
+                                    <td style="text-align: right; font-weight: 600;">${mark}</td>
+                                </tr>
                             `;
                         }
-                        
+
                         document.getElementById('student-total').textContent = studentResult.total;
                         document.getElementById('student-grade').textContent = studentResult.grade;
                         document.getElementById('student-status').textContent = studentResult.status;
                         
-                        resultCard.style.display = 'block';
+                        const statusBadge = document.getElementById('student-status');
+                        statusBadge.className = 'status-badge ' + (studentResult.status.toLowerCase() === 'pass' ? 'status-pass' : '');
+
+                        resultDisplay.style.display = 'block';
+                        resultDisplay.scrollIntoView({ behavior: 'smooth' });
                     } else {
                         errorMsg.style.display = 'block';
                     }
                 })
                 .catch(err => {
                     console.error(err);
-                    errorMsg.textContent = "Error loading result database.";
+                    errorMsg.textContent = "Error accessing result database. Please try again later.";
                     errorMsg.style.display = 'block';
                 });
         });

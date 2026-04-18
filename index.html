@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="A peaceful and excellent Al Quran Hifz Madrasa.">
+    <title>Institute of Da'wa Islamiyya | Excellence in Hifz</title>
+    <meta name="description" content="A peaceful and excellent Al Quran Hifz Madrasa. Nurturing hearts with the light of the Quran.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
-            </div>
-            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <a href="index.html" class="logo-container">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
@@ -31,38 +32,66 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero">
+    <section class="hero" style="background: url('https://images.unsplash.com/photo-1564769625905-50e93615e769?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
+        <div class="hero-overlay"></div>
         <div class="hero-content">
-            <h2>Welcome to the Institute of Da'wa Islamiyya</h2>
-            <p>Nurturing hearts with the light of the Quran. A dedicated Hifz Madrasa committed to academic excellence and Islamic values.</p>
-            <a href="about.html" class="btn btn-primary">Discover More</a>
+            <span class="subtitle">Bismillahir Rahmanir Rahim</span>
+            <h1>Nurturing Hearts with the Light of Quran</h1>
+            <p>Welcome to the Institute of Da'wa Islamiyya. A dedicated Hifz Madrasa committed to academic excellence, spiritual growth, and Islamic values.</p>
+            <div class="hero-btns">
+                <a href="about.html" class="btn btn-primary">Discover More</a>
+                <a href="contact.html" class="btn btn-outline" style="margin-left: 1rem; color: white; border-color: white;">Get in Touch</a>
+            </div>
         </div>
     </section>
 
-    <!-- Quick Links / Features -->
+    <!-- Core Features -->
     <section class="section-container">
-        <h2 class="section-title">Our Focus</h2>
+        <div class="section-title-wrapper">
+            <span class="subtitle">Our Foundation</span>
+            <h2 class="section-title">A Tradition of Excellence</h2>
+        </div>
         <div class="grid-container">
             <div class="card">
-                <img loading="lazy" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Quran_with_Rehal.jpg/800px-Quran_with_Rehal.jpg" alt="Hifz" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Hifz Program</h3>
-                    <p>Comprehensive memorization of the Holy Quran with perfect Tajweed and Tarbiyah.</p>
-                </div>
+                <div class="card-icon"><i class="fa-solid fa-book-quran"></i></div>
+                <h3 class="card-title">Hifz Program</h3>
+                <p class="card-text">Comprehensive memorization of the Holy Quran with perfect Tajweed and focused Tarbiyah for every student.</p>
             </div>
             <div class="card">
-                <img loading="lazy" src="https://images.unsplash.com/photo-1585036156171-384164a8c675?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Education" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Islamic Studies</h3>
-                    <p>Foundational knowledge of Fiqh, Hadith, and Seerah alongside memorization.</p>
-                </div>
+                <div class="card-icon"><i class="fa-solid fa-mosque"></i></div>
+                <h3 class="card-title">Islamic Studies</h3>
+                <p class="card-text">Deep dive into Fiqh, Hadith, and Seerah, providing a solid foundation of Islamic knowledge alongside Hifz.</p>
             </div>
             <div class="card">
-                <img loading="lazy" src="https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Community" class="card-img">
-                <div class="card-content">
-                    <h3 class="card-title">Tarbiyah</h3>
-                    <p>Holistic character development focusing on Akhlaq and Islamic ethics.</p>
-                </div>
+                <div class="card-icon"><i class="fa-solid fa-heart-circle-check"></i></div>
+                <h3 class="card-title">Holistic Tarbiyah</h3>
+                <p class="card-text">Nurturing character (Akhlaq) and ethics through personalized mentorship and a spiritual environment.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Section -->
+    <section class="bg-secondary" style="background-color: var(--bg-secondary);">
+        <div class="section-container" style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;">
+            <div class="featured-img" style="border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow-lg);">
+                <img src="https://images.unsplash.com/photo-1585036156171-384164a8c675?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Student Learning">
+            </div>
+            <div class="featured-content">
+                <span class="subtitle">Join Us</span>
+                <h2 class="section-title" style="margin-bottom: 2rem;">Why Choose IDI?</h2>
+                <p style="margin-bottom: 2rem; color: var(--text-secondary);">We provide a serene and disciplined environment that allows students to focus entirely on their connection with the Quran. Our experienced teachers guide each student at their own pace.</p>
+                <ul class="footer-links" style="margin-bottom: 3rem;">
+                    <li style="display: flex; align-items: center; gap: 1rem; color: var(--text-primary); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-circle-check" style="color: var(--accent-emerald);"></i> Expert Tajweed Instruction
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 1rem; color: var(--text-primary); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-circle-check" style="color: var(--accent-emerald);"></i> Personalized Learning Paths
+                    </li>
+                    <li style="display: flex; align-items: center; gap: 1rem; color: var(--text-primary); margin-bottom: 1rem;">
+                        <i class="fa-solid fa-circle-check" style="color: var(--accent-emerald);"></i> Spiritual Mentorship
+                    </li>
+                </ul>
+                <a href="hifz.html" class="btn btn-primary">Explore Programs</a>
             </div>
         </div>
     </section>
@@ -71,17 +100,33 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+                <h3>IDI Madrasa</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul style="line-height: 2;">
+                <ul class="footer-links">
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="hifz.html">Hifz Program</a></li>
+                    <li><a href="students.html">Student Life</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
                 </ul>
             </div>
             <div class="footer-section">
+                <h3>Information</h3>
+                <ul class="footer-links">
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="alumni.html">Our Alumni</a></li>
+                    <li><a href="result.html">Check Results</a></li>
+                    <li><a href="#">Admissions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-contact">
                 <h3>Contact</h3>
                 <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
                 <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
@@ -90,7 +135,7 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 

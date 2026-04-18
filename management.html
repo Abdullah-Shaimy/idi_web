@@ -3,33 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Management - Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="Meet the management and staff of our Madrasa.">
+    <title>Management | Institute of Da'wa Islamiyya</title>
+    <meta name="description" content="Meet the visionary leadership and dedicated staff behind the Institute of Da'wa Islamiyya.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .page-header {
-            background-color: var(--primary-green-dark);
-            padding: 4rem 2rem;
-            text-align: center;
-            color: var(--bg-white);
-        }
         .mgmt-card {
             text-align: center;
-            padding: 2rem;
+            padding: 3rem;
+            transition: var(--transition);
+        }
+        .mgmt-img-wrapper {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+        .mgmt-img-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            border: 1px solid var(--accent-gold);
+            border-radius: 50%;
+            opacity: 0.3;
         }
         .mgmt-img {
-            width: 150px;
-            height: 150px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto 1.5rem;
-            border: 4px solid var(--secondary-gold);
+            border: 6px solid white;
+            box-shadow: var(--shadow-sm);
         }
         .mgmt-role {
-            color: var(--secondary-gold);
-            font-weight: 600;
+            color: var(--accent-emerald);
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        .mgmt-name {
+            font-family: var(--font-heading);
+            font-size: 1.8rem;
             margin-bottom: 1rem;
+            color: var(--text-primary);
         }
     </style>
 </head>
@@ -38,10 +57,12 @@
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
-            </div>
-            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <a href="index.html" class="logo-container">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
@@ -54,31 +75,52 @@
         </div>
     </header>
 
-    <div class="page-header">
-        <h1>Our Management</h1>
-        <p>The dedicated team guiding the Institute</p>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" style="height: 60vh; min-height: 500px; background: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="subtitle">Our Team</span>
+            <h1>The Management</h1>
+            <p>The dedicated visionaries guiding the spiritual and academic journey of our students.</p>
+        </div>
+    </section>
 
+    <!-- Management Team -->
     <section class="section-container">
-        <h2 class="section-title">Leadership Team</h2>
+        <div class="section-title-wrapper">
+            <span class="subtitle" style="color: var(--accent-emerald);">Leadership</span>
+            <h2 class="section-title">Guiding Lights</h2>
+        </div>
+        
         <div class="grid-container">
+            <!-- Principal -->
             <div class="card mgmt-card">
-                <img loading="lazy" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Principal" class="mgmt-img">
-                <h3>Sheikh Abdullah Hasan</h3>
-                <p class="mgmt-role">Principal & Head of Hifz</p>
-                <p>Guiding the academic and spiritual direction of the Madrasa with over 20 years of experience in Quranic education.</p>
+                <div class="mgmt-img-wrapper">
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Sheikh Abdullah Hasan" class="mgmt-img">
+                </div>
+                <span class="mgmt-role">Principal & Head of Hifz</span>
+                <h3 class="mgmt-name">Sheikh Abdullah Hasan</h3>
+                <p style="color: var(--text-secondary); line-height: 1.7;">Leading the institution with over 25 years of experience in Quranic sciences and educational management.</p>
             </div>
+
+            <!-- Vice Principal -->
             <div class="card mgmt-card">
-                <img loading="lazy" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Vice Principal" class="mgmt-img">
-                <h3>Ustaz Tariq Jameel</h3>
-                <p class="mgmt-role">Vice Principal & Tajweed Expert</p>
-                <p>Ensuring the highest standards of recitation and managing daily operations.</p>
+                <div class="mgmt-img-wrapper">
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Ustaz Tariq Jameel" class="mgmt-img">
+                </div>
+                <span class="mgmt-role">Vice Principal & Tajweed Expert</span>
+                <h3 class="mgmt-name">Ustaz Tariq Jameel</h3>
+                <p style="color: var(--text-secondary); line-height: 1.7;">Ensuring the highest standards of Qira'at and managing the daily spiritual curriculum of the students.</p>
             </div>
+
+            <!-- Administrator -->
             <div class="card mgmt-card">
-                <img loading="lazy" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Administrator" class="mgmt-img">
-                <h3>Brother Umar Farooq</h3>
-                <p class="mgmt-role">Chief Administrator</p>
-                <p>Handling student affairs, admissions, and facility management.</p>
+                <div class="mgmt-img-wrapper">
+                    <img loading="lazy" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80" alt="Brother Umar Farooq" class="mgmt-img">
+                </div>
+                <span class="mgmt-role">Chief Administrator</span>
+                <h3 class="mgmt-name">Brother Umar Farooq</h3>
+                <p style="color: var(--text-secondary); line-height: 1.7;">Managing student affairs, admissions, and ensuring the facility provides a serene environment for learning.</p>
             </div>
         </div>
     </section>
@@ -87,17 +129,33 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+                <h3>IDI Madrasa</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul style="line-height: 2;">
+                <ul class="footer-links">
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="hifz.html">Hifz Program</a></li>
+                    <li><a href="students.html">Student Life</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
                 </ul>
             </div>
             <div class="footer-section">
+                <h3>Information</h3>
+                <ul class="footer-links">
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="alumni.html">Our Alumni</a></li>
+                    <li><a href="result.html">Check Results</a></li>
+                    <li><a href="#">Admissions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-contact">
                 <h3>Contact</h3>
                 <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
                 <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
@@ -106,7 +164,7 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 

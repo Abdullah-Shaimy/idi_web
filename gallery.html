@@ -3,49 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery - Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="View our photo gallery.">
+    <title>Gallery | Institute of Da'wa Islamiyya</title>
+    <meta name="description" content="View glimpses of life and learning at the Institute of Da'wa Islamiyya. Our proud moments captured.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .page-header {
-            background-color: var(--primary-green-dark);
-            padding: 4rem 2rem;
-            text-align: center;
-            color: var(--bg-white);
-        }
         .gallery-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
         }
         .gallery-item {
             position: relative;
-            border-radius: 8px;
+            border-radius: var(--radius-md);
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             cursor: pointer;
+            aspect-ratio: 4/5;
+            box-shadow: var(--shadow-sm);
             transition: var(--transition);
         }
         .gallery-item:hover {
-            transform: scale(1.03);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
         }
         .gallery-img {
             width: 100%;
-            height: 250px;
+            height: 100%;
             object-fit: cover;
-            display: block;
+            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
-        .gallery-caption {
+        .gallery-item:hover .gallery-img {
+            transform: scale(1.1);
+        }
+        .gallery-overlay {
             position: absolute;
-            bottom: 0;
+            top: 0;
             left: 0;
             width: 100%;
-            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            height: 100%;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 2.5rem;
+            opacity: 0;
+            transition: var(--transition);
+        }
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+        .gallery-caption {
             color: white;
-            padding: 1.5rem 1rem 1rem;
-            transform: translateY(100%);
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            transform: translateY(20px);
             transition: var(--transition);
         }
         .gallery-item:hover .gallery-caption {
@@ -53,8 +64,9 @@
         }
         #loading {
             text-align: center;
-            padding: 3rem;
-            color: var(--text-light);
+            padding: 10rem 0;
+            font-size: 1.2rem;
+            color: var(--accent-emerald);
         }
     </style>
 </head>
@@ -63,10 +75,12 @@
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
-            </div>
-            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <a href="index.html" class="logo-container">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
@@ -79,13 +93,19 @@
         </div>
     </header>
 
-    <div class="page-header">
-        <h1>Photo Gallery</h1>
-        <p>Glimpses of life at the Institute</p>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" style="height: 60vh; min-height: 500px; background: url('https://images.unsplash.com/photo-1564769625905-50e93615e769?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="subtitle">Moments Captured</span>
+            <h1>Our Gallery</h1>
+            <p>Glimpses of life, learning, and spiritual growth at the Institute.</p>
+        </div>
+    </section>
 
+    <!-- Gallery Grid -->
     <section class="section-container">
-        <div id="loading"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br>Loading Gallery...</div>
+        <div id="loading"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Unfolding Memories...</div>
         <div class="gallery-grid" id="gallery-grid">
             <!-- Images will be populated here via JS -->
         </div>
@@ -95,17 +115,33 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+                <h3>IDI Madrasa</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul style="line-height: 2;">
+                <ul class="footer-links">
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="hifz.html">Hifz Program</a></li>
+                    <li><a href="students.html">Student Life</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
                 </ul>
             </div>
             <div class="footer-section">
+                <h3>Information</h3>
+                <ul class="footer-links">
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="alumni.html">Our Alumni</a></li>
+                    <li><a href="result.html">Check Results</a></li>
+                    <li><a href="#">Admissions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-contact">
                 <h3>Contact</h3>
                 <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
                 <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
@@ -114,7 +150,7 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
@@ -133,8 +169,8 @@
                         item.className = 'gallery-item';
                         item.innerHTML = `
                             <img loading="lazy" src="${imgData.src}" alt="${imgData.caption}" class="gallery-img">
-                            <div class="gallery-caption">
-                                <p>${imgData.caption}</p>
+                            <div class="gallery-overlay">
+                                <p class="gallery-caption">${imgData.caption}</p>
                             </div>
                         `;
                         grid.appendChild(item);

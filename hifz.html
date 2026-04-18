@@ -3,45 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hifz Program - Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="Details of our rigorous and spiritual Hifz program.">
+    <title>Hifz Program | Institute of Da'wa Islamiyya</title>
+    <meta name="description" content="Explore our comprehensive Tahfeez-ul-Quran program. A systematic approach to memorizing the Holy Quran.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .page-header {
-            background: linear-gradient(rgba(8, 61, 42, 0.85), rgba(8, 61, 42, 0.85)), url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Quran_with_Rehal.jpg/1280px-Quran_with_Rehal.jpg') center/cover;
-            padding: 5rem 2rem;
-            text-align: center;
-            color: var(--bg-white);
-        }
-        .info-list {
-            list-style: none;
-            padding-left: 0;
-        }
-        .info-list li {
-            position: relative;
-            padding-left: 2rem;
-            margin-bottom: 1rem;
-        }
-        .info-list li::before {
-            content: '\f00c';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            left: 0;
-            color: var(--secondary-gold);
-        }
-    </style>
 </head>
 <body>
 
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
-            </div>
-            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <a href="index.html" class="logo-container">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
@@ -54,33 +31,76 @@
         </div>
     </header>
 
-    <div class="page-header">
-        <h1>Tahfeez-ul-Quran Program</h1>
-        <p>A systematic and spiritual approach to memorizing the Holy Quran.</p>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" style="height: 60vh; min-height: 500px; background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/14/Quran_with_Rehal.jpg/1280px-Quran_with_Rehal.jpg') center/cover;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="subtitle">Our Program</span>
+            <h1>Tahfeez-ul-Quran</h1>
+            <p>A systematic and spiritual approach to memorizing the Holy Quran with perfect Tajweed.</p>
+        </div>
+    </section>
 
+    <!-- Curriculum -->
     <section class="section-container">
+        <div class="section-title-wrapper">
+            <span class="subtitle">The Journey</span>
+            <h2 class="section-title">Our Curriculum</h2>
+        </div>
         <div class="grid-container">
-            <div class="card" style="padding: 2rem; border-bottom: none;">
-                <h2>Curriculum Highlights</h2>
-                <ul class="info-list" style="margin-top: 1.5rem;">
-                    <li>Complete memorization of 30 Juz with proper Tajweed.</li>
-                    <li>Daily revision (Dour) to solidify memorized portions.</li>
-                    <li>Weekly tests to monitor progress.</li>
-                    <li>Basic Islamic Fiqh and Aqaid integration.</li>
-                    <li>Tarbiyah sessions focusing on Sunnah and Adab.</li>
-                </ul>
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-star-and-crescent"></i></div>
+                <h3 class="card-title">Nazira & Tajweed</h3>
+                <p class="card-text">Developing fluent reading with precise articulation (Makharij) and understanding the rules of Tajweed before starting memorization.</p>
             </div>
-            <div class="card" style="padding: 2rem; border-bottom: none;">
-                <h2>Duration & Levels</h2>
-                <p>The standard duration for the Hifz program is 3 to 4 years, divided into several levels based on the student's capacity and progress:</p>
-                <ul class="info-list" style="margin-top: 1.5rem;">
-                    <li><strong>Nazira:</strong> Fluent reading focusing on Makharij.</li>
-                    <li><strong>Level 1 (Foundation):</strong> Memorization of the first 5 Juz.</li>
-                    <li><strong>Level 2 (Intermediate):</strong> Up to 15 Juz.</li>
-                    <li><strong>Level 3 (Advanced):</strong> Completion of 30 Juz.</li>
-                    <li><strong>Takmeel:</strong> Final revision and certification.</li>
-                </ul>
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-repeat"></i></div>
+                <h3 class="card-title">Daily Sabak & Dour</h3>
+                <p class="card-text">Students learn new portions (Sabak) daily and revise previously memorized parts (Dour) to ensure long-term retention.</p>
+            </div>
+            <div class="card">
+                <div class="card-icon"><i class="fa-solid fa-certificate"></i></div>
+                <h3 class="card-title">Takmeel & Revision</h3>
+                <p class="card-text">Final consolidation of the entire 30 Juz, followed by rigorous testing and certification as a Hafiz-ul-Quran.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Program Details -->
+    <section style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+        <div class="section-container">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 4rem;">
+                <div class="card" style="border: none; background: white; box-shadow: var(--shadow-sm);">
+                    <h3 style="font-size: 2rem; margin-bottom: 2rem; color: var(--accent-emerald);">Levels of Study</h3>
+                    <ul class="footer-links" style="color: var(--text-primary);">
+                        <li style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                            <span style="font-weight: 700; color: var(--accent-emerald);">01.</span>
+                            <div>
+                                <h4 style="margin-bottom: 0.5rem;">Foundation Level</h4>
+                                <p style="font-size: 0.95rem; color: var(--text-secondary);">Focus on the first 5 Juz and establishing a daily routine.</p>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                            <span style="font-weight: 700; color: var(--accent-emerald);">02.</span>
+                            <div>
+                                <h4 style="margin-bottom: 0.5rem;">Intermediate Level</h4>
+                                <p style="font-size: 0.95rem; color: var(--text-secondary);">Memorizing up to 15 Juz with increased focus on revision.</p>
+                            </div>
+                        </li>
+                        <li style="margin-bottom: 1.5rem; display: flex; gap: 1rem;">
+                            <span style="font-weight: 700; color: var(--accent-emerald);">03.</span>
+                            <div>
+                                <h4 style="margin-bottom: 0.5rem;">Advanced Level</h4>
+                                <p style="font-size: 0.95rem; color: var(--text-secondary);">Completion of the remaining 15 Juz and final consolidation.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div style="padding: 2rem;">
+                    <h3 style="font-size: 2rem; margin-bottom: 2rem; color: var(--accent-emerald);">A Typical Day</h3>
+                    <p style="margin-bottom: 2rem; color: var(--text-secondary);">Our schedule is designed to optimize focus during early morning hours while providing sufficient rest and spiritual reflection throughout the day.</p>
+                    <a href="students.html" class="btn btn-outline">View Daily Routine</a>
+                </div>
             </div>
         </div>
     </section>
@@ -89,17 +109,33 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+                <h3>IDI Madrasa</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul style="line-height: 2;">
+                <ul class="footer-links">
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="hifz.html">Hifz Program</a></li>
+                    <li><a href="students.html">Student Life</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
                 </ul>
             </div>
             <div class="footer-section">
+                <h3>Information</h3>
+                <ul class="footer-links">
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="alumni.html">Our Alumni</a></li>
+                    <li><a href="result.html">Check Results</a></li>
+                    <li><a href="#">Admissions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-contact">
                 <h3>Contact</h3>
                 <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
                 <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
@@ -108,7 +144,7 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 

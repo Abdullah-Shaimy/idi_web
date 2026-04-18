@@ -3,43 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alumni - Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="Meet our proud Hafiz alumni.">
+    <title>Alumni | Institute of Da'wa Islamiyya</title>
+    <meta name="description" content="Meet the proud graduates of our Hifz program. Torchbearers of the Quran across the globe.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .page-header {
-            background-color: var(--primary-green-dark);
-            padding: 4rem 2rem;
-            text-align: center;
-            color: var(--bg-white);
-        }
         .alumni-card {
             text-align: center;
-            padding: 2rem;
+            transition: var(--transition);
+        }
+        .alumni-img-wrapper {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 2rem;
+            position: relative;
+        }
+        .alumni-img-wrapper::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border: 1.5px solid var(--accent-gold);
+            border-radius: 50%;
+            opacity: 0.3;
         }
         .alumni-img {
-            width: 120px;
-            height: 120px;
+            width: 100%;
+            height: 100%;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto 1.5rem;
-            border: 3px solid var(--secondary-gold);
+            border: 5px solid white;
+            box-shadow: var(--shadow-sm);
         }
         .alumni-batch {
             display: inline-block;
-            background-color: var(--bg-light);
-            color: var(--primary-green);
-            padding: 4px 12px;
-            border-radius: 20px;
+            color: var(--accent-emerald);
             font-size: 0.85rem;
-            margin-bottom: 10px;
-            font-weight: 600;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+        .alumni-name {
+            font-family: var(--font-heading);
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
         }
         #loading {
             text-align: center;
-            padding: 3rem;
-            color: var(--text-light);
+            padding: 10rem 0;
+            color: var(--accent-emerald);
         }
     </style>
 </head>
@@ -48,10 +61,12 @@
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
-            </div>
-            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <a href="index.html" class="logo-container">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
@@ -64,13 +79,19 @@
         </div>
     </header>
 
-    <div class="page-header">
-        <h1>Our Proud Alumni</h1>
-        <p>Torchbearers of the Quran spreading light across the world.</p>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" style="height: 60vh; min-height: 500px; background: url('https://images.unsplash.com/photo-1523050335102-c325090ea232?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="subtitle">Our Graduates</span>
+            <h1>The Alumni</h1>
+            <p>Torchbearers of the Quran spreading light across the global community.</p>
+        </div>
+    </section>
 
+    <!-- Alumni Grid -->
     <section class="section-container">
-        <div id="loading"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br>Loading Alumni Data...</div>
+        <div id="loading"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Summoning the Graduates...</div>
         <div class="grid-container" id="alumni-grid">
             <!-- Data will be populated here via JS -->
         </div>
@@ -80,17 +101,33 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+                <h3>IDI Madrasa</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul style="line-height: 2;">
+                <ul class="footer-links">
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="hifz.html">Hifz Program</a></li>
+                    <li><a href="students.html">Student Life</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
                 </ul>
             </div>
             <div class="footer-section">
+                <h3>Information</h3>
+                <ul class="footer-links">
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="alumni.html">Our Alumni</a></li>
+                    <li><a href="result.html">Check Results</a></li>
+                    <li><a href="#">Admissions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-contact">
                 <h3>Contact</h3>
                 <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
                 <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
@@ -99,7 +136,7 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
@@ -112,15 +149,17 @@
                     const grid = document.getElementById('alumni-grid');
                     const loading = document.getElementById('loading');
                     loading.style.display = 'none';
-                    
+
                     data.forEach(alumnus => {
                         const card = document.createElement('div');
                         card.className = 'card alumni-card';
                         card.innerHTML = `
-                            <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='https://via.placeholder.com/120/cccccc/ffffff?text=User'">
-                            <h3>${alumnus.name}</h3>
+                            <div class="alumni-img-wrapper">
+                                <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='https://via.placeholder.com/150/f9f9f9/006d44?text=${alumnus.name.charAt(0)}'">
+                            </div>
                             <span class="alumni-batch">Batch of ${alumnus.batch}</span>
-                            <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">${alumnus.currentStatus}</p>
+                            <h3 class="alumni-name">${alumnus.name}</h3>
+                            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6;">${alumnus.currentStatus}</p>
                         `;
                         grid.appendChild(card);
                     });

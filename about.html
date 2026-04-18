@@ -3,41 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="Learn about the history and mission of our Hifz Madrasa.">
+    <title>About Us | Institute of Da'wa Islamiyya</title>
+    <meta name="description" content="Learn about the history and mission of the Institute of Da'wa Islamiyya.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        .about-header {
-            background: linear-gradient(rgba(8, 61, 42, 0.9), rgba(8, 61, 42, 0.9)), url('https://images.unsplash.com/photo-1585036156171-384164a8c675?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
-            padding: 6rem 2rem;
-            text-align: center;
-            color: white;
-        }
-        .content-block {
-            background: rgba(255, 255, 255, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            padding: 3rem;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.05);
-            margin-bottom: 2rem;
-        }
-        .content-block h2 {
-            margin-bottom: 1rem;
-        }
-    </style>
 </head>
 <body>
 
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
-            </div>
-            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <a href="index.html" class="logo-container">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
@@ -50,36 +31,42 @@
         </div>
     </header>
 
-    <div class="about-header">
-        <h1>About Our Institute</h1>
-        <p>A legacy of Quranic education and spiritual nurturing.</p>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" style="height: 60vh; min-height: 500px; background: url('https://images.unsplash.com/photo-1585036156171-384164a8c675?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="subtitle">Our Story</span>
+            <h1>About the Institute</h1>
+            <p>A journey of faith, dedication, and the pursuit of Quranic excellence.</p>
+        </div>
+    </section>
 
+    <!-- Mission & Vision -->
     <section class="section-container">
-        <div class="content-block">
-            <h2>Our History</h2>
-            <p>Established with the noble intention of preserving the words of Allah in the hearts of the believers, the Institute of Da'wa Islamiyya has been a beacon of light for years. We started with a small group of dedicated students and have since grown into a comprehensive institution for Hifz and Islamic sciences.</p>
-            <div style="margin-top: 1.5rem; text-align: center;">
-                <a href="management.html" class="btn btn-primary">Meet Our Management</a>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: start;">
+            <div>
+                <span class="subtitle" style="color: var(--accent-emerald);">Our Mission</span>
+                <h2 class="section-title" style="text-align: left; margin-top: 1rem; margin-bottom: 2rem;">Nurturing the Next Generation of Scholars</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">Founded with the vision of providing a serene and focused environment for Hifz, the Institute of Da'wa Islamiyya has been a beacon of light for students seeking to memorize the Holy Quran.</p>
+                <p style="color: var(--text-secondary);">We believe that Hifz is not just about memorization, but about building a deep, spiritual connection with the words of Allah (SWT) and implementing them in daily life through refined Akhlaq.</p>
+                <div style="margin-top: 3rem;">
+                    <a href="management.html" class="btn btn-outline">Meet Our Leadership</a>
+                </div>
             </div>
-        </div>
-
-        <div class="grid-container">
-            <div class="content-block">
-                <h2>Our Mission</h2>
-                <p>To produce Huffaz who are not only fluent in the recitation and memorization of the Quran but who also embody its teachings in their character and daily lives.</p>
+            <div style="background-color: var(--bg-secondary); padding: 4rem; border-radius: var(--radius-lg); border: 1px solid var(--border-light);">
+                <div style="margin-bottom: 3rem;">
+                    <h3 style="font-size: 1.8rem; color: var(--accent-emerald); margin-bottom: 1rem;">Our Vision</h3>
+                    <p style="color: var(--text-secondary);">To be a world-class center for Quranic education that produces scholars who are not only Huffaz but also embodiments of Islamic character and wisdom.</p>
+                </div>
+                <div>
+                    <h3 style="font-size: 1.8rem; color: var(--accent-emerald); margin-bottom: 1rem;">Core Values</h3>
+                    <ul class="footer-links" style="color: var(--text-primary);">
+                        <li style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-emerald);"></i> Sincerity (Ikhlas)</li>
+                        <li style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-emerald);"></i> Excellence (Ihsan)</li>
+                        <li style="margin-bottom: 0.8rem; display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-circle-check" style="color: var(--accent-emerald);"></i> Discipline (Adab)</li>
+                    </ul>
+                </div>
             </div>
-            <div class="content-block">
-                <h2>Our Vision</h2>
-                <p>To be recognized globally as a premier institution of Islamic education, fostering an environment where tradition meets contemporary understanding.</p>
-            </div>
-        </div>
-
-        <div class="content-block">
-            <h2>Founder's Message</h2>
-            <p style="font-style: italic; border-left: 4px solid var(--secondary-gold); padding-left: 1rem; color: var(--text-light);">
-                "The best among you are those who learn the Quran and teach it. Our aim is to facilitate this noble journey for the upcoming generation, ensuring they become torchbearers of truth and compassion in society."
-            </p>
         </div>
     </section>
 
@@ -87,17 +74,33 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+                <h3>IDI Madrasa</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul style="line-height: 2;">
+                <ul class="footer-links">
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="hifz.html">Hifz Program</a></li>
+                    <li><a href="students.html">Student Life</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
                 </ul>
             </div>
             <div class="footer-section">
+                <h3>Information</h3>
+                <ul class="footer-links">
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="alumni.html">Our Alumni</a></li>
+                    <li><a href="result.html">Check Results</a></li>
+                    <li><a href="#">Admissions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-contact">
                 <h3>Contact</h3>
                 <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
                 <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
@@ -106,7 +109,7 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 

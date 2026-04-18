@@ -3,74 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Life - Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="Discover the daily routine and student life at our Madrasa.">
+    <title>Student Life | Institute of Da'wa Islamiyya</title>
+    <meta name="description" content="Explore the daily routine and spiritual environment for students at our Institute.">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .page-header {
-            background-color: var(--primary-green-dark);
-            padding: 4rem 2rem;
-            text-align: center;
-            color: var(--bg-white);
-        }
-        .timeline {
+        .timeline-wrapper {
             position: relative;
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 900px;
+            margin: 4rem auto;
+            padding: 2rem 0;
         }
-        .timeline::after {
+        .timeline-wrapper::before {
             content: '';
             position: absolute;
-            width: 4px;
-            background-color: var(--secondary-gold);
+            left: 50%;
             top: 0;
             bottom: 0;
-            left: 50%;
-            margin-left: -2px;
+            width: 2px;
+            background: linear-gradient(to bottom, transparent, var(--accent-emerald), transparent);
+            transform: translateX(-50%);
         }
-        .timeline-container {
-            padding: 10px 40px;
+        .timeline-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6rem;
+            width: 100%;
             position: relative;
-            background-color: inherit;
-            width: 50%;
         }
-        .timeline-container::after {
-            content: '';
+        .timeline-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+        .timeline-content {
+            width: 45%;
+            padding: 3rem;
+            background: white;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-light);
+            transition: var(--transition);
+        }
+        .timeline-item:hover .timeline-content {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--accent-emerald);
+        }
+        .timeline-dot {
             position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
             width: 20px;
             height: 20px;
-            right: -10px;
-            background-color: var(--bg-white);
-            border: 4px solid var(--secondary-gold);
-            top: 15px;
+            background: white;
+            border: 4px solid var(--accent-emerald);
             border-radius: 50%;
-            z-index: 1;
+            z-index: 2;
         }
-        .left { left: 0; }
-        .right { left: 50%; }
-        .right::after { left: -10px; }
-        .timeline-content {
-            padding: 20px;
-            background-color: white;
-            position: relative;
-            border-radius: 6px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        .time-label {
+            width: 45%;
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            color: var(--accent-gold);
+            text-align: right;
         }
-        .time-badge {
-            display: inline-block;
-            background-color: var(--primary-green);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            margin-bottom: 10px;
+        .timeline-item:nth-child(even) .time-label {
+            text-align: left;
         }
-        @media screen and (max-width: 600px) {
-            .timeline::after { left: 31px; }
-            .timeline-container { width: 100%; padding-left: 70px; padding-right: 25px; }
-            .timeline-container::after { left: 21px; }
-            .right { left: 0%; }
+        @media (max-width: 768px) {
+            .timeline-wrapper::before { left: 30px; }
+            .timeline-item, .timeline-item:nth-child(even) { flex-direction: column; align-items: flex-start; }
+            .timeline-content, .time-label { width: 100%; padding-left: 70px; text-align: left !important; }
+            .timeline-dot { left: 30px; }
+            .time-label { margin-bottom: 1rem; font-size: 1.5rem; }
         }
     </style>
 </head>
@@ -79,10 +84,12 @@
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
-            <div class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/50/115e3b/ffffff?text=IDI'">
-            </div>
-            <button class="mobile-menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <a href="index.html" class="logo-container">
+                <img loading="lazy" src="assets/images/idi_logo.png" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i class="fa-solid fa-bars-staggered"></i>
+            </button>
             <nav class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="about.html">About</a>
@@ -95,54 +102,71 @@
         </div>
     </header>
 
-    <div class="page-header">
-        <h1>Student Life</h1>
-        <p>A balanced environment of discipline, spirituality, and brotherhood.</p>
-    </div>
+    <!-- Hero Section -->
+    <section class="hero" style="height: 60vh; min-height: 500px; background: url('https://images.unsplash.com/photo-1584551246679-0daf3d275d0f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <span class="subtitle">Life at IDI</span>
+            <h1>Student Journey</h1>
+            <p>A balanced environment of discipline, spirituality, and brotherhood.</p>
+        </div>
+    </section>
 
+    <!-- Timeline Section -->
     <section class="section-container">
-        <h2 class="section-title">Daily Routine</h2>
-        <div class="timeline">
-            <div class="timeline-container left">
+        <div class="section-title-wrapper">
+            <span class="subtitle">Routine</span>
+            <h2 class="section-title">A Day of Devotion</h2>
+        </div>
+
+        <div class="timeline-wrapper">
+            <!-- Item 1 -->
+            <div class="timeline-item">
+                <div class="time-label">4:30 AM</div>
+                <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <span class="time-badge">4:30 AM</span>
-                    <h3>Tahajjud & Fajr</h3>
-                    <p>Students wake up for Tahajjud prayers followed by Fajr congregation and morning Adhkar.</p>
+                    <h3 style="margin-bottom: 1rem;">Tahajjud & Fajr</h3>
+                    <p style="color: var(--text-secondary);">The day begins with congregational Tahajjud and Fajr prayers, followed by morning Adhkar to set a spiritual tone.</p>
                 </div>
             </div>
-            <div class="timeline-container right">
+
+            <!-- Item 2 -->
+            <div class="timeline-item">
+                <div class="time-label">6:00 AM</div>
+                <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <span class="time-badge">6:00 AM</span>
-                    <h3>Sabaq (New Lesson)</h3>
-                    <p>Memorization of new portions of the Quran with teachers.</p>
+                    <h3 style="margin-bottom: 1rem;">Sabaq (New Lesson)</h3>
+                    <p style="color: var(--text-secondary);">Early morning focus is dedicated to memorizing new portions of the Quran with personalized teacher guidance.</p>
                 </div>
             </div>
-            <div class="timeline-container left">
+
+            <!-- Item 3 -->
+            <div class="timeline-item">
+                <div class="time-label">10:00 AM</div>
+                <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <span class="time-badge">8:30 AM</span>
-                    <h3>Breakfast & Rest</h3>
-                    <p>Nutritious breakfast and a short break to refresh.</p>
+                    <h3 style="margin-bottom: 1rem;">Revision Sessions</h3>
+                    <p style="color: var(--text-secondary);">Mid-morning hours are spent in 'Dour' (revision) to solidify previously memorized Juz and ensure retention.</p>
                 </div>
             </div>
-            <div class="timeline-container right">
+
+            <!-- Item 4 -->
+            <div class="timeline-item">
+                <div class="time-label">1:30 PM</div>
+                <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <span class="time-badge">10:00 AM</span>
-                    <h3>Sabqi & Manzil (Revision)</h3>
-                    <p>Revision of recent lessons and past Juz.</p>
+                    <h3 style="margin-bottom: 1rem;">Rest & Nutrition</h3>
+                    <p style="color: var(--text-secondary);">Zuhr prayer is followed by a nutritious lunch and a period of 'Qailulah' (midday nap) for physical recovery.</p>
                 </div>
             </div>
-            <div class="timeline-container left">
+
+            <!-- Item 5 -->
+            <div class="timeline-item">
+                <div class="time-label">4:30 PM</div>
+                <div class="timeline-dot"></div>
                 <div class="timeline-content">
-                    <span class="time-badge">1:00 PM</span>
-                    <h3>Zuhr & Lunch</h3>
-                    <p>Congregational prayer, followed by lunch and Qailulah (midday nap).</p>
-                </div>
-            </div>
-            <div class="timeline-container right">
-                <div class="timeline-content">
-                    <span class="time-badge">4:30 PM</span>
-                    <h3>Asr & Physical Activity</h3>
-                    <p>Asr prayer followed by sports and recreational activities.</p>
+                    <h3 style="margin-bottom: 1rem;">Physical Activity</h3>
+                    <p style="color: var(--text-secondary);">After Asr, students engage in recreational sports and physical activities to maintain a healthy body and mind.</p>
                 </div>
             </div>
         </div>
@@ -152,17 +176,33 @@
     <footer>
         <div class="footer-content">
             <div class="footer-section">
-                <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education.</p>
+                <h3>IDI Madrasa</h3>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
+                    <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-instagram"></i></a>
+                </div>
             </div>
             <div class="footer-section">
                 <h3>Quick Links</h3>
-                <ul style="line-height: 2;">
+                <ul class="footer-links">
                     <li><a href="about.html">About Us</a></li>
                     <li><a href="hifz.html">Hifz Program</a></li>
+                    <li><a href="students.html">Student Life</a></li>
+                    <li><a href="gallery.html">Gallery</a></li>
                 </ul>
             </div>
             <div class="footer-section">
+                <h3>Information</h3>
+                <ul class="footer-links">
+                    <li><a href="contact.html">Contact Us</a></li>
+                    <li><a href="alumni.html">Our Alumni</a></li>
+                    <li><a href="result.html">Check Results</a></li>
+                    <li><a href="#">Admissions</a></li>
+                </ul>
+            </div>
+            <div class="footer-section footer-contact">
                 <h3>Contact</h3>
                 <p><i class="fa-solid fa-location-dot"></i> 123 Madrasa Lane, City</p>
                 <p><i class="fa-solid fa-phone"></i> +1 234 567 890</p>
@@ -171,7 +211,7 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--secondary-gold);">Develop & Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: inherit;">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
