@@ -474,5 +474,27 @@
     "batch": "2020",
     "currentStatus": "From Sammanthurai",
     "image": "assets/images/placeholder-alumni.png"
+  },
+  {
+    "id": 69,
+    "name": "Al hafil. S. Ahamed Abdullah",
+    "batch": "Upcoming",
+    "currentStatus": "Ready for 11th Convocation",
+    "image": "assets/images/placeholder-alumni.png"
+  },
+  {
+    "id": 70,
+    "name": "Al hafil. M. Zaid Ahmed",
+    "batch": "Upcoming",
+    "currentStatus": "Ready for 11th Convocation",
+    "image": "assets/images/placeholder-alumni.png"
+  },
+  {
+    "id": 71,
+    "name": "Al hafil. K. Umar Farooq",
+    "batch": "Upcoming",
+    "currentStatus": "Ready for 11th Convocation",
+    "image": "assets/images/placeholder-alumni.png"
   }
 ]
+

@@ -768,3 +768,57 @@ footer {
         text-align: right;
     }
 }
+
+/* Alumni Filters */
+.alumni-filters {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 4rem;
+    padding: 0 1rem;
+}
+
+.filter-btn {
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    white-space: nowrap;
+}
+
+.filter-btn:hover {
+    border-color: var(--accent-gold);
+    color: var(--accent-gold);
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: var(--accent-emerald);
+    color: white;
+    border-color: var(--accent-emerald);
+    box-shadow: 0 4px 15px rgba(0, 109, 68, 0.2);
+}
+
+@media (max-width: 768px) {
+    .alumni-filters {
+        justify-content: flex-start;
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+    .alumni-filters::-webkit-scrollbar {
+        display: none;
+    }
+    .filter-btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.8rem;
+    }
+}

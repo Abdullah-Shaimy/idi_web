@@ -142,6 +142,21 @@
 
     <!-- Alumni Grid -->
     <section class="section-container">
+        <div class="alumni-filters" id="alumni-filters">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="1995">1st Convocation</button>
+            <button class="filter-btn" data-filter="1997">2nd Convocation</button>
+            <button class="filter-btn" data-filter="1998">3rd Convocation</button>
+            <button class="filter-btn" data-filter="1999">4th Convocation</button>
+            <button class="filter-btn" data-filter="2000">5th Convocation</button>
+            <button class="filter-btn" data-filter="2001">6th Convocation</button>
+            <button class="filter-btn" data-filter="2006">7th Convocation</button>
+            <button class="filter-btn" data-filter="2011">8th Convocation</button>
+            <button class="filter-btn" data-filter="2014">9th Convocation</button>
+            <button class="filter-btn" data-filter="2020">10th Convocation</button>
+            <button class="filter-btn" data-filter="Upcoming">Ready to Next</button>
+        </div>
+
         <div id="loading"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Summoning the Graduates...</div>
         <div class="grid-container" id="alumni-grid">
             <!-- Data will be populated here via JS -->
@@ -194,33 +209,60 @@
     <script src="js/main.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            let alumniData = [];
+            const grid = document.getElementById('alumni-grid');
+            const loading = document.getElementById('loading');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+
+            function renderAlumni(filter = 'all') {
+                grid.innerHTML = '';
+                const filteredData = filter === 'all' 
+                    ? alumniData 
+                    : alumniData.filter(a => a.batch === filter);
+
+                if (filteredData.length === 0) {
+                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">No graduates found for this category.</p>';
+                    return;
+                }
+
+                filteredData.forEach(alumnus => {
+                    const card = document.createElement('div');
+                    card.className = 'alumni-card';
+                    card.style.animation = 'fadeIn 0.5s ease forwards';
+                    card.innerHTML = `
+                        <div class="alumni-order-badge">${alumnus.id}</div>
+                        <div class="alumni-img-wrapper">
+                            <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='assets/images/placeholder-alumni.png'">
+                        </div>
+                        <span class="alumni-batch">${alumnus.batch === 'Upcoming' ? 'Ready to Next' : 'Convocation ' + alumnus.batch}</span>
+                        <h3 class="alumni-name">${alumnus.name}</h3>
+                        <p class="alumni-status">${alumnus.currentStatus}</p>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+
             fetch('data/alumni.json')
                 .then(response => response.json())
                 .then(data => {
-                    const grid = document.getElementById('alumni-grid');
-                    const loading = document.getElementById('loading');
+                    alumniData = data;
                     loading.style.display = 'none';
-
-                    data.forEach(alumnus => {
-                        const card = document.createElement('div');
-                        card.className = 'alumni-card';
-                        card.innerHTML = `
-                            <div class="alumni-order-badge">${alumnus.id}</div>
-                            <div class="alumni-img-wrapper">
-                                <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='assets/images/placeholder-alumni.png'">
-                            </div>
-                            <span class="alumni-batch">Batch of ${alumnus.batch}</span>
-                            <h3 class="alumni-name">${alumnus.name}</h3>
-                            <p class="alumni-status">${alumnus.currentStatus}</p>
-                        `;
-                        grid.appendChild(card);
-                    });
+                    renderAlumni();
                 })
                 .catch(error => {
                     console.error('Error loading alumni:', error);
-                    document.getElementById('loading').innerHTML = 'Failed to load alumni data.';
+                    loading.innerHTML = 'Failed to load alumni data.';
                 });
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderAlumni(btn.getAttribute('data-filter'));
+                });
+            });
         });
     </script>
+
 </body>
 </html>
