@@ -9,9 +9,11 @@
   --accent-emerald: #006d44;
   --accent-emerald-light: #008f5d;
   --accent-emerald-dark: #004d30;
+  --accent-emerald-faint: #f0f9f4;
 
   --accent-gold: #b8860b;
   --accent-gold-light: #daa520;
+  --accent-gold-faint: #fdf9f0;
 
   --text-primary: #1a1a1a;
   --text-secondary: #4a4a4a;
@@ -420,7 +422,7 @@ header.scrolled .mobile-menu-btn {
 }
 
 .card {
-  background: var(--bg-primary);
+  background: var(--accent-emerald-faint);
   border: 1px solid var(--border-light);
   border-radius: var(--radius-md);
   padding: 3rem;
@@ -428,6 +430,7 @@ header.scrolled .mobile-menu-btn {
   height: 100%;
   display: flex;
   flex-direction: column;
+  box-shadow: var(--shadow-sm);
 }
 
 .card:hover {
