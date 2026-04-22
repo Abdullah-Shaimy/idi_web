@@ -269,47 +269,62 @@
         @media print {
             @page {
                 size: A4 portrait;
-                margin: 0;
+                margin: 15mm;
             }
-            body { background: white; }
-            header, footer, .hero, .section-container, .btn, .subtitle, .mobile-menu-btn {
+            body { 
+                background: white; 
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            header, footer, .hero, .section-container, .btn, .subtitle, .mobile-menu-btn, .no-print {
                 display: none !important;
             }
             .result-display-card {
                 display: block !important;
-                margin: 0;
-                padding: 40px;
-                box-shadow: none;
-                border: none;
-                width: 100%;
-                max-width: none;
+                margin: 0 !important;
+                padding: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                width: 100% !important;
+                max-width: none !important;
+                animation: none !important;
+                page-break-inside: avoid;
             }
-            .print-only { display: block; }
+            .result-content {
+                padding: 1.5rem !important;
+            }
+            .official-header img {
+                max-height: 120px !important;
+                width: auto !important;
+                margin: 0 auto 10px !important;
+            }
             .result-header {
-                background: white !important;
-                color: black !important;
-                padding: 1rem 0 !important;
-                border-bottom: 2px solid #333;
+                background-color: var(--accent-emerald) !important;
+                color: white !important;
+                padding: 2rem !important;
+                border-bottom: 5px solid var(--accent-gold) !important;
             }
-            .result-header h2 { color: black !important; }
+            .result-header h2 {
+                color: white !important;
+            }
             .student-details-grid {
-                background: #f9f9f9 !important;
-                color: black !important;
-                border: 1px solid #eee;
+                background: rgba(255, 255, 255, 0.1) !important;
+                color: white !important;
+                border: none !important;
             }
             .marks-table th {
-                border-bottom: 2px solid #333 !important;
-                color: black !important;
+                border-bottom: 2px solid var(--accent-emerald) !important;
+                color: var(--text-primary) !important;
             }
             .summary-item {
-                background: #f9f9f9 !important;
-                border: 1px solid #eee;
+                background: var(--bg-secondary) !important;
+                border: 1px solid var(--border-light) !important;
             }
-            .summary-value { color: #000 !important; }
+            .summary-value { color: var(--accent-emerald) !important; }
             .status-pass {
-                border: 1px solid #000 !important;
-                color: #000 !important;
-                background: transparent !important;
+                background-color: var(--accent-emerald) !important;
+                color: white !important;
+                border: none !important;
             }
         }
 
