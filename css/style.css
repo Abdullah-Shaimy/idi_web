@@ -37,7 +37,7 @@
   --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.12);
 
   /* Spacing & Transitions */
-  --section-padding: 6rem 2rem;
+  --section-padding: 4rem 2rem;
   --radius-sm: 8px;
   --radius-md: 16px;
   --radius-lg: 32px;
@@ -47,7 +47,7 @@
 /* Responsive Root Overrides */
 @media (max-width: 768px) {
   :root {
-    --section-padding: 4rem 1.2rem;
+    --section-padding: 3rem 1.2rem;
   }
 }
 
@@ -317,6 +317,13 @@ header.scrolled .mobile-menu-btn {
   color: var(--text-on-dark);
   overflow: hidden;
   background-color: #000;
+}
+
+/* Subpage Hero Height Override */
+.hero[style*="min-height: 500px"] {
+  height: 50vh !important;
+  min-height: 450px !important;
+  padding-top: 80px !important;
 }
 
 .hero-slider,
