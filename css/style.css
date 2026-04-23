@@ -406,6 +406,7 @@ header.scrolled .mobile-menu-btn {
     flex-direction: column;
     gap: 1rem;
   }
+
   .hero-btns .btn {
     width: 100%;
     max-width: 300px;
@@ -623,209 +624,221 @@ footer {
 
 /* Marksheet Specific Styles */
 .student-details-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1.5rem;
-    margin-top: 2rem;
-    text-align: left;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2rem;
+  text-align: left;
 }
 
 .detail-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
 }
 
 .detail-label {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 0.8;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0.8;
 }
 
 .detail-value {
-    font-size: 1.1rem;
-    font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 600;
 }
 
-.print-header, .print-signatures, .print-date {
-    display: none;
+.print-header,
+.print-signatures,
+.print-date {
+  display: none;
 }
 
 /* Print Styles */
 @media print {
-    @page {
-        size: A4 portrait;
-        margin: 15mm;
-    }
+  @page {
+    size: A4 portrait;
+    margin: 15mm;
+  }
 
-    body {
-        background: white !important;
-        color: black !important;
-    }
+  body {
+    background: white !important;
+    color: black !important;
+  }
 
-    /* Hide non-essential UI */
-    header, footer, .hero, .result-search-card, .btn, .subtitle, .mobile-menu-btn {
-        display: none !important;
-    }
+  /* Hide non-essential UI */
+  header,
+  footer,
+  .hero,
+  .result-search-card,
+  .btn,
+  .subtitle,
+  .mobile-menu-btn {
+    display: none !important;
+  }
 
-    /* Show print elements */
-    .print-header, .print-signatures, .print-date {
-        display: block;
-    }
+  /* Show print elements */
+  .print-header,
+  .print-signatures,
+  .print-date {
+    display: block;
+  }
 
-    .result-display-card {
-        display: block !important;
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        border: 2px solid #eee !important;
-        border-radius: 0 !important;
-        width: 100% !important;
-        max-width: none !important;
-        animation: none !important;
-        print-color-adjust: exact;
-        -webkit-print-color-adjust: exact;
-    }
+  .result-display-card {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: 2px solid #eee !important;
+    border-radius: 0 !important;
+    width: 100% !important;
+    max-width: none !important;
+    animation: none !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
 
-    .result-header {
-        background-color: var(--accent-emerald) !important;
-        color: white !important;
-        padding: 2rem !important;
-        border-bottom: 5px solid var(--accent-gold) !important;
-    }
+  .result-header {
+    background-color: var(--accent-emerald) !important;
+    color: white !important;
+    padding: 2rem !important;
+    border-bottom: 5px solid var(--accent-gold) !important;
+  }
 
-    .result-content {
-        padding: 2rem !important;
-    }
+  .result-content {
+    padding: 2rem !important;
+  }
 
-    .print-header {
-        padding: 1rem 2rem;
-        border-bottom: 1px solid #eee;
-        margin-bottom: 1rem;
-    }
+  .print-header {
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 1rem;
+  }
 
-    .print-header-content {
-        display: flex;
-        align-items: center;
-        gap: 2rem;
-    }
+  .print-header-content {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+  }
 
-    .print-logo {
-        height: 80px;
-        width: auto;
-    }
+  .print-logo {
+    height: 80px;
+    width: auto;
+  }
 
-    .print-institute-details h1 {
-        font-size: 1.8rem;
-        margin-bottom: 0.2rem;
-        color: var(--accent-emerald) !important;
-    }
+  .print-institute-details h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.2rem;
+    color: var(--accent-emerald) !important;
+  }
 
-    .print-document-title {
-        font-weight: 700;
-        margin-top: 0.5rem;
-        letter-spacing: 2px;
-        color: var(--accent-gold) !important;
-    }
+  .print-document-title {
+    font-weight: 700;
+    margin-top: 0.5rem;
+    letter-spacing: 2px;
+    color: var(--accent-gold) !important;
+  }
 
-    .marks-table {
-        margin-bottom: 2rem !important;
-    }
+  .marks-table {
+    margin-bottom: 2rem !important;
+  }
 
-    .marks-table th {
-        background: #f8f9fa !important;
-        color: black !important;
-        border-bottom: 2px solid #333 !important;
-    }
+  .marks-table th {
+    background: #f8f9fa !important;
+    color: black !important;
+    border-bottom: 2px solid #333 !important;
+  }
 
-    .marks-table td {
-        border-bottom: 1px solid #eee !important;
-    }
+  .marks-table td {
+    border-bottom: 1px solid #eee !important;
+  }
 
-    .summary-grid {
-        border-top: 2px solid #eee !important;
-        margin-bottom: 3rem !important;
-    }
+  .summary-grid {
+    border-top: 2px solid #eee !important;
+    margin-bottom: 3rem !important;
+  }
 
-    .summary-value {
-        color: var(--accent-emerald) !important;
-    }
+  .summary-value {
+    color: var(--accent-emerald) !important;
+  }
 
-    .print-signatures {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 4rem;
-        text-align: center;
-    }
+  .print-signatures {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4rem;
+    text-align: center;
+  }
 
-    .signature-box {
-        width: 200px;
-    }
+  .signature-box {
+    width: 200px;
+  }
 
-    .signature-line {
-        border-top: 1px solid #333;
-        margin-bottom: 0.5rem;
-    }
+  .signature-line {
+    border-top: 1px solid #333;
+    margin-bottom: 0.5rem;
+  }
 
-    .print-date {
-        margin-top: 3rem;
-        font-size: 0.8rem;
-        color: #666;
-        text-align: right;
-    }
+  .print-date {
+    margin-top: 3rem;
+    font-size: 0.8rem;
+    color: #666;
+    text-align: right;
+  }
 }
 
 /* Alumni Filters */
 .alumni-filters {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 4rem;
-    padding: 0 1rem;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 4rem;
+  padding: 0 1rem;
 }
 
 .filter-btn {
-    padding: 0.8rem 1.5rem;
-    border-radius: 50px;
-    background: var(--bg-secondary);
-    border: 1px solid var(--border-light);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: var(--transition);
-    white-space: nowrap;
+  padding: 0.8rem 1.5rem;
+  border-radius: 50px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
 }
 
 .filter-btn:hover {
-    border-color: var(--accent-gold);
-    color: var(--accent-gold);
-    transform: translateY(-2px);
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  transform: translateY(-2px);
 }
 
 .filter-btn.active {
-    background: var(--accent-emerald);
-    color: white;
-    border-color: var(--accent-emerald);
-    box-shadow: 0 4px 15px rgba(0, 109, 68, 0.2);
+  background: var(--accent-emerald);
+  color: white;
+  border-color: var(--accent-emerald);
+  box-shadow: 0 4px 15px rgba(0, 109, 68, 0.2);
 }
 
 @media (max-width: 768px) {
-    .alumni-filters {
-        justify-content: flex-start;
-        overflow-x: auto;
-        flex-wrap: nowrap;
-        padding-bottom: 1rem;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-    }
-    .alumni-filters::-webkit-scrollbar {
-        display: none;
-    }
-    .filter-btn {
-        padding: 0.6rem 1.2rem;
-        font-size: 0.8rem;
-    }
+  .alumni-filters {
+    justify-content: flex-start;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .alumni-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .filter-btn {
+    padding: 0.6rem 1.2rem;
+    font-size: 0.8rem;
+  }
 }
