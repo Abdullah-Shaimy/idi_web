@@ -6,6 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Official Launch — Institute of Da'wa Islamiyya</title>
     <meta name="description" content="Official Website Launch of the Institute of Da'wa Islamiyya.">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; connect-src 'self'; form-action 'self' https://formsubmit.co; img-src 'self' data: https://images.unsplash.com https://upload.wikimedia.org; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; script-src 'self'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/webp" href="assets/images/idi_logo.webp">
     <link
         href="https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
@@ -497,7 +501,7 @@
     </style>
 </head>
 
-<body>
+<body class="content-protected" data-sensitive-page="true">
 
     <!-- BG layers -->
     <div class="bg"></div>
@@ -510,8 +514,7 @@
         <p class="bismillah">Bismillahir &bull; Rahmanir Rahim</p>
 
         <div class="logo-ring">
-            <img src="assets/images/idi_logo.webp" alt="IDI Logo"
-                onerror="this.src='https://via.placeholder.com/100/006d44/ffffff?text=IDI'">
+            <img src="assets/images/idi_logo.webp" alt="IDI Logo">
         </div>
 
         <h1 class="inst-name">Institute of Da'wa Islamiyya</h1>
@@ -563,120 +566,8 @@
         </div>
     </div>
 
-    <script>
-
-        /* Stars */
-        (function () {
-            const w = document.getElementById('stars');
-            for (let i = 0; i < 110; i++) {
-                const s = document.createElement('div'); s.className = 'star';
-                const sz = 1 + Math.random() * 1.5;
-                s.style.cssText = `left:${Math.random() * 100}%;top:${Math.random() * 100}%;
-            width:${sz}px;height:${sz}px;
-            --d:${2 + Math.random() * 4}s;--dl:${Math.random() * 5}s;`;
-                w.appendChild(s);
-            }
-        })();
-
-        /* Orbs */
-        (function () {
-            const w = document.getElementById('orbs');
-            const c = ['#006d44', '#b8860b', '#daa520', '#008f5d'];
-            for (let i = 0; i < 14; i++) {
-                const o = document.createElement('div'); o.className = 'orb';
-                const sz = 50 + Math.random() * 130;
-                o.style.cssText = `width:${sz}px;height:${sz}px;background:${c[i % c.length]};
-            left:${Math.random() * 100}%;top:${Math.random() * 100}%;
-            --d:${7 + Math.random() * 8}s;--dl:${Math.random() * 4}s;`;
-                w.appendChild(o);
-            }
-        })();
-
-        /* Date */
-        document.getElementById('launchDate').textContent =
-            new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-        /* ── Confetti ── */
-        const cv = document.getElementById('confetti-canvas');
-        const cx = cv.getContext('2d');
-        let pts = [], running = false, aid;
-        function resize() { cv.width = innerWidth; cv.height = innerHeight; }
-        resize(); window.addEventListener('resize', resize);
-
-        function rndCol() {
-            return ['#006d44', '#daa520', '#008f5d', '#b8860b', '#f5e6a3', '#fff', '#52d17c', '#ffd700'][Math.floor(Math.random() * 8)];
-        }
-        function burst(n = 160) {
-            for (let i = 0; i < n; i++) {
-                const a = Math.random() * Math.PI * 2, sp = 5 + Math.random() * 14;
-                pts.push({
-                    x: cv.width * (.2 + Math.random() * .6), y: cv.height * (.15 + Math.random() * .35),
-                    vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - (4 + Math.random() * 5),
-                    w: 5 + Math.random() * 8, h: 7 + Math.random() * 12,
-                    color: rndCol(), rot: Math.random() * 360, rs: (Math.random() - .5) * 9,
-                    alpha: 1, shape: Math.random() > .5 ? 'rect' : 'circle'
-                });
-            }
-        }
-        function drawPt(p) {
-            cx.save(); cx.globalAlpha = p.alpha; cx.fillStyle = p.color;
-            cx.translate(p.x, p.y); cx.rotate(p.rot * Math.PI / 180);
-            if (p.shape === 'rect') cx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-            else { cx.beginPath(); cx.arc(0, 0, p.w / 2, 0, Math.PI * 2); cx.fill(); }
-            cx.restore();
-        }
-        function tick() {
-            if (!running) return;
-            cx.clearRect(0, 0, cv.width, cv.height);
-            pts = pts.filter(p => p.alpha > .01);
-            pts.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += .3; p.vx *= .99; p.rot += p.rs; p.alpha -= .008; drawPt(p); });
-            if (pts.length) aid = requestAnimationFrame(tick);
-            else { running = false; cx.clearRect(0, 0, cv.width, cv.height); }
-        }
-        function startConfetti() {
-            if (aid) cancelAnimationFrame(aid);
-            pts = []; running = true;
-            burst(200); setTimeout(() => burst(150), 600); setTimeout(() => burst(120), 1300);
-            tick();
-        }
-        function stopConfetti() {
-            running = false; if (aid) cancelAnimationFrame(aid);
-            cx.clearRect(0, 0, cv.width, cv.height); pts = [];
-        }
-
-        /* Launch btn */
-        const btn = document.getElementById('launchBtn');
-        btn.addEventListener('click', function () {
-            this.innerHTML = `<i class="fa-solid fa-check"></i>&nbsp;Launched! 🌟`;
-            this.style.background = 'linear-gradient(135deg,#b8860b,#daa520)';
-            this.style.color = '#000'; this.disabled = true;
-            const cel = document.getElementById('celebration');
-            cel.classList.add('active'); cel.style.display = 'flex';
-            startConfetti();
-        });
-
-        /* Close */
-        function closeCel() {
-            const c = document.getElementById('celebration');
-            c.classList.remove('active'); c.style.display = 'none';
-            stopConfetti();
-        }
-        document.getElementById('closeCel').addEventListener('click', closeCel);
-        document.getElementById('celebration').addEventListener('click', function (e) { if (e.target === this) closeCel(); });
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCel(); });
-
-        /* Link fade-out */
-        document.addEventListener('click', function (e) {
-            const a = e.target.closest('a');
-            if (!a) return;
-            const href = a.getAttribute('href');
-            if (!href || a.target === '_blank' || href.startsWith('#') ||
-                href.startsWith('http') || href.startsWith('mailto:')) return;
-            e.preventDefault();
-            document.documentElement.style.opacity = '0';
-            setTimeout(() => { window.location.href = href; }, 350);
-        });
-    </script>
+    <script src="js/open.js"></script>
+    <script src="js/security.js"></script>
 </body>
 
 </html>

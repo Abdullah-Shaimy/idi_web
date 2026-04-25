@@ -495,6 +495,118 @@
     "batch": "Upcoming",
     "currentStatus": "From Sammanthurai",
     "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 72,
+    "name": "Al Hafil. Rm. Sharafath",
+    "batch": "Exam-New",
+    "currentStatus": "From Sainthamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 73,
+    "name": "Al Hafil. Tm. Mahees",
+    "batch": "Exam-New",
+    "currentStatus": "From Sainthamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 74,
+    "name": "Al Hafil. Mim. Lishnu Lisan",
+    "batch": "Exam-New",
+    "currentStatus": "From Sanithamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 75,
+    "name": "Al Hafil. Akm. Abdullah",
+    "batch": "Exam-New",
+    "currentStatus": "From Sanithamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 76,
+    "name": "Al Hafil. Arm. Aadhil",
+    "batch": "Exam-New",
+    "currentStatus": "From Sanithamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 77,
+    "name": "Al Hafil. Mfm. Fathhul Baari",
+    "batch": "Exam-New",
+    "currentStatus": "From Sanithamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 78,
+    "name": "Al Hafil. Mh. Ahnaf",
+    "batch": "Exam-New",
+    "currentStatus": "From Sanithamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 79,
+    "name": "Al Hafil. Ms. Abbath Izam",
+    "batch": "Exam-New",
+    "currentStatus": "From Ninthavur",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 80,
+    "name": "Al Hafil. Ms. Himan Rahmy",
+    "batch": "Exam-New",
+    "currentStatus": "From Ninthavur",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 81,
+    "name": "Al Hafil. Mrm. Haashif Rijaal",
+    "batch": "Exam-New",
+    "currentStatus": "From Sainthamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 82,
+    "name": "Al Hafil. Ar. Muhannath",
+    "batch": "Exam-New",
+    "currentStatus": "From Akkaraipattu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 83,
+    "name": "Al Hafil. Kns. Naamy",
+    "batch": "Exam-New",
+    "currentStatus": "From Sainthamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 84,
+    "name": "Al Hafil. Mi. Shuraif",
+    "batch": "Exam-New",
+    "currentStatus": "From Sammanthurai",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 85,
+    "name": "Al Hafil. Mhm. Ammar",
+    "batch": "Exam-New",
+    "currentStatus": "From Ninthavur",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 86,
+    "name": "Al Hafil. Mn. Almaas",
+    "batch": "Exam-New",
+    "currentStatus": "From Addalachenai",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 87,
+    "name": "Al Hafil. Mm. Saheel",
+    "batch": "Exam-New",
+    "currentStatus": "From Sammanthurai",
+    "image": "assets/images/alumni_profile.webp"
   }
 ]
 

@@ -7,6 +7,9 @@
     <title>Alumni | Institute of Da'wa Islamiyya</title>
     <meta name="description"
         content="Meet the proud graduates of our Hifz program. Torchbearers of the Quran across the globe.">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; connect-src 'self'; form-action 'self' https://formsubmit.co; img-src 'self' data: https://images.unsplash.com https://upload.wikimedia.org; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; script-src 'self'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/webp" href="assets/images/idi_logo.webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -125,14 +128,13 @@
     </style>
 </head>
 
-<body>
+<body class="content-protected" data-sensitive-page="true">
 
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.webp" alt="IDI Logo"
-                    onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+                <img loading="lazy" src="assets/images/idi_logo.webp" alt="IDI Logo">
             </a>
             <button class="mobile-menu-btn" aria-label="Toggle Menu">
                 <i class="fa-solid fa-bars-staggered"></i>
@@ -175,6 +177,7 @@
             <button class="filter-btn" data-filter="2014">9th Convocation</button>
             <button class="filter-btn" data-filter="2020">10th Convocation</button>
             <button class="filter-btn" data-filter="Upcoming">Ready to Upcoming</button>
+            <button class="filter-btn" data-filter="Exam-New">Preparing to Exam</button>
         </div>
 
         <div id="loading"><i class="fa-solid fa-spinner fa-spin fa-2x"></i><br><br>Summoning the Graduates...</div>
@@ -224,71 +227,14 @@
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
             <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a
-                    href="https://abdullahshaimy.lk" target="_blank"
+                    href="https://abdullahshaimy.lk" target="_blank" rel="noopener noreferrer"
                     style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let alumniData = [];
-            const grid = document.getElementById('alumni-grid');
-            const loading = document.getElementById('loading');
-            const filterBtns = document.querySelectorAll('.filter-btn');
-
-            function renderAlumni(filter = 'all') {
-                grid.innerHTML = '';
-                const filteredData = filter === 'all'
-                    ? alumniData
-                    : alumniData.filter(a => a.batch === filter);
-
-                if (filteredData.length === 0) {
-                    grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-muted);">No graduates found for this category.</p>';
-                    return;
-                }
-
-                filteredData.forEach(alumnus => {
-                    const card = document.createElement('div');
-                    card.className = 'alumni-card';
-                    card.style.animation = 'fadeIn 0.5s ease forwards';
-                    card.innerHTML = `
-                        <div class="alumni-order-badge">${alumnus.id}</div>
-                        <div class="alumni-img-wrapper">
-                            <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='assets/images/alumni_profile.webp'">
-                        </div>
-                        <div style="margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
-                            <span class="alumni-batch">${alumnus.batch === 'Upcoming' ? 'Ready to Upcoming' : 'Convocation ' + alumnus.batch}</span>
-                            ${alumnus.id > 68 ? '<span class="new-syllabus-badge">New Syllabus</span>' : ''}
-                        </div>
-                        <h3 class="alumni-name">${alumnus.name}</h3>
-                        <p class="alumni-status">${alumnus.currentStatus}</p>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
-
-            fetch('data/alumni.json')
-                .then(response => response.json())
-                .then(data => {
-                    alumniData = data;
-                    loading.style.display = 'none';
-                    renderAlumni();
-                })
-                .catch(error => {
-                    console.error('Error loading alumni:', error);
-                    loading.innerHTML = 'Failed to load alumni data.';
-                });
-
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    renderAlumni(btn.getAttribute('data-filter'));
-                });
-            });
-        });
-    </script>
+    <script src="js/alumni.js"></script>
+    <script src="js/security.js"></script>
 
 </body>
 

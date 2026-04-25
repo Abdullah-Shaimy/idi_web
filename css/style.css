@@ -70,6 +70,35 @@ body {
   overflow-x: hidden;
 }
 
+body.content-protected {
+  -webkit-touch-callout: none;
+}
+
+body.content-protected * {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+body.content-protected input,
+body.content-protected textarea,
+body.content-protected select,
+body.content-protected option,
+body.content-protected button,
+body.content-protected a,
+body.content-protected label {
+  -webkit-user-select: auto;
+  user-select: auto;
+}
+
+body.content-protected img {
+  -webkit-user-drag: none;
+  user-drag: none;
+}
+
+body.privacy-obscured > :not(.security-toast):not(.security-shield):not(.security-print-message):not(script):not(style) {
+  filter: blur(18px);
+}
+
 h1,
 h2,
 h3,
@@ -94,6 +123,84 @@ ul {
 img {
   max-width: 100%;
   display: block;
+}
+
+.security-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 1.5rem;
+  transform: translate(-50%, 120%);
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  background: rgba(4, 20, 12, 0.92);
+  color: white;
+  font-size: 0.9rem;
+  box-shadow: var(--shadow-md);
+  z-index: 11001;
+  opacity: 0;
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  pointer-events: none;
+  white-space: nowrap;
+  max-width: calc(100vw - 2rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.security-toast.visible {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.security-shield {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(2, 10, 5, 0.88);
+  backdrop-filter: blur(10px);
+  color: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 11000;
+  transition: opacity 0.2s ease;
+}
+
+.security-shield.active {
+  opacity: 1;
+}
+
+.security-shield p {
+  padding: 1rem 1.5rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.security-print-message {
+  display: none;
+}
+
+@media print {
+  body.print-protected > * {
+    display: none !important;
+  }
+
+  body.print-protected .security-print-message {
+    position: fixed;
+    inset: 0;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    background: white;
+    color: #111;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+  }
 }
 
 /* Layout Containers */

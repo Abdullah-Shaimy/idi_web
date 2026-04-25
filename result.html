@@ -7,6 +7,10 @@
     <title>Check Results | Institute of Da'wa Islamiyya</title>
     <meta name="description"
         content="Official result checking portal for students of the Institute of Da'wa Islamiyya.">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; connect-src 'self'; form-action 'self' https://formsubmit.co; img-src 'self' data: https://images.unsplash.com https://upload.wikimedia.org; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; script-src 'self'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <meta name="robots" content="noindex, nofollow, noarchive">
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/webp" href="assets/images/idi_logo.webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -263,6 +267,11 @@
             color: white;
         }
 
+        .status-fail {
+            background-color: #b42318;
+            color: white;
+        }
+
         /* Official Print Styles */
         .print-only { display: none; }
 
@@ -404,14 +413,13 @@
     </style>
 </head>
 
-<body>
+<body class="content-protected" data-sensitive-page="true" data-allow-print="true">
 
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.webp" alt="IDI Logo"
-                    onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+                <img loading="lazy" src="assets/images/idi_logo.webp" alt="IDI Logo">
             </a>
             <button class="mobile-menu-btn" aria-label="Toggle Menu">
                 <i class="fa-solid fa-bars-staggered"></i>
@@ -443,9 +451,9 @@
     <section class="section-container">
         <div class="result-search-card">
             <h2 style="margin-bottom: 3rem; text-align: center; font-family: var(--font-heading);">Student Inquiry</h2>
-            <form id="result-form">
+            <form id="result-form" autocomplete="off">
                 <div class="form-group">
-                    <input type="text" id="regNo" class="form-input" placeholder=" " required>
+                    <input type="text" id="regNo" class="form-input" placeholder=" " required autocomplete="off" spellcheck="false" autocapitalize="characters">
                     <label for="regNo" class="form-label">Registration Number</label>
                 </div>
                 <div class="responsive-grid" style="gap: 2rem; margin-bottom: 2rem;">
@@ -570,7 +578,7 @@
                 </div>
 
                 <div style="margin-top: 4rem; text-align: center;" class="no-print">
-                    <button onclick="window.print()" class="btn btn-primary"
+                    <button id="print-result-btn" type="button" class="btn btn-primary"
                         style="padding: 1rem 3rem; font-size: 1rem;"><i class="fa-solid fa-print"
                             style="margin-right: 12px;"></i> Print Official Marksheet</button>
                 </div>
@@ -619,127 +627,14 @@
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
             <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a
-                    href="https://abdullahshaimy.lk" target="_blank"
+                    href="https://abdullahshaimy.lk" target="_blank" rel="noopener noreferrer"
                     style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
-    <script>
-        // Custom Select Logic
-        function setupCustomSelect(groupId, displayId, itemsId, inputId) {
-            const group = document.getElementById(groupId);
-            const display = document.getElementById(displayId);
-            const items = document.getElementById(itemsId);
-            const input = document.getElementById(inputId);
-
-            display.addEventListener('click', (e) => {
-                e.stopPropagation();
-                closeAllSelects(display);
-                items.style.display = items.style.display === 'block' ? 'none' : 'block';
-                display.classList.toggle('select-arrow-active');
-            });
-
-            items.querySelectorAll('div').forEach(item => {
-                item.addEventListener('click', () => {
-                    const value = item.getAttribute('data-value');
-                    const text = item.textContent;
-                    display.textContent = text;
-                    input.value = value;
-                    items.style.display = 'none';
-                    display.classList.remove('select-arrow-active');
-                    group.classList.add('active');
-                });
-            });
-        }
-
-        function closeAllSelects(except) {
-            document.querySelectorAll('.select-items').forEach(item => {
-                if (item.previousElementSibling !== except) {
-                    item.style.display = 'none';
-                    item.previousElementSibling.classList.remove('select-arrow-active');
-                }
-            });
-        }
-
-        document.addEventListener('click', () => closeAllSelects());
-
-        setupCustomSelect('exam-group', 'exam-display', 'exam-items', 'exam');
-        setupCustomSelect('year-group', 'year-display', 'year-items', 'year');
-
-        // Form Submit Logic
-        document.getElementById('result-form').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const regNo = document.getElementById('regNo').value.trim().toUpperCase();
-            const exam = document.getElementById('exam').value;
-            const year = document.getElementById('year').value;
-
-            if (!exam || !year) {
-                alert("Please select both Examination and Academic Year");
-                return;
-            }
-
-            const errorMsg = document.getElementById('error-message');
-            const resultDisplay = document.getElementById('result-display');
-
-            errorMsg.style.display = 'none';
-            resultDisplay.style.display = 'none';
-
-            fetch('data/results.json')
-                .then(res => res.json())
-                .then(data => {
-                    const studentResult = data.find(r =>
-                        r.regNo.toUpperCase() === regNo &&
-                        r.exam === exam &&
-                        r.year === year
-                    );
-
-                    if (studentResult) {
-                        document.getElementById('student-name').textContent = studentResult.name;
-                        document.getElementById('student-reg').textContent = studentResult.regNo;
-                        document.getElementById('student-class').textContent = studentResult.class;
-                        document.getElementById('student-exam').textContent = studentResult.exam;
-                        document.getElementById('student-year').textContent = studentResult.year;
-                        document.getElementById('current-date').textContent = new Date().toLocaleDateString();
-
-                        const marksBody = document.getElementById('marks-body');
-                        marksBody.innerHTML = '';
-
-                        for (const [subject, mark] of Object.entries(studentResult.marks)) {
-                            marksBody.innerHTML += `
-                                <tr>
-                                    <td>${subject}</td>
-                                    <td style="text-align: center; color: var(--text-muted);">100</td>
-                                    <td style="text-align: right; font-weight: 600; color: var(--accent-emerald);">${mark}</td>
-                                </tr>
-                            `;
-                        }
-
-                        document.getElementById('student-total').textContent = studentResult.total;
-                        document.getElementById('student-grade').textContent = studentResult.grade;
-                        document.getElementById('student-status').textContent = studentResult.status;
-
-                        const statusBadge = document.getElementById('student-status');
-                        statusBadge.className = 'status-badge ' + (studentResult.status.toLowerCase() === 'pass' ? 'status-pass' : '');
-
-                        resultDisplay.style.display = 'block';
-                        resultDisplay.scrollIntoView({ behavior: 'smooth' });
-                    } else {
-                        errorMsg.style.display = 'block';
-                    }
-                })
-                .catch(err => {
-                    console.error(err);
-                    if (window.location.protocol === 'file:') {
-                        errorMsg.innerHTML = "<strong>Local File Access Blocked:</strong> To check results, this website must be run through a local server (e.g., Live Server in VS Code) or hosted online. Browsers block database access when opening files directly.";
-                    } else {
-                        errorMsg.textContent = "Error accessing result database. Please try again later.";
-                    }
-                    errorMsg.style.display = 'block';
-                });
-        });
-    </script>
+    <script src="js/result.js"></script>
+    <script src="js/security.js"></script>
 </body>
 
 </html>

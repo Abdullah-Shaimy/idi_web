@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gallery | Institute of Da'wa Islamiyya</title>
     <meta name="description" content="View glimpses of life and learning at the Institute of Da'wa Islamiyya. Our proud moments captured.">
-    <link rel="stylesheet" href="css/style.css">    <link rel="icon" type="image/webp" href="assets/images/idi_logo.webp">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; connect-src 'self'; form-action 'self' https://formsubmit.co; img-src 'self' data: https://images.unsplash.com https://upload.wikimedia.org; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; script-src 'self'; upgrade-insecure-requests">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/webp" href="assets/images/idi_logo.webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .gallery-grid {
@@ -96,13 +100,13 @@
         }
     </style>
 </head>
-<body>
+<body class="content-protected" data-sensitive-page="true">
 
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.webp" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+                <img loading="lazy" src="assets/images/idi_logo.webp" alt="IDI Logo">
             </a>
             <button class="mobile-menu-btn" aria-label="Toggle Menu">
                 <i class="fa-solid fa-bars-staggered"></i>
@@ -182,61 +186,12 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" rel="noopener noreferrer" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let galleryData = [];
-            const grid = document.getElementById('gallery-grid');
-            const loading = document.getElementById('loading');
-            const filterBtns = document.querySelectorAll('.filter-btn');
-
-            function renderGallery(filter = 'All') {
-                grid.innerHTML = '';
-                const filteredData = filter === 'All' 
-                    ? galleryData 
-                    : galleryData.filter(item => item.category === filter);
-
-                filteredData.forEach(imgData => {
-                    const item = document.createElement('div');
-                    item.className = 'gallery-item';
-                    item.innerHTML = `
-                        <img loading="lazy" src="${imgData.src}" alt="${imgData.caption}" class="gallery-img">
-                        <div class="gallery-overlay">
-                            <p class="gallery-caption">${imgData.caption}</p>
-                        </div>
-                    `;
-                    grid.appendChild(item);
-                });
-
-                if (filteredData.length === 0) {
-                    grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 4rem; color: var(--text-muted);">No images found in this category yet.</div>';
-                }
-            }
-
-            fetch('data/gallery.json')
-                .then(response => response.json())
-                .then(data => {
-                    galleryData = data;
-                    loading.style.display = 'none';
-                    renderGallery();
-                })
-                .catch(error => {
-                    console.error('Error loading gallery:', error);
-                    loading.innerHTML = 'Failed to load images.';
-                });
-
-            filterBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    filterBtns.forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                    renderGallery(btn.getAttribute('data-filter'));
-                });
-            });
-        });
-    </script>
+    <script src="js/gallery.js"></script>
+    <script src="js/security.js"></script>
 </body>
 </html>
