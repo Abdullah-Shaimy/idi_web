@@ -474,6 +474,27 @@
     "batch": "2020",
     "currentStatus": "From Sammanthurai",
     "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 69,
+    "name": "Al hafil. J. Abdullah Shaimy",
+    "batch": "Upcoming",
+    "currentStatus": "From Oluvil",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 70,
+    "name": "Al hafil. AJ. Mohamed Aajib",
+    "batch": "Upcoming",
+    "currentStatus": "From Sainthamaruthu",
+    "image": "assets/images/alumni_profile.webp"
+  },
+  {
+    "id": 71,
+    "name": "Al hafil. SM. Ahsan Shukry Mohamed",
+    "batch": "Upcoming",
+    "currentStatus": "From Sammanthurai",
+    "image": "assets/images/alumni_profile.webp"
   }
 ]
 

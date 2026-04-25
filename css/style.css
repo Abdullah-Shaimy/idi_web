@@ -439,6 +439,7 @@ header.scrolled .mobile-menu-btn {
   display: flex;
   flex-direction: column;
   box-shadow: var(--shadow-sm);
+  overflow: hidden;
 }
 
 .card:hover {
@@ -841,4 +842,25 @@ footer {
     padding: 0.6rem 1.2rem;
     font-size: 0.8rem;
   }
+}
+
+/* New Syllabus Ribbon - Premium Look */
+.new-syllabus-badge {
+  position: absolute;
+  top: 15px;
+  left: -48px;
+  width: 150px;
+  background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-light));
+  color: white;
+  font-size: 0.4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 4px 0;
+  transform: rotate(-45deg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  pointer-events: none;
+  text-align: center;
+  white-space: nowrap;
 }

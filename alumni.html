@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alumni | Institute of Da'wa Islamiyya</title>
-    <meta name="description" content="Meet the proud graduates of our Hifz program. Torchbearers of the Quran across the globe.">
-    <link rel="stylesheet" href="css/style.css">    <link rel="icon" type="image/webp" href="assets/images/idi_logo.webp">
+    <meta name="description"
+        content="Meet the proud graduates of our Hifz program. Torchbearers of the Quran across the globe.">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" type="image/webp" href="assets/images/idi_logo.webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         .alumni-card {
@@ -15,13 +18,17 @@
             padding: 2.5rem 1.5rem;
             border-radius: var(--radius-md);
             border: 1px solid var(--border-light);
-            position: relative; /* For order number badge */
+            position: relative;
+            /* For order number badge */
+            overflow: hidden;
         }
+
         .alumni-card:hover {
             border-color: var(--accent-gold);
             transform: translateY(-8px);
             box-shadow: var(--shadow-md);
         }
+
         .alumni-order-badge {
             position: absolute;
             top: 1rem;
@@ -39,17 +46,20 @@
             color: var(--text-muted);
             transition: var(--transition);
         }
+
         .alumni-card:hover .alumni-order-badge {
             background: var(--accent-gold);
             color: white;
             border-color: var(--accent-gold);
         }
+
         .alumni-img-wrapper {
             width: 130px;
             height: 130px;
             margin: 0 auto 1.5rem;
             position: relative;
         }
+
         .alumni-img-wrapper::after {
             content: '';
             position: absolute;
@@ -59,10 +69,12 @@
             opacity: 0.2;
             transition: var(--transition);
         }
+
         .alumni-card:hover .alumni-img-wrapper::after {
             opacity: 0.6;
             inset: -6px;
         }
+
         .alumni-img {
             width: 100%;
             height: 100%;
@@ -72,6 +84,7 @@
             box-shadow: var(--shadow-sm);
             background: var(--bg-secondary);
         }
+
         .alumni-batch {
             display: inline-block;
             color: var(--accent-emerald);
@@ -84,36 +97,42 @@
             background: rgba(0, 109, 68, 0.05);
             border-radius: 20px;
         }
+
         .alumni-name {
             font-family: var(--font-heading);
             font-size: 1.4rem;
             margin-bottom: 0.5rem;
             color: var(--text-primary);
         }
+
         .alumni-status {
             color: var(--text-secondary);
             font-size: 0.9rem;
             line-height: 1.5;
             opacity: 0.8;
         }
+
         #loading {
             text-align: center;
             padding: 10rem 0;
             color: var(--accent-emerald);
         }
+
         .grid-container {
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
             gap: 2rem;
         }
     </style>
 </head>
+
 <body>
 
     <!-- Header Navigation -->
     <header>
         <div class="nav-container">
             <a href="index.html" class="logo-container">
-                <img loading="lazy" src="assets/images/idi_logo.webp" alt="IDI Logo" onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
+                <img loading="lazy" src="assets/images/idi_logo.webp" alt="IDI Logo"
+                    onerror="this.src='https://via.placeholder.com/60/006d44/ffffff?text=IDI'">
             </a>
             <button class="mobile-menu-btn" aria-label="Toggle Menu">
                 <i class="fa-solid fa-bars-staggered"></i>
@@ -131,7 +150,8 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" style="height: 60vh; min-height: 500px; background: url('https://images.unsplash.com/photo-1523050335102-c325090ea232?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
+    <section class="hero"
+        style="height: 60vh; min-height: 500px; background: url('https://images.unsplash.com/photo-1523050335102-c325090ea232?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;">
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <span class="subtitle">Our Graduates</span>
@@ -168,7 +188,8 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation
+                    of scholars.</p>
                 <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
                     <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
                     <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
@@ -202,7 +223,9 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a
+                    href="https://abdullahshaimy.lk" target="_blank"
+                    style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
@@ -216,8 +239,8 @@
 
             function renderAlumni(filter = 'all') {
                 grid.innerHTML = '';
-                const filteredData = filter === 'all' 
-                    ? alumniData 
+                const filteredData = filter === 'all'
+                    ? alumniData
                     : alumniData.filter(a => a.batch === filter);
 
                 if (filteredData.length === 0) {
@@ -234,7 +257,10 @@
                         <div class="alumni-img-wrapper">
                             <img loading="lazy" src="${alumnus.image}" alt="${alumnus.name}" class="alumni-img" onerror="this.src='assets/images/alumni_profile.webp'">
                         </div>
-                        <span class="alumni-batch">${alumnus.batch === 'Upcoming' ? 'Ready to Next' : 'Convocation ' + alumnus.batch}</span>
+                        <div style="margin-bottom: 0.5rem; display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
+                            <span class="alumni-batch">${alumnus.batch === 'Upcoming' ? 'Ready to Upcoming' : 'Convocation ' + alumnus.batch}</span>
+                            ${alumnus.id > 68 ? '<span class="new-syllabus-badge">New Syllabus</span>' : ''}
+                        </div>
                         <h3 class="alumni-name">${alumnus.name}</h3>
                         <p class="alumni-status">${alumnus.currentStatus}</p>
                     `;
@@ -265,4 +291,5 @@
     </script>
 
 </body>
+
 </html>
