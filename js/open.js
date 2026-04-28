@@ -6,9 +6,43 @@ document.addEventListener('DOMContentLoaded', () => {
     const celebration = document.getElementById('celebration');
     const closeCelebrationButton = document.getElementById('closeCel');
     const confettiCanvas = document.getElementById('confetti-canvas');
+    const i18n = window.IDI_I18N;
+    let launched = false;
 
     if (!starsContainer || !orbsContainer || !launchDate || !launchButton || !celebration || !closeCelebrationButton || !confettiCanvas) {
         return;
+    }
+
+    function getText(path, fallback) {
+        if (!i18n) {
+            return fallback;
+        }
+        return i18n.getText('pages.open.page.' + path, fallback) || fallback;
+    }
+
+    function updateLaunchDate() {
+        launchDate.textContent = new Date().toLocaleDateString(
+            i18n && i18n.getLanguage() === 'ta' ? 'ta-LK' : 'en-US',
+            {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            }
+        );
+    }
+
+    function renderLaunchButton() {
+        const label = launched ? getText('launched', 'Launched!') : getText('launch', 'Launch Website');
+        const iconClass = launched ? 'fa-solid fa-check' : 'fa-solid fa-rocket';
+        const pieces = [];
+
+        if (!launched) {
+            pieces.push('<span class="pulse-ring"></span>');
+        }
+
+        pieces.push('<i class="' + iconClass + '"></i> ' + label);
+        launchButton.innerHTML = pieces.join('');
+        launchButton.dataset.launched = launched ? 'true' : '';
     }
 
     for (let index = 0; index < 110; index += 1) {
@@ -47,11 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
         orbsContainer.appendChild(orb);
     }
 
-    launchDate.textContent = new Date().toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-    });
+    updateLaunchDate();
 
     const context = confettiCanvas.getContext('2d');
     let particles = [];
@@ -161,15 +191,11 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', resizeCanvas);
 
     launchButton.addEventListener('click', () => {
+        launched = true;
         launchButton.disabled = true;
         launchButton.style.background = 'linear-gradient(135deg,#b8860b,#daa520)';
         launchButton.style.color = '#000';
-        launchButton.replaceChildren();
-
-        const icon = document.createElement('i');
-        icon.className = 'fa-solid fa-check';
-        launchButton.appendChild(icon);
-        launchButton.appendChild(document.createTextNode(' Launched!'));
+        renderLaunchButton();
 
         celebration.classList.add('active');
         celebration.style.display = 'flex';
@@ -206,5 +232,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.setTimeout(() => {
             window.location.href = href;
         }, 350);
+    });
+
+    renderLaunchButton();
+
+    document.addEventListener('idi:languagechange', () => {
+        updateLaunchDate();
+        renderLaunchButton();
     });
 });

@@ -1,11 +1,31 @@
 document.addEventListener('DOMContentLoaded', () => {
     let galleryData = [];
+    let selectedFilter = 'All';
     const grid = document.getElementById('gallery-grid');
     const loading = document.getElementById('loading');
     const filterButtons = Array.from(document.querySelectorAll('.filter-btn'));
+    const i18n = window.IDI_I18N;
 
     if (!grid || !loading) {
         return;
+    }
+
+    function getText(path, fallback) {
+        if (!i18n) {
+            return fallback;
+        }
+        return i18n.getText('pages.gallery.' + path, fallback) || fallback;
+    }
+
+    function renderFilterLabels() {
+        filterButtons.forEach((button) => {
+            button.textContent = getText('filters.' + button.dataset.filter, button.textContent);
+        });
+    }
+
+    function updateLoadingMessage(message) {
+        const spinner = loading.querySelector('i');
+        loading.innerHTML = (spinner ? spinner.outerHTML + '<br><br>' : '') + message;
     }
 
     function createEmptyState(message) {
@@ -35,15 +55,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const caption = document.createElement('p');
         caption.className = 'gallery-caption';
-        caption.textContent = imageData.caption;
+        caption.textContent = getText('captions.' + imageData.id, imageData.caption);
         overlay.appendChild(caption);
 
+        image.alt = caption.textContent;
         item.appendChild(overlay);
         return item;
     }
 
     function renderGallery(filter) {
-        const selectedFilter = filter || 'All';
+        selectedFilter = filter || 'All';
         const filteredData = selectedFilter === 'All'
             ? galleryData
             : galleryData.filter((item) => item.category === selectedFilter);
@@ -51,7 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.replaceChildren();
 
         if (!filteredData.length) {
-            grid.appendChild(createEmptyState('No images found in this category yet.'));
+            grid.appendChild(createEmptyState(getText('empty', 'No images found in this category yet.')));
             return;
         }
 
@@ -76,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch((error) => {
             console.error('Error loading gallery:', error);
-            loading.textContent = 'Failed to load images.';
+            loading.textContent = getText('loadError', 'Failed to load images.');
         });
 
     filterButtons.forEach((button) => {
@@ -87,5 +108,19 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('active');
             renderGallery(button.dataset.filter);
         });
+    });
+
+    renderFilterLabels();
+    updateLoadingMessage(getText('loading', 'Unfolding Memories...'));
+
+    document.addEventListener('idi:languagechange', () => {
+        renderFilterLabels();
+
+        if (loading.style.display !== 'none') {
+            updateLoadingMessage(getText('loading', 'Unfolding Memories...'));
+            return;
+        }
+
+        renderGallery(selectedFilter);
     });
 });

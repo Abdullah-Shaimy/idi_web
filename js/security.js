@@ -1,5 +1,6 @@
 (function () {
     const NOTICE_DURATION_MS = 2200;
+    const SCREENSHOT_PROTECTION_ENABLED = false;
     let toastEl;
     let shieldEl;
     let printMessageEl;
@@ -115,7 +116,7 @@
     }
 
     function syncPrivacyState(isHidden) {
-        if (!document.body || document.body.dataset.sensitivePage !== 'true') {
+        if (!SCREENSHOT_PROTECTION_ENABLED || !document.body || document.body.dataset.sensitivePage !== 'true') {
             return;
         }
 
@@ -130,7 +131,7 @@
         const key = (event.key || '').toUpperCase();
         const hasCommandKey = event.ctrlKey || event.metaKey;
 
-        if (key === 'PRINTSCREEN') {
+        if (SCREENSHOT_PROTECTION_ENABLED && key === 'PRINTSCREEN') {
             blockAction(event, 'Screenshots are restricted on this page.', true);
             clearClipboard();
             return;
@@ -167,7 +168,7 @@
             return;
         }
 
-        if ((event.key || '').toUpperCase() === 'PRINTSCREEN') {
+        if (SCREENSHOT_PROTECTION_ENABLED && (event.key || '').toUpperCase() === 'PRINTSCREEN') {
             showShield('Screenshots are restricted on this page.');
             clearClipboard();
         }

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Noto+Sans+Tamil:wght@400;500;600;700&family=Noto+Serif+Tamil:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
   /* Colors - White Theme */
@@ -68,6 +68,208 @@ body {
   color: var(--text-primary);
   line-height: 1.7;
   overflow-x: hidden;
+}
+
+html[lang="ta"] body {
+  font-family: 'Noto Sans Tamil', var(--font-body);
+}
+
+html[lang="ta"] h1,
+html[lang="ta"] h2,
+html[lang="ta"] h3,
+html[lang="ta"] h4,
+html[lang="ta"] .font-heading,
+html[lang="ta"] .section-title,
+html[lang="ta"] .card-title,
+html[lang="ta"] .card-title-tamil,
+html[lang="ta"] .alumni-name,
+html[lang="ta"] .mgmt-name,
+html[lang="ta"] .inst-name,
+html[lang="ta"] .language-modal-title {
+  font-family: 'Noto Serif Tamil', var(--font-heading);
+  letter-spacing: 0;
+}
+
+html[lang="ta"] .subtitle,
+html[lang="ta"] .btn,
+html[lang="ta"] .tab-btn,
+html[lang="ta"] .lang-switch-btn,
+html[lang="ta"] .language-modal-btn,
+html[lang="ta"] .filter-btn,
+html[lang="ta"] .form-label {
+  letter-spacing: 0;
+}
+
+html[lang="ta"] .subtitle {
+  text-transform: none;
+  font-size: 1rem;
+  line-height: 1.55;
+}
+
+html[lang="ta"] .hero-content {
+  width: min(100%, 980px);
+  margin-top: 4rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+html[lang="ta"] .hero h1 {
+  font-family: 'Noto Serif Tamil', var(--font-heading);
+  font-size: clamp(2.1rem, 5vw, 3.75rem);
+  line-height: 1.5;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  text-wrap: balance;
+}
+
+html[lang="ta"] .hero h1 .hero-line {
+  white-space: nowrap;
+}
+
+html[lang="ta"] body[data-page="contact"] .hero h1 .hero-line {
+  white-space: normal;
+}
+
+html[lang="ta"] .hero p {
+  max-width: min(46rem, 100%);
+  margin-left: auto;
+  margin-right: auto;
+  font-size: clamp(0.98rem, 1.6vw, 1.08rem);
+  line-height: 1.75;
+  font-weight: 400;
+}
+
+html[lang="ta"] .hero-btns {
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+html[lang="ta"] body[data-page="about"] .hero-content,
+html[lang="ta"] body[data-page="index"] .hero-content,
+html[lang="ta"] body:not([data-page]) .hero-content,
+html[lang="ta"] body[data-page="contact"] .hero-content,
+html[lang="ta"] body[data-page="hifz"] .hero-content,
+html[lang="ta"] body[data-page="students"] .hero-content,
+html[lang="ta"] body[data-page="alumni"] .hero-content,
+html[lang="ta"] body[data-page="gallery"] .hero-content,
+html[lang="ta"] body[data-page="management"] .hero-content,
+html[lang="ta"] body[data-page="result"] .hero-content {
+  text-align: center;
+}
+
+html[lang="ta"] body[data-page="about"] .hero[style*="min-height: 500px"] h1,
+html[lang="ta"] body[data-page="hifz"] .hero[style*="min-height: 500px"] h1,
+html[lang="ta"] body[data-page="students"] .hero[style*="min-height: 500px"] h1,
+html[lang="ta"] body[data-page="alumni"] .hero[style*="min-height: 500px"] h1,
+html[lang="ta"] body[data-page="gallery"] .hero[style*="min-height: 500px"] h1,
+html[lang="ta"] body[data-page="management"] .hero[style*="min-height: 500px"] h1,
+html[lang="ta"] body[data-page="result"] .hero[style*="min-height: 500px"] h1 {
+  white-space: nowrap;
+  max-width: none;
+}
+
+html[lang="ta"] body[data-page="contact"] .hero[style*="min-height: 500px"] h1 {
+  white-space: normal;
+  max-width: 10ch;
+  text-align: center;
+}
+
+html[lang="ta"] .section-title,
+html[lang="ta"] .card-title,
+html[lang="ta"] .card-title-tamil,
+html[lang="ta"] .alumni-name,
+html[lang="ta"] .mgmt-name,
+html[lang="ta"] .inst-name,
+html[lang="ta"] .language-modal-title {
+  font-family: 'Noto Sans Tamil', var(--font-body);
+  line-height: 1.25;
+}
+
+html[lang="ta"] .section-title {
+  font-size: clamp(2.15rem, 4vw, 3rem);
+}
+
+html[lang="ta"] .card-title {
+  font-size: 1.55rem;
+}
+
+html[lang="ta"] .btn,
+html[lang="ta"] .tab-btn,
+html[lang="ta"] .filter-btn,
+html[lang="ta"] .lang-switch-btn,
+html[lang="ta"] .language-modal-btn,
+html[lang="ta"] .mobile-nav-links a {
+  text-transform: none;
+  line-height: 1.45;
+}
+
+html[lang="ta"] .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 2.2rem;
+  max-width: 100%;
+  white-space: normal;
+  text-align: center;
+}
+
+html[lang="ta"] .nav-links {
+  gap: 1rem;
+}
+
+html[lang="ta"] .nav-links a {
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+html[lang="ta"] .lang-switch-btn {
+  min-width: 5.2rem;
+}
+
+html[lang="ta"] .mobile-nav-links a {
+  font-size: 1.35rem;
+}
+
+html[lang="ta"] .card-text,
+html[lang="ta"] .goal-item p,
+html[lang="ta"] .alumni-status,
+html[lang="ta"] .footer-section p,
+html[lang="ta"] .footer-links a,
+html[lang="ta"] .timeline-item h3,
+html[lang="ta"] .timeline-item p,
+html[lang="ta"] .detail-value,
+html[lang="ta"] .detail-label,
+html[lang="ta"] .summary-label,
+html[lang="ta"] .language-modal-copy,
+html[lang="ta"] .language-modal-btn span,
+html[lang="ta"] .gallery-caption,
+html[lang="ta"] .form-label {
+  line-height: 1.75;
+}
+
+html[lang="ta"] .footer-contact p {
+  line-height: 1.8;
+}
+
+html[lang="ta"] .footer-section,
+html[lang="ta"] .footer-bottom {
+  text-align: left;
+}
+
+html[lang="ta"] .hero[style*="min-height: 500px"] h1 {
+  font-size: clamp(1.85rem, 4.4vw, 3.35rem);
+  max-width: 12ch;
+}
+
+html[lang="ta"] .hero[style*="min-height: 500px"] .hero-content {
+  width: min(100%, 900px);
+  margin-top: 3rem;
+}
+
+html[lang="ta"] .hero[style*="min-height: 500px"] p {
+  max-width: 42rem;
 }
 
 body.content-protected {
@@ -266,10 +468,11 @@ header.scrolled .mobile-menu-btn {
 }
 
 .nav-container {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   width: 100%;
+  gap: 1rem;
 }
 
 .logo-container img {
@@ -283,12 +486,11 @@ header.scrolled .logo-container img {
 }
 
 .nav-links {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
   gap: 2.5rem;
   align-items: center;
+  justify-content: center;
+  min-width: 0;
 }
 
 .nav-links a {
@@ -342,8 +544,57 @@ header.scrolled .nav-links a.active {
   /* Push to right */
 }
 
+.desktop-lang-switch {
+  justify-self: end;
+}
+
 header.scrolled .mobile-menu-btn {
   color: var(--text-primary);
+}
+
+.lang-switch {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem;
+  margin-left: auto;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  z-index: 2;
+}
+
+.lang-switch-btn {
+  border: none;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.lang-switch-btn.active {
+  background: rgba(255, 255, 255, 0.95);
+  color: var(--accent-emerald);
+}
+
+header.scrolled .lang-switch {
+  border-color: rgba(0, 0, 0, 0.08);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+header.scrolled .lang-switch-btn {
+  color: var(--text-secondary);
+}
+
+header.scrolled .lang-switch-btn.active {
+  background: var(--accent-emerald);
+  color: white;
 }
 
 /* Full Screen Mobile Menu */
@@ -412,6 +663,87 @@ header.scrolled .mobile-menu-btn {
   z-index: 2001;
 }
 
+.mobile-lang-switch-wrap {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.mobile-lang-switch-wrap .lang-switch {
+  margin-left: 0;
+}
+
+.language-modal {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(2, 10, 5, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 12000;
+}
+
+.language-modal.hidden {
+  display: none;
+}
+
+.language-modal-card {
+  width: min(460px, 100%);
+  padding: 2rem;
+  border-radius: 24px;
+  background: white;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+}
+
+.language-modal-title {
+  font-size: 2rem;
+  color: var(--accent-emerald);
+  margin-bottom: 0.75rem;
+}
+
+.language-modal-copy {
+  color: var(--text-secondary);
+  margin-bottom: 1.75rem;
+}
+
+.language-modal-actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.language-modal-btn {
+  border: 1px solid var(--border-light);
+  border-radius: 18px;
+  background: var(--bg-secondary);
+  padding: 1rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.language-modal-btn strong {
+  display: block;
+  font-size: 1rem;
+  color: var(--accent-emerald);
+  margin-bottom: 0.2rem;
+}
+
+.language-modal-btn span {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.language-modal-btn:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent-emerald);
+  box-shadow: var(--shadow-sm);
+}
+
 /* Hero Section */
 .hero {
   position: relative;
@@ -431,6 +763,10 @@ header.scrolled .mobile-menu-btn {
   height: 50vh !important;
   min-height: 450px !important;
   padding-top: 80px !important;
+}
+
+.hero h1 .hero-line {
+  display: block;
 }
 
 .hero-slider,
@@ -686,10 +1022,27 @@ footer {
   .nav-links a {
     font-size: 0.85rem;
   }
+
+  html[lang="ta"] .nav-links {
+    gap: 0.8rem;
+  }
+
+  html[lang="ta"] .nav-links a {
+    font-size: 0.72rem;
+  }
+
+  html[lang="ta"] .lang-switch-btn {
+    min-width: 4.8rem;
+    padding: 0.45rem 0.75rem;
+  }
 }
 
 @media (max-width: 1024px) {
   .nav-links {
+    display: none;
+  }
+
+  .desktop-lang-switch {
     display: none;
   }
 
@@ -711,6 +1064,190 @@ footer {
     font-size: 3rem;
   }
 
+  html[lang="ta"] .hero-content {
+    width: min(100%, 760px);
+    margin-top: 4.75rem;
+    margin-inline: auto;
+    padding-inline: 0.25rem;
+    text-align: center;
+  }
+
+  html[lang="ta"] .hero h1 {
+    font-size: clamp(1.85rem, 9.5vw, 2.9rem);
+    max-width: 10ch;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  html[lang="ta"] .hero h1 .hero-line {
+    white-space: normal;
+  }
+
+  html[lang="ta"] .subtitle {
+    font-size: 0.92rem;
+    line-height: 1.5;
+    letter-spacing: 0;
+    margin-bottom: 1rem;
+  }
+
+  html[lang="ta"] .hero p {
+    max-width: 34rem;
+    font-size: 0.98rem;
+    line-height: 1.75;
+    margin-bottom: 2rem;
+  }
+
+  html[lang="ta"] .section-title {
+    font-size: clamp(1.85rem, 8vw, 2.5rem);
+  }
+
+  html[lang="ta"] .btn {
+    width: min(100%, 320px);
+    max-width: 320px;
+    min-height: 56px;
+    padding: 0.95rem 1.35rem;
+  }
+
+  html[lang="ta"] .hero[style*="min-height: 500px"] h1 {
+    font-size: clamp(1.7rem, 8vw, 2.65rem);
+    max-width: 10ch;
+  }
+
+  html[lang="ta"] header {
+    top: 0.75rem;
+    width: calc(100% - 1rem);
+    padding: 0.65rem 1rem;
+    border-radius: 20px;
+  }
+
+  html[lang="ta"] header.scrolled {
+    top: 0.5rem;
+    padding: 0.55rem 1rem;
+  }
+
+  html[lang="ta"] .nav-container {
+    gap: 0.75rem;
+  }
+
+  html[lang="ta"] .logo-container img {
+    height: 48px;
+  }
+
+  html[lang="ta"] .mobile-menu-btn {
+    font-size: 1.5rem;
+  }
+
+  html[lang="ta"] .hero-btns {
+    width: 100%;
+    gap: 0.85rem;
+  }
+
+  html[lang="ta"] .hero-btns .btn {
+    width: min(100%, 320px);
+  }
+
+  html[lang="ta"] .section-title-wrapper {
+    margin-bottom: 3rem;
+  }
+
+  html[lang="ta"] .grid-container {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  html[lang="ta"] .card {
+    padding: 1.5rem;
+  }
+
+  html[lang="ta"] .card-title {
+    font-size: 1.35rem;
+    line-height: 1.35;
+  }
+
+  html[lang="ta"] .card-text,
+  html[lang="ta"] .goal-item p,
+  html[lang="ta"] .timeline-item p,
+  html[lang="ta"] .gallery-caption,
+  html[lang="ta"] .detail-value,
+  html[lang="ta"] .summary-value {
+    line-height: 1.7;
+  }
+
+  html[lang="ta"] .mobile-nav-links a {
+    font-size: 1.12rem;
+    padding: 0.65rem 0.8rem;
+  }
+
+  html[lang="ta"] .language-modal-title {
+    font-size: 1.65rem;
+  }
+
+  html[lang="ta"] .language-modal-copy {
+    font-size: 0.96rem;
+  }
+
+  html[lang="ta"] .contact-grid,
+  html[lang="ta"] .responsive-grid {
+    gap: 2rem;
+  }
+
+  html[lang="ta"] .contact-method {
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  html[lang="ta"] .method-icon {
+    width: 52px;
+    height: 52px;
+    font-size: 1rem;
+  }
+
+  html[lang="ta"] .form-card,
+  html[lang="ta"] .result-search-card,
+  html[lang="ta"] .result-content {
+    padding: 2rem 1.25rem;
+  }
+
+  html[lang="ta"] .form-input,
+  html[lang="ta"] .select-selected {
+    font-size: 1rem;
+  }
+
+  html[lang="ta"] .form-label,
+  html[lang="ta"] .detail-label,
+  html[lang="ta"] .summary-label,
+  html[lang="ta"] .marks-table th {
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  html[lang="ta"] .result-header {
+    padding: 1.5rem 1rem;
+  }
+
+  html[lang="ta"] .student-details-grid,
+  html[lang="ta"] .summary-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  html[lang="ta"] .marks-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  html[lang="ta"] .marks-table th,
+  html[lang="ta"] .marks-table td {
+    font-size: 0.92rem;
+  }
+
+  html[lang="ta"] .footer-section {
+    text-align: left;
+  }
+
   .footer-content {
     grid-template-columns: 1fr;
     gap: 3rem;
@@ -718,6 +1255,99 @@ footer {
 
   .card {
     padding: 2rem;
+  }
+
+  .language-modal-card {
+    padding: 1.5rem;
+  }
+
+  .language-modal-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  html[lang="ta"] header {
+    top: 0.5rem;
+    width: calc(100% - 0.75rem);
+    padding: 0.55rem 0.75rem;
+  }
+
+  html[lang="ta"] .logo-container img {
+    height: 42px;
+  }
+
+  html[lang="ta"] .lang-switch {
+    padding: 0.2rem;
+    gap: 0.15rem;
+  }
+
+  html[lang="ta"] .lang-switch-btn {
+    min-width: 4.35rem;
+    padding: 0.45rem 0.65rem;
+    font-size: 0.88rem;
+  }
+
+  html[lang="ta"] .hero-content {
+    margin-top: 4.2rem;
+  }
+
+  html[lang="ta"] .subtitle {
+    font-size: 0.85rem;
+    margin-bottom: 0.85rem;
+  }
+
+  html[lang="ta"] .hero h1 {
+    font-size: clamp(1.7rem, 10vw, 2.35rem);
+    max-width: 8.8ch;
+  }
+
+  html[lang="ta"] body[data-page="index"] .hero h1 {
+    max-width: 11ch;
+  }
+
+  html[lang="ta"] body[data-page="contact"] .hero h1 {
+    max-width: 8ch;
+  }
+
+  html[lang="ta"] .hero p {
+    font-size: 0.94rem;
+  }
+
+  html[lang="ta"] .section-title {
+    font-size: clamp(1.6rem, 9vw, 2.2rem);
+  }
+
+  html[lang="ta"] .mobile-nav-links {
+    gap: 0.75rem;
+  }
+
+  html[lang="ta"] .mobile-nav-links a {
+    font-size: 1.02rem;
+    padding: 0.55rem 0.45rem;
+  }
+
+  html[lang="ta"] .language-modal-card {
+    padding: 1.25rem;
+    border-radius: 18px;
+  }
+
+  html[lang="ta"] .language-modal-title {
+    font-size: 1.45rem;
+  }
+
+  html[lang="ta"] .language-modal-copy {
+    font-size: 0.92rem;
+  }
+
+  html[lang="ta"] .card {
+    padding: 1.25rem;
+  }
+
+  html[lang="ta"] .hero[style*="min-height: 500px"] {
+    min-height: 420px !important;
+    height: auto !important;
+    padding-bottom: 2rem !important;
   }
 }
 

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,13 +12,16 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="icon" type="image/webp" href="assets/images/idi_logo.webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@400;500;600;700;800&family=Arima+Madurai:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Mukta+Malar:wght@400;500;600;700;800&family=Arima+Madurai:wght@400;500;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         .tamil-text {
             font-family: 'Arima Madurai', cursive;
             line-height: 1.6;
             color: #1a1a1a;
         }
+
         .card-title-tamil {
             font-family: 'Arima Madurai', cursive;
             font-weight: 900;
@@ -25,10 +29,12 @@
             color: #004d30 !important;
             margin-bottom: 0.5rem;
         }
+
         .goal-list {
             list-style: none;
             padding: 0;
         }
+
         .goal-item {
             display: flex;
             align-items: flex-start;
@@ -41,17 +47,77 @@
             box-shadow: var(--shadow-sm);
             transition: var(--transition);
         }
+
         .goal-item:hover {
             transform: translateX(10px);
             box-shadow: var(--shadow-md);
         }
+
         .goal-icon {
             color: var(--accent-gold);
             font-size: 1.2rem;
             margin-top: 4px;
         }
+
+        .about-hero .hero-content {
+            margin-top: 2.25rem;
+        }
+
+        .about-hero .hero-btns {
+            margin-top: 1.5rem !important;
+        }
+
+        .about-hero .hero-content p {
+            margin-bottom: 0;
+        }
+
+        html[lang="ta"] .about-hero .hero-content {
+            margin-top: 1.5rem;
+            width: min(100%, 1100px);
+        }
+
+        html[lang="ta"] .about-hero h1 {
+            font-size: clamp(1.85rem, 4.2vw, 3.25rem);
+            line-height: 1.15;
+            max-width: none;
+            white-space: nowrap;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        html[lang="ta"] .about-hero p {
+            max-width: 44rem;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        html[lang="ta"] .about-hero .hero-btns {
+            margin-top: 1rem !important;
+        }
+
+        html[lang="ta"] .about-hero .btn {
+            max-width: 440px;
+        }
+
+        @media (max-width: 768px) {
+            .about-hero .hero-content {
+                margin-top: 3rem;
+            }
+
+            html[lang="ta"] .about-hero h1 {
+                font-size: clamp(1.65rem, 7.2vw, 2.35rem);
+                white-space: normal;
+            }
+
+            html[lang="ta"] .about-hero .hero-content {
+                margin-top: 2.5rem;
+                width: min(100%, 760px);
+            }
+        }
     </style>
 </head>
+
 <body class="content-protected" data-sensitive-page="true">
 
     <!-- Header Navigation -->
@@ -76,7 +142,8 @@
     </header>
 
     <!-- Hero Section -->
-    <section class="hero" style="height: 60vh; min-height: 500px; background: url('assets/images/about_hero.webp') center/cover;">
+    <section class="hero about-hero"
+        style="height: 60vh; min-height: 500px; background: url('assets/images/about_hero.webp') center/cover;">
         <div class="hero-overlay"></div>
         <div class="hero-content">
             <span class="subtitle">Our Story</span>
@@ -92,47 +159,73 @@
     <section class="section-container">
         <div class="grid-container" style="gap: 2rem;">
             <!-- Motto Card -->
-            <div class="card" style="text-align: center; border-top: 6px solid var(--accent-gold); padding: 3.5rem 2rem;">
-                <div class="card-icon" style="color: var(--accent-gold); background: rgba(196, 160, 82, 0.1);"><i class="fa-solid fa-quote-left"></i></div>
+            <div class="card"
+                style="text-align: center; border-top: 6px solid var(--accent-gold); padding: 3.5rem 2rem;">
+                <div class="card-icon" style="color: var(--accent-gold); background: rgba(196, 160, 82, 0.1);"><i
+                        class="fa-solid fa-quote-left"></i></div>
                 <h3 class="card-title-tamil">மகுட வாசகம்</h3>
-                <span class="subtitle" style="font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: var(--accent-gold);">(MOTTO)</span>
+                <span class="subtitle"
+                    style="font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: var(--accent-gold);">(MOTTO)</span>
                 <p class="tamil-text" style="margin-top: 2rem; font-size: 1.4rem; font-weight: 700;">அல்-குர்ஆனை மனனம் செய்வோம் அதனை பாதுகாப்போம்</p>
             </div>
 
             <!-- Vision Card -->
-            <div class="card" style="text-align: center; border-top: 6px solid var(--accent-emerald); padding: 3.5rem 2rem;">
-                <div class="card-icon" style="color: var(--accent-emerald); background: rgba(0, 109, 68, 0.1);"><i class="fa-solid fa-eye"></i></div>
+            <div class="card"
+                style="text-align: center; border-top: 6px solid var(--accent-emerald); padding: 3.5rem 2rem;">
+                <div class="card-icon" style="color: var(--accent-emerald); background: rgba(0, 109, 68, 0.1);"><i
+                        class="fa-solid fa-eye"></i></div>
                 <h3 class="card-title-tamil">தூர நோக்கு</h3>
-                <span class="subtitle" style="font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: var(--accent-emerald);">(VISION)</span>
-                <p class="tamil-text" style="margin-top: 2rem; font-size: 1.25rem; font-weight: 600;">அல்-குர்ஆனை சுமந்த பல்துறைசார் முன்மாதிரி ஆளுமைகளை உருவாக்கும் தனித்துவமான நிறுவனம்</p>
+                <span class="subtitle"
+                    style="font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: var(--accent-emerald);">(VISION)</span>
+                <p class="tamil-text" style="margin-top: 2rem; font-size: 1.25rem; font-weight: 600;">அல்-குர்ஆனை சுமந்த பல்துறைசார் முன்மாதிரி ஆளுமைகளை உருவாக்கும் தனித்துவமான கலாபீடம்</p>
             </div>
 
             <!-- Mission Card -->
-            <div class="card" style="text-align: center; border-top: 6px solid var(--accent-gold); padding: 3.5rem 2rem;">
-                <div class="card-icon" style="color: var(--accent-gold); background: rgba(196, 160, 82, 0.1);"><i class="fa-solid fa-bullseye"></i></div>
+            <div class="card"
+                style="text-align: center; border-top: 6px solid var(--accent-gold); padding: 3.5rem 2rem;">
+                <div class="card-icon" style="color: var(--accent-gold); background: rgba(196, 160, 82, 0.1);"><i
+                        class="fa-solid fa-bullseye"></i></div>
                 <h3 class="card-title-tamil">பணிக்கூற்று</h3>
-                <span class="subtitle" style="font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: var(--accent-gold);">(MISSION)</span>
+                <span class="subtitle"
+                    style="font-size: 0.9rem; letter-spacing: 3px; font-weight: 700; color: var(--accent-gold);">(MISSION)</span>
                 <p class="tamil-text" style="margin-top: 2rem; font-size: 1.15rem; font-weight: 500;">பொருத்தமான வழிமுறைகள் மூலம் எமது சமூகத்திற்கும் நாட்டிற்கும் பணிவிடைசெய்யக் கூடிய. அல் குர்ஆனை மனனம் செய்த நற்பண்புடைய ஒரு பரம்பரையை உருவாக்குதல்</p>
             </div>
         </div>
     </section>
 
     <!-- Detailed About Section -->
-    <section style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+    <section
+        style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
         <div class="section-container">
             <div class="responsive-grid">
                 <div>
                     <span class="subtitle" style="color: var(--accent-emerald);">Our Story</span>
-                    <h2 class="section-title" style="text-align: left; margin-top: 1rem; margin-bottom: 2rem;">A Legacy of Faith & Excellence</h2>
-                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Founded with a divine vision, the Institute of Da'wa Islamiyya has been a beacon of light for students seeking to memorize the Holy Quran while developing a character that reflects its teachings.</p>
-                    <p style="color: var(--text-secondary);">We believe that Hifz is not just about memorization, but about building a deep, spiritual connection with the words of Allah (SWT) and implementing them in daily life through refined Akhlaq and academic excellence.</p>
+                    <h2 class="section-title" style="text-align: left; margin-top: 1rem; margin-bottom: 2rem;">A Legacy
+                        of Faith & Excellence</h2>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">Founded with a divine vision, the
+                        Institute of Da'wa Islamiyya has been a beacon of light for students seeking to memorize the
+                        Holy Quran while developing a character that reflects its teachings.</p>
+                    <p style="color: var(--text-secondary);">We believe that Hifz is not just about memorization, but
+                        about building a deep, spiritual connection with the words of Allah (SWT) and implementing them
+                        in daily life through refined Akhlaq and academic excellence.</p>
                 </div>
-                <div style="background: white; padding: 3rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
-                    <h3 style="font-size: 1.5rem; color: var(--accent-emerald); margin-bottom: 2rem;">Our Core Values</h3>
+                <div
+                    style="background: white; padding: 3rem; border-radius: var(--radius-md); box-shadow: var(--shadow-sm);">
+                    <h3 style="font-size: 1.5rem; color: var(--accent-emerald); margin-bottom: 2rem;">Our Core Values
+                    </h3>
                     <ul class="footer-links" style="color: var(--text-primary);">
-                        <li style="margin-bottom: 1.2rem; display: flex; align-items: center; gap: 15px; font-weight: 500;"><i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i> Sincerity (Ikhlas)</li>
-                        <li style="margin-bottom: 1.2rem; display: flex; align-items: center; gap: 15px; font-weight: 500;"><i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i> Excellence (Ihsan)</li>
-                        <li style="margin-bottom: 1.2rem; display: flex; align-items: center; gap: 15px; font-weight: 500;"><i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i> Discipline (Adab)</li>
+                        <li
+                            style="margin-bottom: 1.2rem; display: flex; align-items: center; gap: 15px; font-weight: 500;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i> Sincerity
+                            (Ikhlas)</li>
+                        <li
+                            style="margin-bottom: 1.2rem; display: flex; align-items: center; gap: 15px; font-weight: 500;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i> Excellence
+                            (Ihsan)</li>
+                        <li
+                            style="margin-bottom: 1.2rem; display: flex; align-items: center; gap: 15px; font-weight: 500;">
+                            <i class="fa-solid fa-circle-check" style="color: var(--accent-gold);"></i> Discipline
+                            (Adab)</li>
                     </ul>
                 </div>
             </div>
@@ -140,36 +233,44 @@
     </section>
 
     <!-- Goals Section -->
-    <section class="section-container" style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
+    <section class="section-container"
+        style="background-color: var(--bg-secondary); border-top: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light);">
         <div class="section-title-wrapper">
             <h2 class="card-title-tamil" style="font-size: 3rem !important; text-align: center;">இலக்குகள்</h2>
-            <span class="subtitle" style="display: block; text-align: center; margin-bottom: 3rem; color: var(--accent-emerald); font-weight: 700;">(GOALS)</span>
+            <span class="subtitle"
+                style="display: block; text-align: center; margin-bottom: 3rem; color: var(--accent-emerald); font-weight: 700;">(GOALS)</span>
         </div>
         <div style="max-width: 900px; margin: 0 auto;">
             <ul class="goal-list">
                 <li class="goal-item">
                     <i class="fa-solid fa-star-and-crescent goal-icon"></i>
-                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">அல்-குர்ஆனை மனனம் செய்து அதற்கு பணிவிடை செய்யும் ஒரு பரம்பரையை உருவாக்கல்.</p>
+                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">அல்-குர்ஆனை மனனம் செய்து அதற்கு
+                        பணிவிடை செய்யும் ஒரு பரம்பரையை உருவாக்கல்.</p>
                 </li>
                 <li class="goal-item">
                     <i class="fa-solid fa-star-and-crescent goal-icon"></i>
-                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">அல்-குர்ஆனிய அறிவைப் பெற்ற பல்துறை சார்ந்த ஆளுமைகளை உருவாக்கல்.</p>
+                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">அல்-குர்ஆனிய அறிவைப் பெற்ற
+                        பல்துறை சார்ந்த ஆளுமைகளை உருவாக்கல்.</p>
                 </li>
                 <li class="goal-item">
                     <i class="fa-solid fa-star-and-crescent goal-icon"></i>
-                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">ஆன்மீக மற்றும் பண்பாட்டு ரீதியாக பயிற்றுவிக்கப்பட்ட ஆளுமைகளை உருவாக்கல்.</p>
+                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">ஆன்மீக மற்றும் பண்பாட்டு ரீதியாக
+                        பயிற்றுவிக்கப்பட்ட ஆளுமைகளை உருவாக்கல்.</p>
                 </li>
                 <li class="goal-item">
                     <i class="fa-solid fa-star-and-crescent goal-icon"></i>
-                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">நடுநிலைமை மற்றும் முழுமைத்தன்மை ஆகிய பண்புகளைஅடிப்படையாகக் கொண்டு இஸ்லாமிய சிந்தனையைப் பரப்புதல்.</p>
+                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">நடுநிலைமை மற்றும் முழுமைத்தன்மை
+                        ஆகிய பண்புகளைஅடிப்படையாகக் கொண்டு இஸ்லாமிய சிந்தனையைப் பரப்புதல்.</p>
                 </li>
                 <li class="goal-item">
                     <i class="fa-solid fa-star-and-crescent goal-icon"></i>
-                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">தீனுக்கும் சமூகத்திற்கும் நற்பணி புரியும் சாலிஹான பிரஜைகளை உருவாக்கல்.</p>
+                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">தீனுக்கும் சமூகத்திற்கும் நற்பணி
+                        புரியும் சாலிஹான பிரஜைகளை உருவாக்கல்.</p>
                 </li>
                 <li class="goal-item">
                     <i class="fa-solid fa-star-and-crescent goal-icon"></i>
-                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">இலங்கையின் பொதுக்கல்வியின் இலக்குகளை அடைந்து தேசிய தொழில் தகைமைகளை அடைவதற்கான வழிகாட்டல்.</p>
+                    <p class="tamil-text" style="font-size: 1.15rem; font-weight: 700;">இலங்கையின் பொதுக்கல்வியின்
+                        இலக்குகளை அடைந்து தேசிய தொழில் தகைமைகளை அடைவதற்கான வழிகாட்டல்.</p>
                 </li>
             </ul>
         </div>
@@ -180,7 +281,8 @@
         <div class="footer-content">
             <div class="footer-section">
                 <h3>INSTITUTE OF DA'WA ISLAMIYYA</h3>
-                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation of scholars.</p>
+                <p>A center of excellence for Quranic memorization and Islamic education, nurturing the next generation
+                    of scholars.</p>
                 <div class="social-links" style="margin-top: 2rem; display: flex; gap: 1.5rem; font-size: 1.2rem;">
                     <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-facebook"></i></a>
                     <a href="#" style="color: var(--accent-emerald);"><i class="fa-brands fa-twitter"></i></a>
@@ -214,11 +316,15 @@
         </div>
         <div class="footer-bottom">
             <p>&copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.</p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a href="https://abdullahshaimy.lk" target="_blank" rel="noopener noreferrer" style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">Designed by <a
+                    href="https://abdullahshaimy.lk" target="_blank" rel="noopener noreferrer"
+                    style="text-decoration: underline; color: var(--accent-emerald);">NanoVext</a></p>
         </div>
     </footer>
 
     <script src="js/main.js"></script>
+    <script src="js/i18n.js"></script>
     <script src="js/security.js"></script>
 </body>
+
 </html>

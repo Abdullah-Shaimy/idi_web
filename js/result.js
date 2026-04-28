@@ -4,10 +4,19 @@ document.addEventListener('DOMContentLoaded', () => {
     const errorMessage = document.getElementById('error-message');
     const marksBody = document.getElementById('marks-body');
     const printButton = document.getElementById('print-result-btn');
+    const i18n = window.IDI_I18N;
     let resultsCache = null;
+    let activeResult = null;
 
     if (!resultForm || !resultDisplay || !errorMessage || !marksBody) {
         return;
+    }
+
+    function getText(path, fallback) {
+        if (!i18n) {
+            return fallback;
+        }
+        return i18n.getText('pages.result.' + path, fallback) || fallback;
     }
 
     function showError(message, useHtml) {
@@ -65,6 +74,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function updateSelectCopy() {
+        const examInput = document.getElementById('exam');
+        const yearInput = document.getElementById('year');
+        const examDisplay = document.getElementById('exam-display');
+        const yearDisplay = document.getElementById('year-display');
+
+        const examItems = document.querySelectorAll('#exam-items div');
+        examItems.forEach((item) => {
+            item.textContent = i18n ? i18n.translateExam(item.dataset.value || '') : item.textContent;
+        });
+
+        if (examDisplay) {
+            examDisplay.textContent = examInput && examInput.value
+                ? (i18n ? i18n.translateExam(examInput.value) : examInput.value)
+                : getText('search.examPlaceholder', 'Select Exam');
+        }
+
+        if (yearDisplay) {
+            yearDisplay.textContent = yearInput && yearInput.value
+                ? yearInput.value
+                : getText('search.yearPlaceholder', 'Select Year');
+        }
+    }
+
     function buildMarksTable(marks) {
         marksBody.replaceChildren();
         const fragment = document.createDocumentFragment();
@@ -73,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('tr');
 
             const subjectCell = document.createElement('td');
-            subjectCell.textContent = subject;
+            subjectCell.textContent = i18n ? i18n.translateSubject(subject) : subject;
             row.appendChild(subjectCell);
 
             const maxMarksCell = document.createElement('td');
@@ -110,16 +143,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderStudentResult(studentResult) {
+        activeResult = studentResult;
         document.getElementById('student-name').textContent = studentResult.name;
         document.getElementById('student-reg').textContent = studentResult.regNo;
-        document.getElementById('student-class').textContent = studentResult.class;
-        document.getElementById('student-exam').textContent = studentResult.exam;
+        document.getElementById('student-class').textContent = i18n
+            ? i18n.translateClassName(studentResult.class)
+            : studentResult.class;
+        document.getElementById('student-exam').textContent = i18n
+            ? i18n.translateExam(studentResult.exam)
+            : studentResult.exam;
         document.getElementById('student-year').textContent = studentResult.year;
-        document.getElementById('current-date').textContent = new Date().toLocaleDateString('en-GB', {
+        document.getElementById('current-date').textContent = new Date().toLocaleDateString(
+            i18n && i18n.getLanguage() === 'ta' ? 'ta-LK' : 'en-GB',
+            {
             day: 'numeric',
             month: 'long',
             year: 'numeric',
-        });
+            }
+        );
 
         buildMarksTable(studentResult.marks);
 
@@ -128,7 +169,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const statusBadge = document.getElementById('student-status');
         const isPass = studentResult.status.toLowerCase() === 'pass';
-        statusBadge.textContent = studentResult.status;
+        statusBadge.textContent = isPass
+            ? getText('result.status.pass', 'Pass')
+            : getText('result.status.fail', 'Fail');
         statusBadge.className = 'status-badge ' + (isPass ? 'status-pass' : 'status-fail');
 
         resultDisplay.style.display = 'block';
@@ -151,9 +194,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         hideError();
         resultDisplay.style.display = 'none';
+        activeResult = null;
 
         if (!exam || !year) {
-            showError('Please select both Examination and Academic Year.');
+            showError(getText('search.selectBoth', 'Please select both Examination and Academic Year.'));
             return;
         }
 
@@ -166,7 +210,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (!studentResult) {
-                showError('No result was found for the provided details.');
+                showError(getText('search.notFound', 'No result was found for the provided details.'));
                 return;
             }
 
@@ -174,9 +218,9 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error(error);
             if (window.location.protocol === 'file:') {
-                showError('<strong>Local file access blocked:</strong> open the website through a local server or host it online so the result database can be read.', true);
+                showError(getText('search.localBlocked', '<strong>Local file access blocked:</strong> open the website through a local server or host it online so the result database can be read.'), true);
             } else {
-                showError('Error accessing result database. Please try again later.');
+                showError(getText('search.dbError', 'Error accessing result database. Please try again later.'));
             }
         }
     });
@@ -186,4 +230,14 @@ document.addEventListener('DOMContentLoaded', () => {
             window.print();
         });
     }
+
+    updateSelectCopy();
+
+    document.addEventListener('idi:languagechange', () => {
+        updateSelectCopy();
+
+        if (activeResult) {
+            renderStudentResult(activeResult);
+        }
+    });
 });

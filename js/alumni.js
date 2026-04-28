@@ -1,11 +1,50 @@
 document.addEventListener('DOMContentLoaded', () => {
     let alumniData = [];
+    let selectedFilter = 'all';
     const grid = document.getElementById('alumni-grid');
     const loading = document.getElementById('loading');
     const filterButtons = Array.from(document.querySelectorAll('.filter-btn'));
+    const i18n = window.IDI_I18N;
 
     if (!grid || !loading) {
         return;
+    }
+
+    function getText(path, fallback) {
+        if (!i18n) {
+            return fallback;
+        }
+        return i18n.getText('pages.alumni.' + path, fallback) || fallback;
+    }
+
+    function getBadgeLabel(batch) {
+        const language = i18n ? i18n.getLanguage() : 'en';
+
+        if (batch === 'Upcoming') {
+            return getText('badge.upcoming', 'Ready to Upcoming');
+        }
+
+        if (batch === 'Exam-New') {
+            return getText('badge.examNew', 'Preparing to Exam');
+        }
+
+        if (language === 'ta') {
+            return batch + ' ' + getText('badge.convocation', 'பட்டமளிப்பு');
+        }
+
+        return getText('badge.convocation', 'Convocation') + ' ' + batch;
+    }
+
+    function renderFilterLabels() {
+        filterButtons.forEach((button) => {
+            const filterKey = button.dataset.filter === 'all' ? 'all' : button.dataset.filter;
+            button.textContent = getText('filters.' + filterKey, button.textContent);
+        });
+    }
+
+    function updateLoadingMessage(message) {
+        const spinner = loading.querySelector('i');
+        loading.innerHTML = (spinner ? spinner.outerHTML + '<br><br>' : '') + message;
     }
 
     function createEmptyState(message) {
@@ -51,19 +90,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const batchBadge = document.createElement('span');
         batchBadge.className = 'alumni-batch';
-        if (alumnus.batch === 'Upcoming') {
-            batchBadge.textContent = 'Ready to Upcoming';
-        } else if (alumnus.batch === 'Exam-New') {
-            batchBadge.textContent = 'Preparing to Exam';
-        } else {
-            batchBadge.textContent = 'Convocation ' + alumnus.batch;
-        }
+        batchBadge.textContent = getBadgeLabel(alumnus.batch);
         badgeRow.appendChild(batchBadge);
 
         if (Number(alumnus.id) > 68) {
             const syllabusBadge = document.createElement('span');
             syllabusBadge.className = 'new-syllabus-badge';
-            syllabusBadge.textContent = 'New Syllabus';
+            syllabusBadge.textContent = getText('badge.newSyllabus', 'New Syllabus');
             badgeRow.appendChild(syllabusBadge);
         }
 
@@ -76,14 +109,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const status = document.createElement('p');
         status.className = 'alumni-status';
-        status.textContent = alumnus.currentStatus;
+        status.textContent = i18n ? i18n.formatOrigin(alumnus.currentStatus) : alumnus.currentStatus;
         card.appendChild(status);
 
         return card;
     }
 
     function renderAlumni(filter) {
-        const selectedFilter = filter || 'all';
+        selectedFilter = filter || 'all';
         const filteredData = selectedFilter === 'all'
             ? alumniData
             : alumniData.filter((alumnus) => alumnus.batch === selectedFilter);
@@ -91,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
         grid.replaceChildren();
 
         if (!filteredData.length) {
-            grid.appendChild(createEmptyState('No graduates found for this category.'));
+            grid.appendChild(createEmptyState(getText('empty', 'No graduates found for this category.')));
             return;
         }
 
@@ -116,7 +149,7 @@ document.addEventListener('DOMContentLoaded', () => {
         })
         .catch((error) => {
             console.error('Error loading alumni:', error);
-            loading.textContent = 'Failed to load alumni data.';
+            loading.textContent = getText('loadError', 'Failed to load alumni data.');
         });
 
     filterButtons.forEach((button) => {
@@ -127,5 +160,19 @@ document.addEventListener('DOMContentLoaded', () => {
             button.classList.add('active');
             renderAlumni(button.dataset.filter);
         });
+    });
+
+    renderFilterLabels();
+    updateLoadingMessage(getText('loading', 'Summoning the Graduates...'));
+
+    document.addEventListener('idi:languagechange', () => {
+        renderFilterLabels();
+
+        if (loading.style.display !== 'none') {
+            updateLoadingMessage(getText('loading', 'Summoning the Graduates...'));
+            return;
+        }
+
+        renderAlumni(selectedFilter);
     });
 });
