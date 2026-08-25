@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Institute of Da'wa Islamiyya</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; img-src 'self' data: blob: https://images.unsplash.com https://upload.wikimedia.org https://*.supabase.co; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; upgrade-insecure-requests">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="icon" type="image/webp" href="../assets/images/idi_logo.webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <!-- Top Admin Navbar -->
+    <header class="admin-navbar">
+        <a href="dashboard.html" class="admin-brand">
+            <img src="../assets/images/idi_logo.webp" alt="IDI Logo">
+            <div class="admin-brand-text">
+                <h2>Institute of Da'wa Islamiyya</h2>
+                <span>Gallery Admin Portal</span>
+            </div>
+        </a>
+
+        <div class="admin-nav-actions">
+            <a href="../gallery.html" target="_blank" class="btn btn-secondary btn-sm" title="View Public Gallery">
+                <i class="fa-solid fa-arrow-up-right-from-square"></i> Public Website
+            </a>
+            <div class="admin-user-badge" id="admin-user-badge">
+                <div class="admin-user-avatar" id="admin-user-avatar">A</div>
+                <span id="admin-user-email">admin@idi.edu</span>
+            </div>
+            <button class="btn btn-secondary btn-sm" id="btn-admin-config" title="Supabase Database Settings">
+                <i class="fa-solid fa-gear"></i>
+            </button>
+            <button class="btn btn-danger btn-sm" id="btn-logout">
+                <i class="fa-solid fa-right-from-bracket"></i> Logout
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="admin-container">
+
+        <!-- Stats Overview Cards -->
+        <section class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon emerald">
+                    <i class="fa-solid fa-folder-open"></i>
+                </div>
+                <div class="stat-details">
+                    <h4>Total Albums</h4>
+                    <div class="stat-number" id="stat-total-folders">--</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon gold">
+                    <i class="fa-solid fa-images"></i>
+                </div>
+                <div class="stat-details">
+                    <h4>Total Photos</h4>
+                    <div class="stat-number" id="stat-total-photos">--</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                </div>
+                <div class="stat-details">
+                    <h4>Storage Status</h4>
+                    <div class="stat-number" id="stat-storage-status" style="font-size: 1.25rem;">Connected</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 1: ALBUM FOLDERS MANAGEMENT -->
+        <section id="admin-folders-view">
+            <div class="admin-section-header">
+                <div>
+                    <h2>Gallery Albums</h2>
+                    <p>Organize photographs into structured event folders and albums</p>
+                </div>
+                <button class="btn btn-primary" id="btn-open-create-folder">
+                    <i class="fa-solid fa-plus"></i> Create Folder
+                </button>
+            </div>
+
+            <!-- Folders Loading Skeleton -->
+            <div id="admin-folders-loading" class="admin-folders-grid" style="display: none;">
+                <div class="skeleton-card"><div class="skeleton-box skeleton-cover"></div><div class="skeleton-box skeleton-text"></div></div>
+                <div class="skeleton-card"><div class="skeleton-box skeleton-cover"></div><div class="skeleton-box skeleton-text"></div></div>
+                <div class="skeleton-card"><div class="skeleton-box skeleton-cover"></div><div class="skeleton-box skeleton-text"></div></div>
+            </div>
+
+            <!-- Folders Grid -->
+            <div class="admin-folders-grid" id="admin-folders-grid">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </section>
+
+        <!-- VIEW 2: ALBUM DETAIL & PHOTOS MANAGEMENT (Hidden initially) -->
+        <section id="admin-folder-detail-view" style="display: none;">
+            <div class="admin-section-header">
+                <div>
+                    <button class="btn btn-secondary btn-sm" id="btn-back-to-folders-admin" style="margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-arrow-left"></i> Back to Albums
+                    </button>
+                    <h2 id="detail-folder-title">Folder Name</h2>
+                    <p id="detail-folder-desc">Folder description</p>
+                </div>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary" id="btn-edit-current-folder">
+                        <i class="fa-solid fa-pen-to-square"></i> Edit Info
+                    </button>
+                    <button class="btn btn-danger" id="btn-delete-current-folder">
+                        <i class="fa-solid fa-trash-can"></i> Delete Album
+                    </button>
+                </div>
+            </div>
+
+            <!-- Upload Photos Dropzone -->
+            <div class="upload-dropzone" id="upload-dropzone">
+                <input type="file" id="photo-file-input" multiple accept=".jpg,.jpeg,.png,.webp" style="display: none;">
+                <i class="fa-solid fa-cloud-arrow-up"></i>
+                <h3>Click or Drag & Drop Photos Here</h3>
+                <p>Upload multiple images (JPG, JPEG, PNG, WEBP) to this album</p>
+            </div>
+
+            <!-- Upload Progress Bar (Shown during upload) -->
+            <div class="upload-progress-wrap" id="upload-progress-wrap" style="display: none;">
+                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
+                    <span id="upload-progress-status"><i class="fa-solid fa-spinner fa-spin"></i> Uploading photos...</span>
+                    <span id="upload-progress-percent">0%</span>
+                </div>
+                <div class="progress-bar-outer">
+                    <div class="progress-bar-inner" id="upload-progress-bar"></div>
+                </div>
+            </div>
+
+            <!-- Photos Section Header -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+                <h3 style="font-family: var(--font-heading); font-size: 1.2rem;">Photos in this Album</h3>
+                <span id="detail-photo-count" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">0 Photos</span>
+            </div>
+
+            <!-- Photos Grid -->
+            <div class="admin-photos-grid" id="admin-photos-grid">
+                <!-- Dynamically populated via JS -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =======================================================================
+         MODALS
+         ======================================================================= -->
+
+    <!-- 1. CREATE FOLDER MODAL -->
+    <div class="modal-overlay" id="create-folder-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-folder-plus" style="color: var(--accent-emerald);"></i> Create New Album</h3>
+                <button class="modal-close-btn" data-close-modal>&times;</button>
+            </div>
+            <form id="create-folder-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="create-folder-name" class="form-label">Album Name *</label>
+                        <input type="text" id="create-folder-name" class="form-input" placeholder="e.g. Annual Day 2026" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="create-folder-desc" class="form-label">Description (Optional)</label>
+                        <textarea id="create-folder-desc" class="form-textarea" placeholder="Brief description of the event or photo collection..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cover Image (Uploadable / Optional)</label>
+                        <div class="cover-upload-box" id="create-cover-dropzone">
+                            <input type="file" id="create-folder-cover-file" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                            <div class="cover-upload-placeholder" id="create-cover-placeholder">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <div class="upload-text">
+                                    <strong>Click to upload cover</strong> or drag &amp; drop
+                                </div>
+                                <div class="upload-hint">JPG, PNG, or WEBP (or set later from uploaded photos)</div>
+                            </div>
+                            <div class="cover-preview-wrapper" id="create-cover-preview-wrap" style="display: none;">
+                                <img id="create-cover-preview-img" src="" alt="Cover Preview">
+                                <div class="cover-preview-overlay">
+                                    <button type="button" class="btn btn-sm btn-light" id="btn-change-create-cover" title="Change Image">
+                                        <i class="fa-solid fa-arrows-rotate"></i> Change
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="btn-remove-create-cover" title="Remove Image">
+                                        <i class="fa-solid fa-trash"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-create-folder">Create Album</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. EDIT FOLDER MODAL -->
+    <div class="modal-overlay" id="edit-folder-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-pen-to-square" style="color: var(--accent-emerald);"></i> Edit Album Details</h3>
+                <button class="modal-close-btn" data-close-modal>&times;</button>
+            </div>
+            <form id="edit-folder-form">
+                <div class="modal-body">
+                    <input type="hidden" id="edit-folder-id">
+                    <input type="hidden" id="edit-folder-cover-current">
+                    <div class="form-group">
+                        <label for="edit-folder-name" class="form-label">Album Name *</label>
+                        <input type="text" id="edit-folder-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-folder-desc" class="form-label">Description</label>
+                        <textarea id="edit-folder-desc" class="form-textarea"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Cover Image</label>
+                        <div class="cover-upload-box" id="edit-cover-dropzone">
+                            <input type="file" id="edit-folder-cover-file" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                            <div class="cover-upload-placeholder" id="edit-cover-placeholder">
+                                <i class="fa-solid fa-cloud-arrow-up"></i>
+                                <div class="upload-text">
+                                    <strong>Click to upload new cover</strong> or drag &amp; drop
+                                </div>
+                                <div class="upload-hint">JPG, PNG, or WEBP (Max 8MB)</div>
+                            </div>
+                            <div class="cover-preview-wrapper" id="edit-cover-preview-wrap" style="display: none;">
+                                <img id="edit-cover-preview-img" src="" alt="Cover Preview">
+                                <div class="cover-preview-overlay">
+                                    <button type="button" class="btn btn-sm btn-light" id="btn-change-edit-cover" title="Change Image">
+                                        <i class="fa-solid fa-arrows-rotate"></i> Change
+                                    </button>
+                                    <button type="button" class="btn btn-sm btn-danger" id="btn-remove-edit-cover" title="Remove Image">
+                                        <i class="fa-solid fa-trash"></i> Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-edit-folder">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 3. EDIT PHOTO METADATA MODAL -->
+    <div class="modal-overlay" id="edit-photo-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-image" style="color: var(--accent-emerald);"></i> Edit Photo Information</h3>
+                <button class="modal-close-btn" data-close-modal>&times;</button>
+            </div>
+            <form id="edit-photo-form">
+                <div class="modal-body">
+                    <input type="hidden" id="edit-photo-id">
+                    <div class="form-group">
+                        <label for="edit-photo-title" class="form-label">Photo Title / Caption</label>
+                        <input type="text" id="edit-photo-title" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-photo-desc" class="form-label">Photo Description (Optional)</label>
+                        <textarea id="edit-photo-desc" class="form-textarea"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-edit-photo">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 4. DELETE CONFIRMATION MODAL -->
+    <div class="modal-overlay" id="delete-modal">
+        <div class="modal-card">
+            <div class="modal-header" style="background: var(--danger-faint); border-bottom-color: rgba(220,38,38,0.15);">
+                <h3 style="color: var(--danger);"><i class="fa-solid fa-triangle-exclamation"></i> Confirm Deletion</h3>
+                <button class="modal-close-btn" data-close-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="delete-modal-message" style="color: var(--text-primary); font-size: 0.95rem; line-height: 1.6;">
+                    Are you sure you want to proceed with this deletion?
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+                <button type="button" class="btn btn-danger-solid" id="btn-confirm-delete">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. SUPABASE SETTINGS MODAL -->
+    <div class="modal-overlay" id="admin-config-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-database" style="color: var(--accent-emerald);"></i> Supabase API Settings</h3>
+                <button class="modal-close-btn" data-close-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                    Active Supabase credentials used for database queries and file storage.
+                </p>
+                <div class="form-group">
+                    <label for="adm-cfg-url" class="form-label">Supabase Project URL</label>
+                    <input type="url" id="adm-cfg-url" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label for="adm-cfg-key" class="form-label">Supabase Anon Public Key</label>
+                    <input type="text" id="adm-cfg-key" class="form-input">
+                </div>
+                <div id="adm-cfg-status" style="font-size: 0.85rem; display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+                <button type="button" class="btn btn-primary" id="btn-save-admin-config">Save Credentials</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div class="toast-container" id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

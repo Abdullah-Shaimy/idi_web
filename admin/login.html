@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | Institute of Da'wa Islamiyya</title>
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; base-uri 'self'; object-src 'none'; connect-src 'self' https://*.supabase.co wss://*.supabase.co; form-action 'self'; img-src 'self' data: blob: https://images.unsplash.com https://upload.wikimedia.org https://*.supabase.co; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://fonts.googleapis.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; upgrade-insecure-requests">
+    <link rel="stylesheet" href="css/admin.css">
+    <link rel="icon" type="image/webp" href="../assets/images/idi_logo.webp">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="login-body">
+
+    <div class="login-card">
+        <div class="login-header">
+            <img src="../assets/images/idi_logo.webp" alt="IDI Logo" class="login-logo">
+            <h1>Admin Portal</h1>
+            <p>Sign in to manage gallery albums and website photos</p>
+        </div>
+
+        <div id="login-alert" class="alert alert-danger" style="display: none;">
+            <i class="fa-solid fa-circle-exclamation"></i>
+            <span id="login-alert-text">Error message</span>
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="admin-email" class="form-label">Email Address</label>
+                <input type="email" id="admin-email" class="form-input" placeholder="admin@idi.edu" required autocomplete="email">
+            </div>
+
+            <div class="form-group">
+                <label for="admin-password" class="form-label">Password</label>
+                <input type="password" id="admin-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+
+            <button type="submit" id="btn-login" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1rem; margin-top: 0.5rem;">
+                <span id="btn-login-text"><i class="fa-solid fa-arrow-right-to-bracket"></i> Sign In</span>
+                <span id="btn-login-spinner" style="display: none;"><i class="fa-solid fa-spinner fa-spin"></i> Signing in...</span>
+            </button>
+        </form>
+
+        <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--border-color); padding-top: 1.25rem; font-size: 0.85rem; color: var(--text-muted);">
+            <a href="../gallery.html" style="color: var(--accent-emerald); text-decoration: none; font-weight: 600;">
+                <i class="fa-solid fa-arrow-left"></i> Return to Public Gallery
+            </a>
+            <span style="margin: 0 0.5rem;">•</span>
+            <a href="javascript:void(0)" id="btn-open-config" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
+                <i class="fa-solid fa-gear"></i> Supabase Setup
+            </a>
+        </div>
+    </div>
+
+    <!-- Supabase Config Modal (Allows configuring credentials directly from browser) -->
+    <div class="modal-overlay" id="config-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-database" style="color: var(--accent-emerald);"></i> Supabase API Settings</h3>
+                <button class="modal-close-btn" id="config-modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
+                    Configure your Supabase project URL and anon public key. You can also permanently set these in <code style="background:#edf2f7; padding:2px 4px; border-radius:3px;">js/supabase-client.js</code>.
+                </p>
+                <div class="form-group">
+                    <label for="cfg-url" class="form-label">Supabase Project URL</label>
+                    <input type="url" id="cfg-url" class="form-input" placeholder="https://xyzcompany.supabase.co">
+                </div>
+                <div class="form-group">
+                    <label for="cfg-key" class="form-label">Supabase Anon Public Key</label>
+                    <input type="text" id="cfg-key" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
+                </div>
+                <div id="cfg-status" style="font-size: 0.85rem; display: none;"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="btn-cancel-config">Cancel</button>
+                <button type="button" class="btn btn-primary" id="btn-save-config">Save Credentials</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../js/supabase-client.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const loginForm = document.getElementById('login-form');
+            const emailInput = document.getElementById('admin-email');
+            const passwordInput = document.getElementById('admin-password');
+            const btnLogin = document.getElementById('btn-login');
+            const btnText = document.getElementById('btn-login-text');
+            const btnSpinner = document.getElementById('btn-login-spinner');
+            const alertBox = document.getElementById('login-alert');
+            const alertText = document.getElementById('login-alert-text');
+
+            // Config modal elements
+            const configModal = document.getElementById('config-modal');
+            const btnOpenConfig = document.getElementById('btn-open-config');
+            const configModalClose = document.getElementById('config-modal-close');
+            const btnCancelConfig = document.getElementById('btn-cancel-config');
+            const btnSaveConfig = document.getElementById('btn-save-config');
+            const cfgUrlInput = document.getElementById('cfg-url');
+            const cfgKeyInput = document.getElementById('cfg-key');
+            const cfgStatus = document.getElementById('cfg-status');
+
+            // 1. Auto redirect if already logged in and verified as admin
+            try {
+                const user = await window.IDISupabase.getUser();
+                if (user) {
+                    const isAdmin = await window.IDISupabase.checkIsAdmin(user.id);
+                    if (isAdmin) {
+                        window.location.replace('dashboard.html');
+                        return;
+                    }
+                }
+            } catch (e) {
+                console.log('Session check completed:', e);
+            }
+
+            // 2. Handle Login Form
+            loginForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                alertBox.style.display = 'none';
+
+                if (!window.IDISupabase.isConfigured()) {
+                    showAlert('Supabase credentials have not been configured yet. Click "Supabase Setup" below to enter your Project URL and Anon Key, or edit js/supabase-client.js.');
+                    return;
+                }
+
+                btnText.style.display = 'none';
+                btnSpinner.style.display = 'inline-block';
+                btnLogin.disabled = true;
+
+                const email = emailInput.value.trim();
+                const password = passwordInput.value;
+
+                try {
+                    const { data, error } = await window.IDISupabase.signIn(email, password);
+
+                    if (error) {
+                        showAlert(error);
+                        btnText.style.display = 'inline-block';
+                        btnSpinner.style.display = 'none';
+                        btnLogin.disabled = false;
+                        return;
+                    }
+
+                    // Successful login
+                    window.location.replace('dashboard.html');
+                } catch (err) {
+                    showAlert(err.message || 'Failed to sign in. Please check your credentials and network connection.');
+                    btnText.style.display = 'inline-block';
+                    btnSpinner.style.display = 'none';
+                    btnLogin.disabled = false;
+                }
+            });
+
+            function showAlert(msg) {
+                alertText.textContent = msg;
+                alertBox.style.display = 'flex';
+            }
+
+            // 3. Supabase Config Dialog
+            btnOpenConfig.addEventListener('click', () => {
+                const currentConfig = window.IDISupabase.getConfig();
+                cfgUrlInput.value = currentConfig.url && !currentConfig.url.includes('your-project-id') ? currentConfig.url : '';
+                cfgKeyInput.value = currentConfig.anonKey && !currentConfig.anonKey.includes('your-anon-public-key') ? currentConfig.anonKey : '';
+                cfgStatus.style.display = 'none';
+                configModal.classList.add('active');
+            });
+
+            const closeConfigModal = () => configModal.classList.remove('active');
+            configModalClose.addEventListener('click', closeConfigModal);
+            btnCancelConfig.addEventListener('click', closeConfigModal);
+
+            btnSaveConfig.addEventListener('click', () => {
+                const url = cfgUrlInput.value.trim();
+                const key = cfgKeyInput.value.trim();
+
+                if (!url || !key) {
+                    cfgStatus.style.color = '#dc2626';
+                    cfgStatus.textContent = 'Please enter both Supabase URL and Anon Key.';
+                    cfgStatus.style.display = 'block';
+                    return;
+                }
+
+                window.IDISupabase.setConfig(url, key);
+                cfgStatus.style.color = '#16a34a';
+                cfgStatus.textContent = 'Credentials saved! You can now sign in.';
+                cfgStatus.style.display = 'block';
+
+                setTimeout(() => {
+                    closeConfigModal();
+                    alertBox.style.display = 'none';
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
