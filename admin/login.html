@@ -45,38 +45,6 @@
             <a href="../gallery.html" style="color: var(--accent-emerald); text-decoration: none; font-weight: 600;">
                 <i class="fa-solid fa-arrow-left"></i> Return to Public Gallery
             </a>
-            <span style="margin: 0 0.5rem;">•</span>
-            <a href="javascript:void(0)" id="btn-open-config" style="color: var(--accent-gold); text-decoration: none; font-weight: 600;">
-                <i class="fa-solid fa-gear"></i> Supabase Setup
-            </a>
-        </div>
-    </div>
-
-    <!-- Supabase Config Modal (Allows configuring credentials directly from browser) -->
-    <div class="modal-overlay" id="config-modal">
-        <div class="modal-card">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-database" style="color: var(--accent-emerald);"></i> Supabase API Settings</h3>
-                <button class="modal-close-btn" id="config-modal-close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-                    Configure your Supabase project URL and anon public key. You can also permanently set these in <code style="background:#edf2f7; padding:2px 4px; border-radius:3px;">js/supabase-client.js</code>.
-                </p>
-                <div class="form-group">
-                    <label for="cfg-url" class="form-label">Supabase Project URL</label>
-                    <input type="url" id="cfg-url" class="form-input" placeholder="https://xyzcompany.supabase.co">
-                </div>
-                <div class="form-group">
-                    <label for="cfg-key" class="form-label">Supabase Anon Public Key</label>
-                    <input type="text" id="cfg-key" class="form-input" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...">
-                </div>
-                <div id="cfg-status" style="font-size: 0.85rem; display: none;"></div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" id="btn-cancel-config">Cancel</button>
-                <button type="button" class="btn btn-primary" id="btn-save-config">Save Credentials</button>
-            </div>
         </div>
     </div>
 
@@ -92,16 +60,6 @@
             const btnSpinner = document.getElementById('btn-login-spinner');
             const alertBox = document.getElementById('login-alert');
             const alertText = document.getElementById('login-alert-text');
-
-            // Config modal elements
-            const configModal = document.getElementById('config-modal');
-            const btnOpenConfig = document.getElementById('btn-open-config');
-            const configModalClose = document.getElementById('config-modal-close');
-            const btnCancelConfig = document.getElementById('btn-cancel-config');
-            const btnSaveConfig = document.getElementById('btn-save-config');
-            const cfgUrlInput = document.getElementById('cfg-url');
-            const cfgKeyInput = document.getElementById('cfg-key');
-            const cfgStatus = document.getElementById('cfg-status');
 
             // 1. Auto redirect if already logged in and verified as admin
             try {
@@ -123,7 +81,7 @@
                 alertBox.style.display = 'none';
 
                 if (!window.IDISupabase.isConfigured()) {
-                    showAlert('Supabase credentials have not been configured yet. Click "Supabase Setup" below to enter your Project URL and Anon Key, or edit js/supabase-client.js.');
+                    showAlert('Supabase credentials have not been configured yet.');
                     return;
                 }
 
@@ -159,41 +117,6 @@
                 alertText.textContent = msg;
                 alertBox.style.display = 'flex';
             }
-
-            // 3. Supabase Config Dialog
-            btnOpenConfig.addEventListener('click', () => {
-                const currentConfig = window.IDISupabase.getConfig();
-                cfgUrlInput.value = currentConfig.url && !currentConfig.url.includes('your-project-id') ? currentConfig.url : '';
-                cfgKeyInput.value = currentConfig.anonKey && !currentConfig.anonKey.includes('your-anon-public-key') ? currentConfig.anonKey : '';
-                cfgStatus.style.display = 'none';
-                configModal.classList.add('active');
-            });
-
-            const closeConfigModal = () => configModal.classList.remove('active');
-            configModalClose.addEventListener('click', closeConfigModal);
-            btnCancelConfig.addEventListener('click', closeConfigModal);
-
-            btnSaveConfig.addEventListener('click', () => {
-                const url = cfgUrlInput.value.trim();
-                const key = cfgKeyInput.value.trim();
-
-                if (!url || !key) {
-                    cfgStatus.style.color = '#dc2626';
-                    cfgStatus.textContent = 'Please enter both Supabase URL and Anon Key.';
-                    cfgStatus.style.display = 'block';
-                    return;
-                }
-
-                window.IDISupabase.setConfig(url, key);
-                cfgStatus.style.color = '#16a34a';
-                cfgStatus.textContent = 'Credentials saved! You can now sign in.';
-                cfgStatus.style.display = 'block';
-
-                setTimeout(() => {
-                    closeConfigModal();
-                    alertBox.style.display = 'none';
-                }, 1000);
-            });
         });
     </script>
 </body>

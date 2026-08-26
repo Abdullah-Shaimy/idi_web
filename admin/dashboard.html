@@ -18,17 +18,20 @@
             <img src="../assets/images/idi_logo.webp" alt="IDI Logo">
             <div class="admin-brand-text">
                 <h2>Institute of Da'wa Islamiyya</h2>
-                <span>Gallery Admin Portal</span>
+                <span id="nav-portal-title">Admin Management Portal</span>
             </div>
         </a>
 
         <div class="admin-nav-actions">
-            <a href="../gallery.html" target="_blank" class="btn btn-secondary btn-sm" title="View Public Gallery">
+            <a href="../index.html" target="_blank" class="btn btn-secondary btn-sm" title="View Public Website">
                 <i class="fa-solid fa-arrow-up-right-from-square"></i> Public Website
             </a>
             <div class="admin-user-badge" id="admin-user-badge">
                 <div class="admin-user-avatar" id="admin-user-avatar">A</div>
-                <span id="admin-user-email">admin@idi.edu</span>
+                <div style="display: flex; flex-direction: column; text-align: left;">
+                    <span id="admin-user-email" style="font-weight: 600;">admin@idi.lk</span>
+                    <span id="admin-role-badge" class="role-pill role-admin">Admin</span>
+                </div>
             </div>
             <button class="btn btn-secondary btn-sm" id="btn-admin-config" title="Supabase Database Settings">
                 <i class="fa-solid fa-gear"></i>
@@ -39,115 +42,340 @@
         </div>
     </header>
 
+    <!-- Navigation Tabs Bar -->
+    <nav class="admin-tabs-nav">
+        <div class="admin-tabs-container">
+            <button class="admin-tab-btn active" data-tab="overview" id="tab-btn-overview">
+                <i class="fa-solid fa-chart-pie"></i> Overview
+            </button>
+            <button class="admin-tab-btn" data-tab="gallery" id="tab-btn-gallery">
+                <i class="fa-solid fa-images"></i> Gallery Albums
+            </button>
+            <button class="admin-tab-btn" data-tab="inquiries" id="tab-btn-inquiries">
+                <i class="fa-solid fa-envelope-open-text"></i> Contact Inquiries
+                <span class="tab-badge" id="badge-inquiries-count" style="display: none;">0</span>
+            </button>
+            <button class="admin-tab-btn super-admin-tab" data-tab="admins" id="tab-btn-admins">
+                <i class="fa-solid fa-user-shield"></i> Admins
+                <span class="super-tag">Super</span>
+            </button>
+        </div>
+    </nav>
+
     <!-- Main Content Container -->
     <main class="admin-container">
 
-        <!-- Stats Overview Cards -->
-        <section class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon emerald">
-                    <i class="fa-solid fa-folder-open"></i>
+        <!-- ===================================================================
+             SECTION 1: DASHBOARD OVERVIEW TAB
+             =================================================================== -->
+        <section id="tab-section-overview" class="tab-section active">
+            <!-- Stats Overview Grid -->
+            <div class="stats-grid">
+                <div class="stat-card" data-action="goto-gallery">
+                    <div class="stat-icon emerald">
+                        <i class="fa-solid fa-folder-open"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h4>Total Albums</h4>
+                        <div class="stat-number" id="stat-total-folders">--</div>
+                    </div>
                 </div>
-                <div class="stat-details">
-                    <h4>Total Albums</h4>
-                    <div class="stat-number" id="stat-total-folders">--</div>
+
+                <div class="stat-card" data-action="goto-gallery">
+                    <div class="stat-icon gold">
+                        <i class="fa-solid fa-images"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h4>Total Photos</h4>
+                        <div class="stat-number" id="stat-total-photos">--</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" data-action="goto-inquiries">
+                    <div class="stat-icon purple">
+                        <i class="fa-solid fa-envelope-open-text"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h4>Total Inquiries</h4>
+                        <div class="stat-number" id="stat-total-inquiries">--</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" data-action="goto-inquiries">
+                    <div class="stat-icon orange">
+                        <i class="fa-solid fa-bell"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h4>New / Unread</h4>
+                        <div class="stat-number" id="stat-new-inquiries">--</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" data-action="goto-admins" id="stat-card-admins">
+                    <div class="stat-icon navy">
+                        <i class="fa-solid fa-users-gear"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h4>Admin Team</h4>
+                        <div class="stat-number" id="stat-total-admins">--</div>
+                    </div>
+                </div>
+
+                <div class="stat-card" id="stat-card-db-status">
+                    <div class="stat-icon blue">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h4>Database Status</h4>
+                        <div class="stat-number" id="stat-storage-status" style="font-size: 1.15rem;">Connected</div>
+                    </div>
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon gold">
-                    <i class="fa-solid fa-images"></i>
+            <!-- Overview Two Column Layout -->
+            <div class="overview-grid">
+                <!-- Recent Inquiries Panel -->
+                <div class="overview-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h3><i class="fa-solid fa-envelope" style="color: var(--accent-emerald);"></i> Recent Inquiries</h3>
+                            <p>Latest submissions from the website contact form</p>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" id="btn-overview-all-inquiries">
+                            View All <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="panel-body">
+                        <div id="overview-inquiries-list" class="overview-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-details">
-                    <h4>Total Photos</h4>
-                    <div class="stat-number" id="stat-total-photos">--</div>
+
+                <!-- Recent Albums Panel -->
+                <div class="overview-panel">
+                    <div class="panel-header">
+                        <div>
+                            <h3><i class="fa-solid fa-images" style="color: var(--accent-gold);"></i> Gallery Highlights</h3>
+                            <p>Recent photo albums and collections</p>
+                        </div>
+                        <button class="btn btn-primary btn-sm" id="btn-overview-create-folder">
+                            <i class="fa-solid fa-plus"></i> New Album
+                        </button>
+                    </div>
+                    <div class="panel-body">
+                        <div id="overview-albums-list" class="overview-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             SECTION 2: GALLERY MANAGEMENT TAB
+             =================================================================== -->
+        <section id="tab-section-gallery" class="tab-section">
+            <!-- VIEW 1: ALBUM FOLDERS MANAGEMENT -->
+            <div id="admin-folders-view">
+                <div class="admin-section-header">
+                    <div>
+                        <h2>Gallery Albums</h2>
+                        <p>Organize photographs into structured event folders and public galleries</p>
+                    </div>
+                    <button class="btn btn-primary" id="btn-open-create-folder">
+                        <i class="fa-solid fa-plus"></i> Create Folder
+                    </button>
+                </div>
+
+                <!-- Folders Loading Skeleton -->
+                <div id="admin-folders-loading" class="admin-folders-grid" style="display: none;">
+                    <div class="skeleton-card"><div class="skeleton-box skeleton-cover"></div><div class="skeleton-box skeleton-text"></div></div>
+                    <div class="skeleton-card"><div class="skeleton-box skeleton-cover"></div><div class="skeleton-box skeleton-text"></div></div>
+                    <div class="skeleton-card"><div class="skeleton-box skeleton-cover"></div><div class="skeleton-box skeleton-text"></div></div>
+                </div>
+
+                <!-- Folders Grid -->
+                <div class="admin-folders-grid" id="admin-folders-grid">
+                    <!-- Dynamically populated via JS -->
                 </div>
             </div>
 
-            <div class="stat-card">
-                <div class="stat-icon blue">
+            <!-- VIEW 2: ALBUM DETAIL & PHOTOS MANAGEMENT (Hidden initially) -->
+            <div id="admin-folder-detail-view" style="display: none;">
+                <div class="admin-section-header">
+                    <div>
+                        <button class="btn btn-secondary btn-sm" id="btn-back-to-folders-admin" style="margin-bottom: 0.5rem;">
+                            <i class="fa-solid fa-arrow-left"></i> Back to Albums
+                        </button>
+                        <h2 id="detail-folder-title">Folder Name</h2>
+                        <p id="detail-folder-desc">Folder description</p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="btn btn-secondary" id="btn-edit-current-folder">
+                            <i class="fa-solid fa-pen-to-square"></i> Edit Info
+                        </button>
+                        <button class="btn btn-danger" id="btn-delete-current-folder">
+                            <i class="fa-solid fa-trash-can"></i> Delete Album
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Upload Photos Dropzone -->
+                <div class="upload-dropzone" id="upload-dropzone">
+                    <input type="file" id="photo-file-input" multiple accept="image/webp,.webp" style="display: none;">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
+                    <h3>Click or Drag &amp; Drop Photos Here</h3>
+                    <p>Upload multiple photographs in <strong>WEBP format (.webp)</strong> only</p>
                 </div>
-                <div class="stat-details">
-                    <h4>Storage Status</h4>
-                    <div class="stat-number" id="stat-storage-status" style="font-size: 1.25rem;">Connected</div>
+
+                <!-- Upload Progress Bar (Shown during upload) -->
+                <div class="upload-progress-wrap" id="upload-progress-wrap" style="display: none;">
+                    <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
+                        <span id="upload-progress-status"><i class="fa-solid fa-spinner fa-spin"></i> Uploading photos...</span>
+                        <span id="upload-progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar-outer">
+                        <div class="progress-bar-inner" id="upload-progress-bar"></div>
+                    </div>
+                </div>
+
+                <!-- Photos Section Header -->
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
+                    <h3 style="font-family: var(--font-heading); font-size: 1.2rem;">Photos in this Album</h3>
+                    <span id="detail-photo-count" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">0 Photos</span>
+                </div>
+
+                <!-- Photos Grid -->
+                <div class="admin-photos-grid" id="admin-photos-grid">
+                    <!-- Dynamically populated via JS -->
                 </div>
             </div>
         </section>
 
-        <!-- VIEW 1: ALBUM FOLDERS MANAGEMENT -->
-        <section id="admin-folders-view">
+        <!-- ===================================================================
+             SECTION 3: CONTACT FORM INQUIRIES TAB (Admins & Super Admins)
+             =================================================================== -->
+        <section id="tab-section-inquiries" class="tab-section">
             <div class="admin-section-header">
                 <div>
-                    <h2>Gallery Albums</h2>
-                    <p>Organize photographs into structured event folders and albums</p>
+                    <h2>Contact Form Inquiries</h2>
+                    <p>Review, respond to, and manage inquiries submitted by prospective students and visitors</p>
                 </div>
-                <button class="btn btn-primary" id="btn-open-create-folder">
-                    <i class="fa-solid fa-plus"></i> Create Folder
+                <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+                    <button class="btn btn-secondary btn-sm" id="btn-export-inquiries" title="Export inquiries as CSV">
+                        <i class="fa-solid fa-file-csv"></i> Export CSV
+                    </button>
+                    <button class="btn btn-secondary btn-sm" id="btn-refresh-inquiries" title="Refresh Inquiries">
+                        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                    </button>
+                </div>
+            </div>
+
+            <!-- Inquiries Filters Toolbar -->
+            <div class="inquiries-toolbar">
+                <div class="search-box-wrap">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="inquiries-search-input" class="search-input" placeholder="Search by name, email, phone, city, or message...">
+                    <button id="btn-clear-inquiries-search" class="search-clear-btn" style="display: none;">&times;</button>
+                </div>
+
+                <div class="filter-pills-wrap" id="inquiry-status-filters">
+                    <button class="filter-pill active" data-status="all">All (<span id="count-filter-all">0</span>)</button>
+                    <button class="filter-pill" data-status="new">New (<span id="count-filter-new">0</span>)</button>
+                    <button class="filter-pill" data-status="in_progress">In Progress (<span id="count-filter-in_progress">0</span>)</button>
+                    <button class="filter-pill" data-status="resolved">Resolved (<span id="count-filter-resolved">0</span>)</button>
+                    <button class="filter-pill" data-status="archived">Archived (<span id="count-filter-archived">0</span>)</button>
+                </div>
+            </div>
+
+            <!-- Inquiries List / Table -->
+            <div class="inquiries-container">
+                <div id="inquiries-loading" style="text-align: center; padding: 3rem; display: none;">
+                    <i class="fa-solid fa-spinner fa-spin fa-2x" style="color: var(--accent-emerald);"></i>
+                    <p style="margin-top: 0.5rem; color: var(--text-muted);">Loading inquiries...</p>
+                </div>
+
+                <div id="inquiries-table-wrap" class="table-responsive">
+                    <table class="admin-data-table" id="inquiries-table">
+                        <thead>
+                            <tr>
+                                <th>Sender</th>
+                                <th>Contact Info</th>
+                                <th>City</th>
+                                <th>Subject &amp; Message</th>
+                                <th>Status</th>
+                                <th>Received</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inquiries-tbody">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="inquiries-empty-state" class="empty-state-box" style="display: none;">
+                    <i class="fa-regular fa-envelope-open" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 0.75rem;"></i>
+                    <h3>No inquiries found</h3>
+                    <p>There are no inquiries matching your current filter criteria.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ===================================================================
+             SECTION 4: ADMIN USERS MANAGEMENT TAB (Super Admin Only)
+             =================================================================== -->
+        <section id="tab-section-admins" class="tab-section">
+            <!-- Super Admin View -->
+            <div id="admins-management-view">
+                <div class="admin-section-header">
+                    <div>
+                        <h2>Administrator Accounts</h2>
+                        <p>Manage system administrators, assign roles, and control administrative access</p>
+                    </div>
+                    <button class="btn btn-primary" id="btn-open-add-admin">
+                        <i class="fa-solid fa-user-plus"></i> Add New Admin
+                    </button>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="admin-data-table" id="admins-table">
+                        <thead>
+                            <tr>
+                                <th>Administrator</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Added Date</th>
+                                <th style="text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admins-tbody">
+                            <!-- Populated via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="admins-empty-state" class="empty-state-box" style="display: none;">
+                    <i class="fa-solid fa-users" style="font-size: 2.5rem; color: var(--text-muted); margin-bottom: 0.75rem;"></i>
+                    <h3>No administrators listed</h3>
+                    <p>Click "Add New Admin" to authorize an administrator account.</p>
+                </div>
+            </div>
+
+            <!-- Non-Super Admin Locked View (fallback protection) -->
+            <div id="admins-locked-view" class="empty-state-box" style="display: none; padding: 4rem 2rem;">
+                <div class="lock-icon-wrap" style="width: 70px; height: 70px; border-radius: 50%; background: var(--accent-gold-faint); color: var(--accent-gold); display: flex; align-items: center; justify-content: center; font-size: 2rem; margin: 0 auto 1.25rem;">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h2>Super Admin Access Required</h2>
+                <p style="max-width: 500px; margin: 0.5rem auto 1.5rem; color: var(--text-muted);">
+                    Only Super Administrators have permissions to view, create, edit, or remove administrator accounts.
+                </p>
+                <button class="btn btn-primary" id="btn-return-overview">
+                    <i class="fa-solid fa-chart-pie"></i> Return to Overview
                 </button>
-            </div>
-
-            <!-- Folders Loading Skeleton -->
-            <div id="admin-folders-loading" class="admin-folders-grid" style="display: none;">
-                <div class="skeleton-card"><div class="skeleton-box skeleton-cover"></div><div class="skeleton-box skeleton-text"></div></div>
-                <div class="skeleton-card"><div class="skeleton-box skeleton-cover"></div><div class="skeleton-box skeleton-text"></div></div>
-                <div class="skeleton-card"><div class="skeleton-box skeleton-cover"></div><div class="skeleton-box skeleton-text"></div></div>
-            </div>
-
-            <!-- Folders Grid -->
-            <div class="admin-folders-grid" id="admin-folders-grid">
-                <!-- Dynamically populated via JS -->
-            </div>
-        </section>
-
-        <!-- VIEW 2: ALBUM DETAIL & PHOTOS MANAGEMENT (Hidden initially) -->
-        <section id="admin-folder-detail-view" style="display: none;">
-            <div class="admin-section-header">
-                <div>
-                    <button class="btn btn-secondary btn-sm" id="btn-back-to-folders-admin" style="margin-bottom: 0.5rem;">
-                        <i class="fa-solid fa-arrow-left"></i> Back to Albums
-                    </button>
-                    <h2 id="detail-folder-title">Folder Name</h2>
-                    <p id="detail-folder-desc">Folder description</p>
-                </div>
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    <button class="btn btn-secondary" id="btn-edit-current-folder">
-                        <i class="fa-solid fa-pen-to-square"></i> Edit Info
-                    </button>
-                    <button class="btn btn-danger" id="btn-delete-current-folder">
-                        <i class="fa-solid fa-trash-can"></i> Delete Album
-                    </button>
-                </div>
-            </div>
-
-            <!-- Upload Photos Dropzone -->
-            <div class="upload-dropzone" id="upload-dropzone">
-                <input type="file" id="photo-file-input" multiple accept=".jpg,.jpeg,.png,.webp" style="display: none;">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-                <h3>Click or Drag & Drop Photos Here</h3>
-                <p>Upload multiple images (JPG, JPEG, PNG, WEBP) to this album</p>
-            </div>
-
-            <!-- Upload Progress Bar (Shown during upload) -->
-            <div class="upload-progress-wrap" id="upload-progress-wrap" style="display: none;">
-                <div style="display: flex; justify-content: space-between; font-size: 0.85rem; font-weight: 600;">
-                    <span id="upload-progress-status"><i class="fa-solid fa-spinner fa-spin"></i> Uploading photos...</span>
-                    <span id="upload-progress-percent">0%</span>
-                </div>
-                <div class="progress-bar-outer">
-                    <div class="progress-bar-inner" id="upload-progress-bar"></div>
-                </div>
-            </div>
-
-            <!-- Photos Section Header -->
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem;">
-                <h3 style="font-family: var(--font-heading); font-size: 1.2rem;">Photos in this Album</h3>
-                <span id="detail-photo-count" style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">0 Photos</span>
-            </div>
-
-            <!-- Photos Grid -->
-            <div class="admin-photos-grid" id="admin-photos-grid">
-                <!-- Dynamically populated via JS -->
             </div>
         </section>
 
@@ -177,13 +405,13 @@
                     <div class="form-group">
                         <label class="form-label">Cover Image (Uploadable / Optional)</label>
                         <div class="cover-upload-box" id="create-cover-dropzone">
-                            <input type="file" id="create-folder-cover-file" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                            <input type="file" id="create-folder-cover-file" accept="image/webp,.webp" style="display: none;">
                             <div class="cover-upload-placeholder" id="create-cover-placeholder">
                                 <i class="fa-solid fa-cloud-arrow-up"></i>
                                 <div class="upload-text">
                                     <strong>Click to upload cover</strong> or drag &amp; drop
                                 </div>
-                                <div class="upload-hint">JPG, PNG, or WEBP (or set later from uploaded photos)</div>
+                                <div class="upload-hint">WEBP format only (.webp)</div>
                             </div>
                             <div class="cover-preview-wrapper" id="create-cover-preview-wrap" style="display: none;">
                                 <img id="create-cover-preview-img" src="" alt="Cover Preview">
@@ -229,13 +457,13 @@
                     <div class="form-group">
                         <label class="form-label">Cover Image</label>
                         <div class="cover-upload-box" id="edit-cover-dropzone">
-                            <input type="file" id="edit-folder-cover-file" accept="image/jpeg,image/png,image/webp" style="display: none;">
+                            <input type="file" id="edit-folder-cover-file" accept="image/webp,.webp" style="display: none;">
                             <div class="cover-upload-placeholder" id="edit-cover-placeholder">
                                 <i class="fa-solid fa-cloud-arrow-up"></i>
                                 <div class="upload-text">
                                     <strong>Click to upload new cover</strong> or drag &amp; drop
                                 </div>
-                                <div class="upload-hint">JPG, PNG, or WEBP (Max 8MB)</div>
+                                <div class="upload-hint">WEBP format only (.webp)</div>
                             </div>
                             <div class="cover-preview-wrapper" id="edit-cover-preview-wrap" style="display: none;">
                                 <img id="edit-cover-preview-img" src="" alt="Cover Preview">
@@ -286,7 +514,166 @@
         </div>
     </div>
 
-    <!-- 4. DELETE CONFIRMATION MODAL -->
+    <!-- 4. INQUIRY DETAIL & MANAGEMENT MODAL (For Admins & Super Admins) -->
+    <div class="modal-overlay" id="inquiry-detail-modal">
+        <div class="modal-card modal-lg">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-envelope-open-text" style="color: var(--accent-emerald);"></i> Inquiry Details</h3>
+                <button class="modal-close-btn" data-close-modal>&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="modal-inquiry-id">
+                
+                <!-- Sender Info Banner -->
+                <div class="inquiry-modal-sender-box">
+                    <div class="sender-avatar" id="modal-inquiry-avatar">M</div>
+                    <div class="sender-details">
+                        <h4 id="modal-inquiry-name">Sender Name</h4>
+                        <div class="sender-meta">
+                            <span id="modal-inquiry-city"><i class="fa-solid fa-location-dot"></i> City</span>
+                            <span id="modal-inquiry-date"><i class="fa-regular fa-clock"></i> Date</span>
+                        </div>
+                    </div>
+                    <div class="sender-actions">
+                        <a href="#" id="modal-inquiry-call-btn" class="btn btn-sm btn-secondary" title="Call Phone">
+                            <i class="fa-solid fa-phone" style="color: var(--accent-emerald);"></i> Call
+                        </a>
+                        <a href="#" id="modal-inquiry-email-btn" class="btn btn-sm btn-secondary" title="Send Email">
+                            <i class="fa-solid fa-envelope" style="color: #2563eb;"></i> Email
+                        </a>
+                        <a href="#" id="modal-inquiry-wa-btn" target="_blank" class="btn btn-sm btn-secondary" title="Chat on WhatsApp">
+                            <i class="fa-brands fa-whatsapp" style="color: #16a34a;"></i> WhatsApp
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Message Box -->
+                <div class="form-group" style="margin-top: 1.25rem;">
+                    <label class="form-label" style="font-weight: 700;">Subject</label>
+                    <div id="modal-inquiry-subject" class="inquiry-detail-text subject-highlight">Subject</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" style="font-weight: 700;">Message</label>
+                    <div id="modal-inquiry-message" class="inquiry-detail-text message-box">Message content...</div>
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid var(--border-color); margin: 1.5rem 0;">
+
+                <!-- Status & Admin Notes -->
+                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1.25rem;">
+                    <div class="form-group">
+                        <label for="modal-inquiry-status-select" class="form-label">Inquiry Status</label>
+                        <select id="modal-inquiry-status-select" class="form-input">
+                            <option value="new">🟢 New</option>
+                            <option value="in_progress">🟡 In Progress</option>
+                            <option value="resolved">🔵 Resolved</option>
+                            <option value="archived">⚪ Archived</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modal-inquiry-notes" class="form-label">Internal Admin Notes</label>
+                        <textarea id="modal-inquiry-notes" class="form-textarea" placeholder="Add private notes, follow-up history, or staff assignments..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content: space-between;">
+                <div>
+                    <button type="button" class="btn btn-danger btn-sm" id="btn-modal-delete-inquiry" style="display: none;">
+                        <i class="fa-solid fa-trash-can"></i> Delete Inquiry
+                    </button>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button type="button" class="btn btn-secondary" data-close-modal>Close</button>
+                    <button type="button" class="btn btn-primary" id="btn-save-inquiry-updates">Save Status &amp; Notes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. ADD ADMIN USER MODAL (Super Admin Only) -->
+    <div class="modal-overlay" id="add-admin-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-plus" style="color: var(--accent-emerald);"></i> Add New Administrator</h3>
+                <button class="modal-close-btn" data-close-modal>&times;</button>
+            </div>
+            <form id="add-admin-form">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="add-admin-fullname" class="form-label">Full Name</label>
+                        <input type="text" id="add-admin-fullname" class="form-input" placeholder="e.g. Usthadh Abdullah">
+                    </div>
+                    <div class="form-group">
+                        <label for="add-admin-email" class="form-label">Email Address *</label>
+                        <input type="email" id="add-admin-email" class="form-input" placeholder="admin@idi.lk" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-admin-role" class="form-label">Administrative Role *</label>
+                        <select id="add-admin-role" class="form-input" required>
+                            <option value="admin">Standard Admin (Gallery &amp; Inquiries View)</option>
+                            <option value="super_admin">Super Admin (Full System &amp; Admins Control)</option>
+                        </select>
+                        <small style="color: var(--text-muted); font-size: 0.8rem; margin-top: 0.25rem; display: block;">
+                            Super Admins can manage everything including other administrators.
+                        </small>
+                    </div>
+                    <div class="form-group">
+                        <label for="add-admin-password" class="form-label">Initial Password (Optional)</label>
+                        <input type="password" id="add-admin-password" class="form-input" placeholder="Min. 6 characters (or send invite)">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-add-admin">Create Admin</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 6. EDIT ADMIN USER MODAL (Super Admin Only) -->
+    <div class="modal-overlay" id="edit-admin-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-pen" style="color: var(--accent-emerald);"></i> Edit Admin Account</h3>
+                <button class="modal-close-btn" data-close-modal>&times;</button>
+            </div>
+            <form id="edit-admin-form">
+                <div class="modal-body">
+                    <input type="hidden" id="edit-admin-id">
+                    <div class="form-group">
+                        <label for="edit-admin-email" class="form-label">Email Address</label>
+                        <input type="email" id="edit-admin-email" class="form-input" readonly style="background: var(--bg-main); opacity: 0.85;">
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-admin-fullname" class="form-label">Full Name</label>
+                        <input type="text" id="edit-admin-fullname" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-admin-role" class="form-label">Role</label>
+                        <select id="edit-admin-role" class="form-input" required>
+                            <option value="admin">Standard Admin</option>
+                            <option value="super_admin">Super Admin</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="edit-admin-status" class="form-label">Account Status</label>
+                        <select id="edit-admin-status" class="form-input" required>
+                            <option value="active">Active</option>
+                            <option value="suspended">Suspended (Block Login)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-close-modal>Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="btn-submit-edit-admin">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 7. DELETE CONFIRMATION MODAL -->
     <div class="modal-overlay" id="delete-modal">
         <div class="modal-card">
             <div class="modal-header" style="background: var(--danger-faint); border-bottom-color: rgba(220,38,38,0.15);">
@@ -305,7 +692,7 @@
         </div>
     </div>
 
-    <!-- 5. SUPABASE SETTINGS MODAL -->
+    <!-- 8. SUPABASE SETTINGS MODAL -->
     <div class="modal-overlay" id="admin-config-modal">
         <div class="modal-card">
             <div class="modal-header">
@@ -314,7 +701,7 @@
             </div>
             <div class="modal-body">
                 <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.25rem;">
-                    Active Supabase credentials used for database queries and file storage.
+                    Active Supabase credentials used for database queries, authentication, and file storage.
                 </p>
                 <div class="form-group">
                     <label for="adm-cfg-url" class="form-label">Supabase Project URL</label>
