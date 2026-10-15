@@ -1,0 +1,25 @@
+# ==============================================================================
+# Robots.txt for Institute of Da'wa Islamiyya (IDI)
+# ==============================================================================
+
+User-agent: *
+# Disallow private admin panel, database dumps, and private assets
+Disallow: /admin/
+Disallow: /data/
+Disallow: /supabase_schema.sql
+
+# Allow crawling of public pages and assets
+Allow: /
+Allow: /assets/
+Allow: /about.html
+Allow: /hifz.html
+Allow: /students.html
+Allow: /alumni.html
+Allow: /gallery.html
+Allow: /contact.html
+Allow: /management.html
+Allow: /open.html
+Allow: /result.html
+
+# Sitemap specification
+Sitemap: https://idi.edu/sitemap.xml

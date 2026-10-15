@@ -11,8 +11,8 @@
     // Found in Supabase Dashboard -> Project Settings -> API.
     // You can also override these at runtime via localStorage ('idi_supabase_url', 'idi_supabase_anon_key')
     const DEFAULT_CONFIG = {
-        url: window.localStorage.getItem('idi_supabase_url') || 'https://tusqsesisyvtlflbzasj.supabase.co',
-        anonKey: window.localStorage.getItem('idi_supabase_anon_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR1c3FzZXNpc3l2dGxmbGJ6YXNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODc2MTU1OTMsImV4cCI6MjEwMzE5MTU5M30.15H1BNCbCRD_il5zQXmMgQnPt99mtRwEI8Agcutw4h8',
+        url: window.localStorage.getItem('idi_supabase_url') || (window.__ENV__ && window.__ENV__.SUPABASE_URL) || 'https://pbgqrjlcqyyolejchymx.supabase.co',
+        anonKey: window.localStorage.getItem('idi_supabase_anon_key') || (window.__ENV__ && window.__ENV__.SUPABASE_ANON_KEY) || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBiZ3FyamxjcXl5b2xlamNoeW14Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTIwMzczOTQsImV4cCI6MjEwNzYxMzM5NH0.IOdBTilJQ79zP6tqxLxTtqQnK1xreTo0E99A07-lrK0',
     };
 
     let client = null;
@@ -36,8 +36,8 @@
      */
     function getConfig() {
         return {
-            url: window.localStorage.getItem('idi_supabase_url') || DEFAULT_CONFIG.url,
-            anonKey: window.localStorage.getItem('idi_supabase_anon_key') || DEFAULT_CONFIG.anonKey,
+            url: window.localStorage.getItem('idi_supabase_url') || (window.__ENV__ && window.__ENV__.SUPABASE_URL) || DEFAULT_CONFIG.url,
+            anonKey: window.localStorage.getItem('idi_supabase_anon_key') || (window.__ENV__ && window.__ENV__.SUPABASE_ANON_KEY) || DEFAULT_CONFIG.anonKey,
         };
     }
 

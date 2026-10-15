@@ -1,5 +1,19 @@
 Options -Indexes
 
+# Custom Error Pages
+ErrorDocument 404 /404.html
+
+# Block direct access to hidden files (.env, .git, .gitignore) and sensitive SQL schemas
+<FilesMatch "(^\.|\.env|supabase_schema\.sql|web\.config)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
 <IfModule mod_headers.c>
     Header always set X-Content-Type-Options "nosniff"
     Header always set X-Frame-Options "DENY"

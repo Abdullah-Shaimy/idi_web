@@ -1,5 +1,73 @@
+# ==============================================================================
+# Institute of Da'wa Islamiyya (IDI) - Git Ignore Configuration
+# ==============================================================================
+
+# Environment & Secret files
+.env
+.env.local
+.env.*.local
+*.env
+*.env.production
+*.env.development
+
+# Operating System files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
-*.log
+desktop.ini
+$RECYCLE.BIN/
+
+# IDE & Editor files
 .vscode/
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
 .idea/
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+*.swo
+*~
+
+# Dependencies & Package Managers
+node_modules/
+jspm_packages/
+.pnp/
+.pnp.js
+
+# Logs & Debugging
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+
+# Build & Cache Directories
+dist/
+build/
+out/
+.cache/
+.parcel-cache/
+.turbo/
+
+# Temporary files & backups
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+
+# Database / Backup Dumps
+*.sql.bak
+*.dump
+*.backup

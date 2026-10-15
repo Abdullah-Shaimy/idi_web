@@ -1,0 +1,20 @@
+{
+  "name": "idi-website",
+  "version": "1.0.0",
+  "description": "Institute of Da'wa Islamiyya (IDI) - Official Website & Administrative Portal",
+  "private": true,
+  "scripts": {
+    "start": "npx serve -l 5500 .",
+    "dev": "npx serve -l 5500 .",
+    "serve": "npx http-server -p 5500 -c-1 ."
+  },
+  "keywords": [
+    "madrasa",
+    "hifz",
+    "islamic-education",
+    "supabase",
+    "vanilla-js"
+  ],
+  "author": "NanoVext",
+  "license": "UNLICENSED"
+}
