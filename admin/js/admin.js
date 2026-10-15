@@ -1109,8 +1109,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         allAdmins.forEach((admin) => {
             const tr = document.createElement('tr');
+            const isCurrentSession = (admin.user_id && admin.user_id === currentUser?.id) ||
+                (currentUser?.email && admin.email && admin.email.toLowerCase() === currentUser.email.toLowerCase());
 
-            // Administrator name & avatar
+            // Administrator name + avatar
             const tdAdmin = document.createElement('td');
             const name = admin.full_name || admin.email.split('@')[0];
             tdAdmin.innerHTML = `
@@ -1120,7 +1122,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     </div>
                     <div>
                         <div style="font-weight: 700; color: var(--text-primary);">${escapeHtml(name)}</div>
-                        <div style="font-size: 0.78rem; color: var(--text-muted);">${admin.user_id === currentUser?.id ? '(Current Session)' : ''}</div>
+                        <div style="font-size: 0.78rem; color: var(--text-muted);">${isCurrentSession ? '(Current Session)' : ''}</div>
                     </div>
                 </div>
             `;
@@ -1160,7 +1162,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             btnDelete.style.marginLeft = '0.4rem';
 
             // Prevent deleting own active session
-            if (admin.user_id === currentUser?.id) {
+            if (isCurrentSession) {
                 btnDelete.disabled = true;
                 btnDelete.title = 'Cannot remove own active account';
                 btnDelete.style.opacity = '0.5';

@@ -773,18 +773,6 @@
                 full_name: admin.full_name || (admin.email && admin.email.toLowerCase() === 'dev@idi.lk' ? 'Lead Developer' : admin.email.split('@')[0]),
             }));
 
-            // Ensure dev@idi.lk is always in the list
-            if (!normalized.some((a) => a.email && a.email.toLowerCase() === 'dev@idi.lk')) {
-                normalized.unshift({
-                    id: 'dev-super-admin-row',
-                    email: 'dev@idi.lk',
-                    role: 'super_admin',
-                    full_name: 'Lead Developer (Super Admin)',
-                    status: 'active',
-                    created_at: new Date().toISOString(),
-                });
-            }
-
             return { data: normalized, error: null, isMock: false };
         } catch (error) {
             console.error('[IDI Supabase] Error fetching admin users:', error);
@@ -872,7 +860,9 @@
         if (status !== undefined) payload.status = status;
         if (full_name !== undefined) payload.full_name = full_name ? full_name.trim() : null;
 
-        if (!supabase || !isConfigured()) {
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(adminId);
+
+        if (!supabase || !isConfigured() || !isUuid) {
             const admin = MOCK_ADMINS.find((a) => a.id === adminId);
             if (admin) {
                 if (role !== undefined) admin.role = role;
@@ -880,7 +870,7 @@
                 if (full_name !== undefined) admin.full_name = full_name;
                 admin.updated_at = new Date().toISOString();
             }
-            return { data: admin, error: null, isMock: true };
+            return { data: admin || { id: adminId, ...payload }, error: null, isMock: true };
         }
 
         try {
@@ -904,7 +894,9 @@
      */
     async function deleteAdminUser(adminId) {
         const supabase = getClient();
-        if (!supabase || !isConfigured()) {
+        const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(adminId);
+
+        if (!supabase || !isConfigured() || !isUuid) {
             MOCK_ADMINS = MOCK_ADMINS.filter((a) => a.id !== adminId);
             return { success: true, isMock: true };
         }

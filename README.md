@@ -10,7 +10,7 @@ Official responsive web platform and administrative portal for the **Institute o
   - **Home** (`index.html`): Hero slider, mission, quick navigation, and highlights.
   - **About** (`about.html`): History, vision, mission, and bilingual Tamil/English presentation.
   - **Hifz Program** (`hifz.html`): Curriculum, stages, and daily schedule.
-  - **Students & Life** (`students.html`): Student activities, routines, and facilities.
+  - **Journey** (`students.html`): Daily routines, student life, and spiritual journey.
   - **Alumni Network** (`alumni.html`): Graduate directory loaded from dynamic JSON data.
   - **Dynamic Photo Gallery** (`gallery.html`): Album folders and photos served from Supabase storage or local fallbacks.
   - **Contact & Inquiries** (`contact.html`): Direct database submission with status tracking.

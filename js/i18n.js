@@ -19,7 +19,7 @@
                     home: 'Home',
                     about: 'About',
                     hifz: 'Hifz Program',
-                    students: 'Students',
+                    students: 'Journey',
                     alumni: 'Alumni',
                     gallery: 'Gallery',
                     contact: 'Contact',
@@ -31,7 +31,7 @@
                     information: 'Information',
                     contact: 'Contact',
                     aboutUs: 'About Us',
-                    studentLife: 'Student Life',
+                    studentLife: 'Journey',
                     contactUs: 'Contact Us',
                     ourAlumni: 'Our Alumni',
                     checkResults: 'Check Results',
@@ -92,6 +92,36 @@
                             'Integrated Hifz and Academic Studies',
                         ],
                         cta: 'Explore Programs',
+                    },
+                    homeAbout: {
+                        subtitle: 'About the Institute',
+                        title: 'Nurturing Faith, Knowledge & Character',
+                        copy: "The Institute of Da'wa Islamiyya (IDI) is a center of excellence dedicated to Qur'anic memorization (Hifz), sound Islamic scholarship, and character development. We provide an inspiring sanctuary where students connect deeply with the words of Allah (SWT) and embody them through refined ethics.",
+                        cta: 'Discover More About Us',
+                    },
+                    homeHifz: {
+                        subtitle: 'Tahfeez-ul-Quran',
+                        title: 'Comprehensive Hifz Program',
+                        copy: 'A systematic, 4-year curriculum designed to ensure accurate recitation, steady memorization, and lifelong retention of the Holy Quran.',
+                        cta: 'Explore Hifz Curriculum',
+                    },
+                    homeJourney: {
+                        subtitle: 'Student Journey',
+                        title: 'A Harmonious Balance of Sacred & Secular Knowledge',
+                        copy: 'At IDI, intellectual growth and spiritual devotion flourish together. Along with rigorous Quranic memorization, our students receive standard national curriculum education from Grade 6 to Grade 11 (O/L), preparing well-rounded scholars with strong ethical character and academic competence.',
+                        cta: 'Explore Student Journey',
+                    },
+                    homeAlumni: {
+                        subtitle: 'Our Graduates',
+                        title: 'A Proud Legacy of Huffaz',
+                        copy: 'Since 1995, dozens of dedicated students have graduated as certified Huffaz-ul-Quran, serving communities as spiritual leaders, imams, educators, and upright citizens.',
+                        cta: 'Browse Complete Alumni Directory',
+                    },
+                    homeGallery: {
+                        subtitle: 'Campus & Activities',
+                        title: 'Moments at the Institute',
+                        copy: 'Glimpses into our sacred learning atmosphere, daily prayers, memorization sessions, and annual institutional milestones.',
+                        cta: 'Explore Full Photo Gallery',
                     },
                 },
                 about: {
@@ -484,7 +514,7 @@
                     home: 'முகப்பு',
                     about: 'அறிமுகம்',
                     hifz: 'ஹிஃப்ழ் பாடத்திட்டம்',
-                    students: 'மாணவர்கள்',
+                    students: 'பயணம்',
                     alumni: 'பழைய மாணவர்கள்',
                     gallery: 'கேலரி',
                     contact: 'தொடர்பு',
@@ -496,7 +526,7 @@
                     information: 'தகவல்கள்',
                     contact: 'தொடர்பு',
                     aboutUs: 'எங்களை பற்றி',
-                    studentLife: 'மாணவர் வாழ்க்கை',
+                    studentLife: 'பயணம்',
                     contactUs: 'எங்களை தொடர்புகொள்ள',
                     ourAlumni: 'எங்கள் பழைய மாணவர்கள்',
                     checkResults: 'முடிவுகளை பார்க்க',
@@ -557,6 +587,36 @@
                             'ஹிஃப்ழும் பொதுக் கல்வியும் ஒருங்கிணைப்பு',
                         ],
                         cta: 'பாடத்திட்டங்களைப் பார்க்க',
+                    },
+                    homeAbout: {
+                        subtitle: 'எங்களைப் பற்றி',
+                        title: 'ஈமான், கல்வி மற்றும் உயர்ந்த பண்புகளின் சரணாலயம்',
+                        copy: 'தஃவா இஸ்லாமிய்யா கலாபீடம் (IDI) குர்ஆன் மனனம் (ஹிஃப்ழ்), இஸ்லாமியக் கல்வி, குணநலன் வளர்ப்பு ஆகியவற்றில் அர்ப்பணிப்புடன் செயலாற்றும் முன்னணி கல்வி நிலையமாகும். மாணவர்கள் குர்ஆனோடு ஆழமான தொடர்பை ஏற்படுத்தி அதனைத் தம் வாழ்வில் நடைமுறைப்படுத்த வழிகாட்டுகிறோம்.',
+                        cta: 'எங்களைப் பற்றி மேலும் அறிய',
+                    },
+                    homeHifz: {
+                        subtitle: 'ஹிஃப்ழ் பாடத்திட்டம்',
+                        title: 'முறையான அல்குர்ஆன் மனனப் பயிற்சி',
+                        copy: 'தஜ்வீத் விதிகளுடன் குர்ஆனைத் தெளிவாக மனனம் செய்து, மீட்டி, மனதில் ஆழமாகப் பதிய வைக்கும் 4 வருடக் கட்டமைப்பு.',
+                        cta: 'ஹிஃப்ழ் விபரங்களைப் பார்க்க',
+                    },
+                    homeJourney: {
+                        subtitle: 'மாணவர் பயணம்',
+                        title: 'அறிவும் ஆன்மிகமும் இணைந்த சமநிலையான நாளாந்த ஒழுங்கு',
+                        copy: 'குர்ஆன் மனனத்தோடு 6ஆம் வகுப்பு முதல் O/L வரையான தேசிய பாடசாலைக் கல்வியும் மார்க்கக் கல்வியும் மாணவர்களுக்கு சமச்சீராக வழங்கப்படுகிறது.',
+                        cta: 'மாணவர் பயணத்தைப் பார்க்க',
+                    },
+                    homeAlumni: {
+                        subtitle: 'எங்கள் பழைய மாணவர்கள்',
+                        title: 'நாடெங்கும் ஒளிவீசும் ஹாஃபிழ்களின் பாரம்பரியம்',
+                        copy: '1995 முதல் இந்நிலையம் உருவாக்கிய ஹாஃபிழ்கள் இலங்கை முழுவதும் சன்மார்க்கப் பணிகளிலும் பொதுத்துறைகளிலும் முன்மாதிரியாகத் திகழ்கின்றனர்.',
+                        cta: 'பழைய மாணவர் விபரங்களைப் பார்க்க',
+                    },
+                    homeGallery: {
+                        subtitle: 'கலாபீட நிகழ்வுகள்',
+                        title: 'கலாபீட வாழ்க்கையின் சில நினைவுகள்',
+                        copy: 'மத்ரஸா வாழ்க்கை, மார்க்க நிகழ்வுகள் மற்றும் மாணவர்களின் ஆன்மிகப் பயணத்தின் காட்சித் தொகுப்பு.',
+                        cta: 'முழுமையான கேலரியைப் பார்க்க',
                     },
                 },
                 about: {
@@ -1267,6 +1327,46 @@
             if (cta) {
                 setText(cta, content.featured.cta);
             }
+        }
+
+        if (content.homeAbout) {
+            setText('.home-about-sub', content.homeAbout.subtitle);
+            setText('.home-about-title', content.homeAbout.title);
+            setText('.home-about-copy', content.homeAbout.copy);
+            const aboutCta = query('.home-about-cta');
+            if (aboutCta) withIcon(aboutCta, content.homeAbout.cta);
+        }
+
+        if (content.homeHifz) {
+            setText('.home-hifz-sub', content.homeHifz.subtitle);
+            setText('.home-hifz-title', content.homeHifz.title);
+            setText('.home-hifz-copy', content.homeHifz.copy);
+            const hifzCta = query('.home-hifz-cta');
+            if (hifzCta) withIcon(hifzCta, content.homeHifz.cta);
+        }
+
+        if (content.homeJourney) {
+            setText('.home-journey-sub', content.homeJourney.subtitle);
+            setText('.home-journey-title', content.homeJourney.title);
+            setText('.home-journey-copy', content.homeJourney.copy);
+            const journeyCta = query('.home-journey-cta');
+            if (journeyCta) withIcon(journeyCta, content.homeJourney.cta);
+        }
+
+        if (content.homeAlumni) {
+            setText('.home-alumni-sub', content.homeAlumni.subtitle);
+            setText('.home-alumni-title', content.homeAlumni.title);
+            setText('.home-alumni-copy', content.homeAlumni.copy);
+            const alumniCta = query('.home-alumni-cta');
+            if (alumniCta) withIcon(alumniCta, content.homeAlumni.cta);
+        }
+
+        if (content.homeGallery) {
+            setText('.home-gallery-sub', content.homeGallery.subtitle);
+            setText('.home-gallery-title', content.homeGallery.title);
+            setText('.home-gallery-copy', content.homeGallery.copy);
+            const galleryCta = query('.home-gallery-cta');
+            if (galleryCta) withIcon(galleryCta, content.homeGallery.cta);
         }
     }
 
