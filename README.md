@@ -1,102 +1,112 @@
 # Institute of Da'wa Islamiyya (IDI) - Web Portal
 
-Official responsive web platform and administrative portal for the **Institute of Da'wa Islamiyya (IDI)** — an institution dedicated to Qur'anic memorization (Hifz), Islamic values, and academic excellence.
+Official responsive web platform and administrative portal for the **Institute of Da'wa Islamiyya (IDI)** — an institution dedicated to Qur'anic memorization (Hifz), Islamic values, and academic excellence. Built with **Next.js (App Router)**, **React**, **TypeScript**, and **Supabase**.
 
 ---
 
 ## 🌟 Key Features
 
-- **Public Website Pages**:
-  - **Home** (`index.html`): Hero slider, mission, quick navigation, and highlights.
-  - **About** (`about.html`): History, vision, mission, and bilingual Tamil/English presentation.
-  - **Hifz Program** (`hifz.html`): Curriculum, stages, and daily schedule.
-  - **Journey** (`students.html`): Daily routines, student life, and spiritual journey.
-  - **Alumni Network** (`alumni.html`): Graduate directory loaded from dynamic JSON data.
-  - **Dynamic Photo Gallery** (`gallery.html`): Album folders and photos served from Supabase storage or local fallbacks.
-  - **Contact & Inquiries** (`contact.html`): Direct database submission with status tracking.
-  - **Results Lookup** (`result.html`): Protected, non-cacheable exam results portal.
-  - **Custom 404** (`404.html`): Branded error page with helpful navigation.
+- **Public Website Routes**:
+  - **Home** (`/`): Hero slider, mission, quick navigation, and highlights.
+  - **About** (`/about`): History, vision, mission, and bilingual Tamil/English presentation.
+  - **Hifz Program** (`/hifz`): Curriculum, stages, and daily schedule.
+  - **Journey** (`/students`): Daily routines, student life, and spiritual journey.
+  - **Alumni Network** (`/alumni`): Graduate directory loaded from dynamic JSON data.
+  - **Events** (`/events`): Dynamic photo album folders and events served from Supabase storage or local fallbacks (with `/gallery` auto-redirect).
+  - **Contact & Inquiries** (`/contact`): Direct database submission with status tracking.
+  - **Results Lookup** (`/result`): Protected, non-cacheable exam results portal.
+  - **Admissions Open** (`/open`): Special admissions announcement and portal.
+  - **Custom 404** (`/_not-found`): Branded error page with helpful navigation.
 
-- **Administrative Management Dashboard** (`/admin/dashboard.html`):
+- **Administrative Management Dashboard** (`/admin/dashboard`):
   - **Role-based Access Control**: Supports `super_admin` and `admin` roles.
-  - **Gallery Management**: Create/delete photo folders, upload and manage WebP images directly into Supabase Storage.
+  - **Gallery / Events Management**: Create/delete photo folders, upload and manage WebP images directly into Supabase Storage.
   - **Inquiries Inbox**: Real-time review, status updates (`new`, `in_progress`, `resolved`), and internal admin notes.
   - **Admin User Management**: Invite, create, update, and revoke admin staff privileges (`super_admin` only).
   - **Direct Credentials Config**: Runtime Supabase configuration modal.
 
 - **Security & Integrity**:
-  - Modern Content Security Policy (CSP), anti-clickjacking (`X-Frame-Options: DENY`), and nosniff headers.
-  - Client-side content protection (`js/security.js`).
+  - Content Security Policy (CSP), anti-clickjacking (`X-Frame-Options: DENY`), and nosniff security headers in `next.config.mjs`.
+  - Client-side content protection via React `<SecurityProvider>`.
   - Strict upload restrictions: Enforces WEBP image format and size constraints.
-  - Server-level protection in `.htaccess` and `web.config` to prevent public downloads of `.env` and SQL schema dumps.
 
 ---
 
 ## 📁 Project Directory Structure
 
 ```text
-├── admin/
-│   ├── css/
-│   │   └── admin.css            # Admin portal styling
-│   ├── js/
-│   │   └── admin.js             # Admin functionality and Supabase integration
-│   ├── dashboard.html           # Admin operations dashboard
-│   └── login.html               # Secure Supabase Auth login
-├── assets/
-│   └── images/                  # Institutional logos, hero backgrounds, and webp assets
-├── css/
-│   └── style.css                # Global site stylesheets and variables
-├── data/
-│   ├── alumni.json              # Alumni database records
-│   ├── gallery.json             # Fallback gallery data
-│   └── results.json             # Student examination records
-├── js/
-│   ├── alumni.js                # Alumni directory filtering
-│   ├── gallery.js               # Public photo album viewer
-│   ├── i18n.js                  # Multi-language translation engine (Tamil / English)
-│   ├── main.js                  # Navigation, sliders, and UI interactions
-│   ├── open.js                  # Open admissions script
-│   ├── result.js                # Exam result lookup logic
-│   ├── security.js              # Protection utilities
-│   ├── students.js              # Students section logic
-│   └── supabase-client.js       # Supabase database & storage client wrapper
-├── .env                         # Local environment configuration (ignored by git)
-├── .env.example                 # Environment configuration template
-├── .gitignore                   # Version control ignore rules
-├── .htaccess                    # Apache server configuration & security headers
-├── 404.html                     # Custom 404 Not Found error page
-├── package.json                 # Project scripts and metadata
-├── robots.txt                   # Web crawler and search engine guidelines
-├── site.webmanifest             # PWA metadata
-├── sitemap.xml                  # Search engine XML sitemap
-├── supabase_schema.sql          # Complete Supabase PostgreSQL schema and RLS policies
-└── web.config                   # IIS server configuration & security headers
+├── app/                         # Next.js App Router pages and layouts
+│   ├── about/                   # About page
+│   ├── admin/                   # Admin portal (dashboard, login)
+│   ├── alumni/                  # Alumni directory page
+│   ├── contact/                 # Contact & inquiries page
+│   ├── events/                  # Events & photo albums page
+│   ├── gallery/                 # Redirect route to /events
+│   ├── hifz/                    # Hifz program page
+│   ├── management/              # Management page
+│   ├── open/                    # Admissions open page
+│   ├── result/                  # Exam results lookup
+│   ├── students/                # Student journey page
+│   ├── globals.css              # Global styles and responsive design
+│   ├── layout.tsx               # Root layout & providers
+│   └── page.tsx                 # Home page
+├── components/                  # Modular React components
+│   ├── about/                   # About section components
+│   ├── alumni/                  # Alumni filter & cards
+│   ├── contact/                 # Contact form & info
+│   ├── gallery/                 # Events & album viewer
+│   ├── hifz/                    # Hifz curriculum & stages
+│   ├── home/                    # Home content & hero slider
+│   ├── layout/                  # Header, Footer, Chrome, Security
+│   ├── management/              # Management directory
+│   ├── open/                    # Open portal
+│   ├── result/                  # Result verification & lookup
+│   └── students/                # Students journey content
+├── context/                     # React Context providers (LanguageContext)
+├── lib/                         # Core utilities, Supabase client, i18n data
+│   ├── i18nData.ts              # Multi-language dictionary (Tamil / English)
+│   └── supabaseClient.ts        # Supabase client wrapper & API methods
+├── public/                      # Static assets & public data
+│   ├── assets/images/           # WebP images & institutional graphics
+│   ├── data/                    # JSON datasets (alumni, results, gallery)
+│   ├── robots.txt               # Web crawler instructions
+│   ├── site.webmanifest         # PWA metadata
+│   └── sitemap.xml              # XML Sitemap with clean Next.js paths
+├── .env                         # Environment variables (ignored by git)
+├── .env.example                 # Environment variables template
+├── next.config.mjs              # Next.js configuration & security headers
+├── package.json                 # Project dependencies and scripts
+├── supabase_schema.sql          # Supabase PostgreSQL schema and RLS policies
+└── tsconfig.json                # TypeScript configuration
 ```
 
 ---
 
 ## 🚀 Getting Started
 
-### 1. Clone & Configure Environment
+### 1. Configure Environment
 
-1. Copy `.env.example` to `.env`:
+1. Copy `.env.example` to `.env.local`:
    ```bash
-   cp .env.example .env
+   cp .env.example .env.local
    ```
-2. Enter your Supabase Project URL and Anon Public Key inside `.env`.
+2. Enter your Supabase Project URL and Anon Public Key inside `.env.local`.
 
 ### 2. Run Locally
 
-You can run the site using any static web server:
-
 ```bash
-# Using npm / npx
+# Install dependencies
+npm install
+
+# Start Next.js development server
+npm run dev
+
+# Or build and start production server
+npm run build
 npm start
-# OR
-npx serve -l 5500 .
 ```
 
-Navigate to `http://localhost:5500` in your browser.
+Navigate to `http://localhost:3000` in your browser.
 
 ---
 
@@ -117,11 +127,10 @@ Navigate to `http://localhost:5500` in your browser.
 
 - Never commit `.env` or production credentials to GitHub.
 - Keep `SUPABASE_SERVICE_ROLE_KEY` strictly confidential. The client frontend only uses the public `SUPABASE_ANON_KEY`.
-- Both `.htaccess` (Apache) and `web.config` (IIS) include blocking rules preventing web access to `.env`, `.git`, and `supabase_schema.sql`.
 
 ---
 
 ## 📄 License
 
 &copy; 2026 Institute of Da'wa Islamiyya. All rights reserved.
-Developed by [NanoVext](https://abdullahshaimy.lk).
+Developed by [NanoVext](https://nanovext.com).

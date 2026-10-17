@@ -56,11 +56,14 @@ logs/
 dist/
 build/
 out/
+.next/
 .cache/
 .parcel-cache/
 .turbo/
+*.tsbuildinfo
 
 # Temporary files & backups
+_legacy_backup/
 *.tmp
 *.temp
 *.bak
