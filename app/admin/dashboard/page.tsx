@@ -514,7 +514,7 @@ export default function AdminDashboardPage() {
 
     try {
       const isSuper = newAdminRole === 'super_admin';
-      await IDISupabase.createAdminUser({
+      const created: any = await IDISupabase.createAdminUser({
         email: newAdminEmail.trim(),
         full_name: newAdminFullName.trim(),
         role: newAdminRole,
@@ -522,7 +522,11 @@ export default function AdminDashboardPage() {
         allowed_tabs: isSuper ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'] : newAdminAllowedTabs,
         allowed_emails: isSuper ? ['*'] : newAdminAllowedEmails,
       });
-      showToast(`Admin account created for ${newAdminEmail}.`);
+      if (created?.generatedPassword) {
+        showToast(`Admin account created! Initial password: ${created.generatedPassword}`, 'success');
+      } else {
+        showToast(`Admin account created for ${newAdminEmail}.`);
+      }
       setAddAdminModal(false);
       setNewAdminEmail('');
       setNewAdminFullName('');

@@ -299,6 +299,12 @@ function setStorageItem(key, val) {
         }
     ];
 
+    function isKnownSuperAdminEmail(email?: string | null): boolean {
+        if (!email) return false;
+        const clean = email.toLowerCase().trim();
+        return clean === 'dev@idi.lk' || clean === 'dev@abdullahshaimy.lk';
+    }
+
     // -------------------------------------------------------------------------
     // 3. PUBLIC GALLERY SERVICE METHODS
     // -------------------------------------------------------------------------
@@ -538,22 +544,25 @@ function setStorageItem(key, val) {
 
             const user = await getUser();
             const userEmail = (user && user.email) || (data && data.email) || '';
+            const isKnownSuper = isKnownSuperAdminEmail(userEmail);
 
             if (error || !data) {
-                if (userEmail.toLowerCase() === 'dev@idi.lk') {
+                if (isKnownSuper) {
                     return {
-                        id: 'dev-super-admin',
+                        id: 'super-admin-' + userId,
                         user_id: userId,
-                        email: 'dev@idi.lk',
+                        email: userEmail || 'dev@abdullahshaimy.lk',
                         role: 'super_admin',
-                        full_name: 'Lead Developer (Super Admin)',
+                        full_name: userEmail.includes('abdullah') ? 'Abdullah Shaimy' : 'Lead Developer (Super Admin)',
                         status: 'active',
+                        allowed_tabs: ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'],
+                        allowed_emails: ['*'],
                     };
                 }
                 return null;
             }
 
-            if (userEmail.toLowerCase() === 'dev@idi.lk' || data.role === 'super_admin') {
+            if (isKnownSuper || data.role === 'super_admin') {
                 data.role = 'super_admin';
                 data.status = 'active';
                 data.allowed_tabs = data.allowed_tabs || ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'];
@@ -574,7 +583,7 @@ function setStorageItem(key, val) {
      */
     async function checkIsAdmin(userId) {
         const user = await getUser();
-        if (user && user.email && user.email.toLowerCase() === 'dev@idi.lk') return true;
+        if (user && isKnownSuperAdminEmail(user.email)) return true;
         const profile = await getAdminProfile(userId);
         return Boolean(profile && profile.status === 'active');
     }
@@ -584,9 +593,9 @@ function setStorageItem(key, val) {
      */
     async function checkIsSuperAdmin(userId) {
         const user = await getUser();
-        if (user && user.email && user.email.toLowerCase() === 'dev@idi.lk') return true;
+        if (user && isKnownSuperAdminEmail(user.email)) return true;
         const profile = await getAdminProfile(userId);
-        return Boolean(profile && (profile.role === 'super_admin' || (user && user.email.toLowerCase() === 'dev@idi.lk')) && profile.status === 'active');
+        return Boolean(profile && (profile.role === 'super_admin' || isKnownSuperAdminEmail(user?.email)) && profile.status === 'active');
     }
 
     /**
@@ -596,16 +605,18 @@ function setStorageItem(key, val) {
         const user = await getUser();
         if (!user) return null;
         let profile = await getAdminProfile(user.id);
-        const isDev = Boolean(user.email && user.email.toLowerCase() === 'dev@idi.lk');
+        const isDev = isKnownSuperAdminEmail(user.email);
 
         if (!profile && isDev) {
             profile = {
-                id: 'dev-super-admin',
+                id: 'super-admin-' + user.id,
                 user_id: user.id,
-                email: 'dev@idi.lk',
+                email: user.email || 'dev@abdullahshaimy.lk',
                 role: 'super_admin',
-                full_name: 'Lead Developer (Super Admin)',
+                full_name: user.email?.includes('abdullah') ? 'Abdullah Shaimy' : 'Lead Developer (Super Admin)',
                 status: 'active',
+                allowed_tabs: ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'],
+                allowed_emails: ['*'],
             };
         }
 
@@ -818,6 +829,25 @@ function setStorageItem(key, val) {
         }
 
         try {
+            // First try server API route with admin session
+            try {
+                const session = await getSession();
+                const token = session?.access_token || '';
+                const res = await fetch('/api/admin/users', {
+                    headers: {
+                        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                    },
+                });
+                if (res.ok) {
+                    const result = await res.json();
+                    if (result.success && Array.isArray(result.users)) {
+                        return { data: result.users, error: null, isMock: false };
+                    }
+                }
+            } catch (apiErr) {
+                console.warn('[IDI Supabase] /api/admin/users GET failed, falling back to direct query:', apiErr);
+            }
+
             const { data, error } = await supabase
                 .from('admin_users')
                 .select('*')
@@ -829,12 +859,18 @@ function setStorageItem(key, val) {
             }
 
             // Normalize records if schema migration hasn't been executed yet
-            const normalized = (data || []).map((admin) => ({
-                ...admin,
-                role: admin.role || (admin.email && admin.email.toLowerCase() === 'dev@idi.lk' ? 'super_admin' : 'admin'),
-                status: admin.status || 'active',
-                full_name: admin.full_name || (admin.email && admin.email.toLowerCase() === 'dev@idi.lk' ? 'Lead Developer' : admin.email.split('@')[0]),
-            }));
+            const normalized = (data || []).map((admin) => {
+                const isSuper = admin.role === 'super_admin' || isKnownSuperAdminEmail(admin.email);
+                return {
+                    ...admin,
+                    role: isSuper ? 'super_admin' : (admin.role || 'admin'),
+                    status: admin.status || 'active',
+                    full_name: admin.full_name || (isKnownSuperAdminEmail(admin.email) ? 'Super Administrator' : (admin.email?.split('@')[0] || 'Admin')),
+                    allowed_tabs: admin.allowed_tabs || (isSuper ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'] : ['overview', 'gallery', 'inquiries', 'mailbox']),
+                    allowed_emails: admin.allowed_emails || (isSuper ? ['*'] : ['info@idi.lk']),
+                    must_change_password: Boolean(admin.must_change_password),
+                };
+            });
 
             return { data: normalized, error: null, isMock: false };
         } catch (error) {
@@ -876,53 +912,32 @@ function setStorageItem(key, val) {
         }
 
         try {
-            // Attempt to create user account if password provided
-            let authUserId = null;
-            if (password && password.length >= 6) {
-                const { data: signUpData, error: signErr } = await supabase.auth.signUp({
+            // Call server-side API endpoint with session Bearer token
+            const session = await getSession();
+            const token = session?.access_token || '';
+
+            const res = await fetch('/api/admin/users', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+                body: JSON.stringify({
                     email: cleanEmail,
-                    password: password,
-                    options: {
-                        data: { full_name: cleanName, role: cleanRole }
-                    }
-                });
-                if (!signErr && signUpData && signUpData.user) {
-                    authUserId = signUpData.user.id;
-                }
+                    role: cleanRole,
+                    full_name: cleanName,
+                    password: password || undefined,
+                    allowed_tabs: cleanTabs,
+                    allowed_emails: cleanEmails,
+                }),
+            });
+
+            const result = await res.json();
+            if (!res.ok || !result.success) {
+                throw new Error(result.error || 'Failed to create admin user');
             }
 
-            const targetUserId = authUserId || crypto.randomUUID();
-
-            const insertRow: any = {
-                user_id: targetUserId,
-                email: cleanEmail,
-                role: cleanRole,
-                full_name: cleanName || null,
-                status: 'active',
-                allowed_tabs: cleanTabs,
-                allowed_emails: cleanEmails,
-                must_change_password: Boolean(password),
-            };
-
-            let { data, error } = await supabase
-                .from('admin_users')
-                .insert([insertRow])
-                .select()
-                .single();
-
-            // If remote table hasn't migrated columns yet, fallback gracefully
-            if (error && error.code === 'PGRST204') {
-                delete insertRow.allowed_tabs;
-                delete insertRow.allowed_emails;
-                delete insertRow.must_change_password;
-                const retry = await supabase.from('admin_users').insert([insertRow]).select().single();
-                if (retry.error) throw retry.error;
-                data = { ...retry.data, allowed_tabs: cleanTabs, allowed_emails: cleanEmails, must_change_password: Boolean(password) };
-            } else if (error) {
-                throw error;
-            }
-
-            return { data, error: null, isMock: false };
+            return { data: result.user, generatedPassword: result.generatedPassword, error: null, isMock: false };
         } catch (error) {
             console.error('[IDI Supabase] Error creating admin user:', error);
             throw error;
@@ -932,7 +947,7 @@ function setStorageItem(key, val) {
     /**
      * Update admin user role, full name, or status
      */
-    async function updateAdminUser(adminId, { role, status, full_name, allowed_tabs, allowed_emails }) {
+    async function updateAdminUser(adminId, { role, status, full_name, allowed_tabs, allowed_emails, password }: any = {}) {
         const supabase = getClient();
         const payload: Record<string, any> = {};
         if (role !== undefined) payload.role = role;
@@ -940,6 +955,7 @@ function setStorageItem(key, val) {
         if (full_name !== undefined) payload.full_name = full_name ? full_name.trim() : null;
         if (allowed_tabs !== undefined) payload.allowed_tabs = allowed_tabs;
         if (allowed_emails !== undefined) payload.allowed_emails = allowed_emails;
+        if (password !== undefined) payload.password = password;
 
         const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(adminId);
 
@@ -957,6 +973,29 @@ function setStorageItem(key, val) {
         }
 
         try {
+            // First call server API
+            const session = await getSession();
+            const token = session?.access_token || '';
+
+            const res = await fetch('/api/admin/users', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+                body: JSON.stringify({
+                    id: adminId,
+                    ...payload,
+                }),
+            });
+
+            const result = await res.json();
+            if (res.ok && result.success) {
+                return { data: result.user, error: null, isMock: false };
+            }
+
+            // Fallback direct table update if API unavailable
+            delete payload.password;
             let { data, error } = await supabase
                 .from('admin_users')
                 .update(payload)
@@ -996,6 +1035,22 @@ function setStorageItem(key, val) {
         }
 
         try {
+            const session = await getSession();
+            const token = session?.access_token || '';
+
+            const res = await fetch(`/api/admin/users?id=${encodeURIComponent(adminId)}`, {
+                method: 'DELETE',
+                headers: {
+                    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+                },
+            });
+
+            const result = await res.json();
+            if (res.ok && result.success) {
+                return { success: true, isMock: false };
+            }
+
+            // Fallback to direct delete
             const { data, error } = await supabase
                 .from('admin_users')
                 .delete()

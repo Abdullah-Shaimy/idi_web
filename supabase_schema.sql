@@ -53,6 +53,7 @@ ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEF
 ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now());
 ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS allowed_tabs JSONB DEFAULT '["overview", "gallery", "inquiries", "mailbox"]'::jsonb;
 ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS allowed_emails JSONB DEFAULT '["info@idi.lk"]'::jsonb;
+ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS must_change_password BOOLEAN DEFAULT false;
 
 -- Table: contact_inquiries (for managing public contact submissions)
 CREATE TABLE IF NOT EXISTS public.contact_inquiries (

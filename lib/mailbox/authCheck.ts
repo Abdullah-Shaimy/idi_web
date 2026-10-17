@@ -108,7 +108,9 @@ export async function verifyAdminRequest(request: NextRequest): Promise<AdminAut
       // Ignore schema cache errors
     }
 
-    const isDev = user.email?.toLowerCase() === 'dev@idi.lk';
+    const isDev =
+      user.email?.toLowerCase() === 'dev@idi.lk' ||
+      user.email?.toLowerCase() === 'dev@abdullahshaimy.lk';
     const isSuper = isDev || adminRecord?.role === 'super_admin';
 
     if (!adminRecord && !isDev && !user.email?.endsWith('@idi.lk')) {
