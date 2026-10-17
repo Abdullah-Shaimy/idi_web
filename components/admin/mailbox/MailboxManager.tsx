@@ -75,7 +75,44 @@ interface MailboxSignature {
   is_default: boolean;
 }
 
-export default function MailboxManager() {
+export interface MailboxManagerProps {
+  adminProfile?: any;
+  isSuperAdmin?: boolean;
+}
+
+export default function MailboxManager({ adminProfile: propProfile, isSuperAdmin: propIsSuper }: MailboxManagerProps = {}) {
+  const [currentAdminProfile, setCurrentAdminProfile] = useState<any>(propProfile || null);
+  const [isSuper, setIsSuper] = useState<boolean>(propIsSuper ?? false);
+
+  useEffect(() => {
+    if (propProfile) {
+      setCurrentAdminProfile(propProfile);
+      setIsSuper(propIsSuper ?? propProfile.role === 'super_admin');
+      return;
+    }
+    async function fetchMyProfile() {
+      try {
+        const user = await IDISupabase.getUser();
+        if (user) {
+          const prof = await IDISupabase.getAdminProfile(user.id);
+          if (prof) {
+            setCurrentAdminProfile(prof);
+            setIsSuper(prof.role === 'super_admin');
+          }
+        }
+      } catch {}
+    }
+    fetchMyProfile();
+  }, [propProfile, propIsSuper]);
+
+  const allowedEmailsList: string[] = isSuper
+    ? ['*']
+    : Array.isArray(currentAdminProfile?.allowed_emails)
+    ? currentAdminProfile.allowed_emails
+    : [];
+
+  const hasMailboxAccess = isSuper || allowedEmailsList.length > 0;
+
   // Navigation & Filter State
   const [activeFolder, setActiveFolder] = useState<FolderType>('inbox');
   const [filterStarred, setFilterStarred] = useState(false);
@@ -602,9 +639,38 @@ export default function MailboxManager() {
           1. LEFT SIDEBAR (FOLDERS & SHORTCUTS)
           =================================================================== */}
       <aside className="mailbox-sidebar">
-        <button className="mailbox-compose-btn" onClick={openNewCompose}>
+        <button
+          className="mailbox-compose-btn"
+          onClick={() => {
+            if (!hasMailboxAccess || identities.length === 0) {
+              showToast('Your administrator account has not been assigned permission to any institutional sender address.', 'warning');
+              return;
+            }
+            openNewCompose();
+          }}
+          style={!hasMailboxAccess || identities.length === 0 ? { opacity: 0.55, cursor: 'not-allowed' } : undefined}
+          title={!hasMailboxAccess || identities.length === 0 ? 'No authorized sender addresses available' : 'Compose new email'}
+        >
           <i className="fa-solid fa-pen"></i> Compose
         </button>
+
+        {!isSuper && (
+          <div style={{ margin: '0.65rem 0.75rem 0.25rem', padding: '0.5rem 0.75rem', background: 'rgba(0,109,68,0.06)', border: '1px solid rgba(0,109,68,0.15)', borderRadius: '6px', fontSize: '0.78rem' }}>
+            <div style={{ fontWeight: 600, color: 'var(--accent-emerald)', display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '3px' }}>
+              <i className="fa-solid fa-shield-halved"></i>
+              <span>Assigned Mailbox:</span>
+            </div>
+            {allowedEmailsList.length === 0 ? (
+              <span style={{ color: 'var(--danger)', fontSize: '0.75rem', fontWeight: 600 }}>None (Access Restricted)</span>
+            ) : (
+              allowedEmailsList.map((em) => (
+                <div key={em} style={{ background: 'var(--bg-card)', padding: '2px 6px', borderRadius: '3px', marginTop: '2px', fontFamily: 'monospace', fontSize: '0.74rem', border: '1px solid var(--border-color)', color: 'var(--text-main)' }}>
+                  {em}
+                </div>
+              ))
+            )}
+          </div>
+        )}
 
         <div className="mailbox-sidebar-scroll">
           <ul className="mailbox-nav-list">
@@ -745,18 +811,22 @@ export default function MailboxManager() {
 
         {/* Sidebar Management Shortcuts */}
         <div className="mailbox-sidebar-footer">
-          <button className="mailbox-subnav-btn" onClick={() => setIdentitiesModalOpen(true)}>
-            <i className="fa-solid fa-id-badge" style={{ color: 'var(--accent-emerald)' }}></i> Sender Identities
-          </button>
+          {isSuper && (
+            <button className="mailbox-subnav-btn" onClick={() => setIdentitiesModalOpen(true)}>
+              <i className="fa-solid fa-id-badge" style={{ color: 'var(--accent-emerald)' }}></i> Sender Identities
+            </button>
+          )}
           <button className="mailbox-subnav-btn" onClick={() => setTemplatesModalOpen(true)}>
             <i className="fa-solid fa-file-invoice" style={{ color: 'var(--accent-gold)' }}></i> Templates
           </button>
           <button className="mailbox-subnav-btn" onClick={() => setSignaturesModalOpen(true)}>
             <i className="fa-solid fa-signature" style={{ color: '#6366f1' }}></i> Signatures
           </button>
-          <button className="mailbox-subnav-btn" onClick={() => setDnsModalOpen(true)}>
-            <i className="fa-solid fa-cloud-arrow-up" style={{ color: '#0284c7' }}></i> Cloudflare DNS &amp; Resend
-          </button>
+          {isSuper && (
+            <button className="mailbox-subnav-btn" onClick={() => setDnsModalOpen(true)}>
+              <i className="fa-solid fa-cloud-arrow-up" style={{ color: '#0284c7' }}></i> Cloudflare DNS &amp; Resend
+            </button>
+          )}
         </div>
       </aside>
 
@@ -858,6 +928,16 @@ export default function MailboxManager() {
             <div style={{ textAlign: 'center', padding: '3.5rem' }}>
               <i className="fa-solid fa-spinner fa-spin fa-2x" style={{ color: 'var(--accent-emerald)' }}></i>
               <p style={{ marginTop: '0.85rem', color: 'var(--text-muted)' }}>Loading mailbox messages...</p>
+            </div>
+          ) : !hasMailboxAccess ? (
+            <div className="mailbox-empty-state" style={{ padding: '3.5rem 1.5rem', textAlign: 'center' }}>
+              <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'rgba(217, 119, 6, 0.1)', color: 'var(--accent-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '1.5rem', margin: '0 auto 1rem' }}>
+                <i className="fa-solid fa-lock"></i>
+              </div>
+              <h4 style={{ fontSize: '1.05rem', color: 'var(--text-main)', marginBottom: '0.4rem' }}>No Email Access Assigned</h4>
+              <p style={{ maxWidth: '380px', margin: '0 auto', fontSize: '0.84rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                Your administrator account has not been assigned permissions to any official mailbox address (info@idi.lk, support@idi.lk, etc.). Please contact a Super Administrator.
+              </p>
             </div>
           ) : emails.length === 0 ? (
             <div className="mailbox-empty-state">
@@ -1167,6 +1247,14 @@ export default function MailboxManager() {
               </div>
             </div>
 
+            {/* Warning if no identities are authorized */}
+            {identities.length === 0 && (
+              <div style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px solid rgba(239, 68, 68, 0.25)', borderRadius: '6px', padding: '0.65rem 0.85rem', margin: '0.75rem 1rem 0.25rem', color: '#b91c1c', fontSize: '0.82rem', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <i className="fa-solid fa-circle-exclamation"></i>
+                <span>Access Denied: You do not have permission to send emails from any institutional address.</span>
+              </div>
+            )}
+
             {/* Recipient & Identity Fields */}
             <div className="compose-fields">
               <div className="compose-field-row">
@@ -1174,6 +1262,7 @@ export default function MailboxManager() {
                 <select
                   className="compose-field-select"
                   value={composeFrom}
+                  disabled={identities.length === 0}
                   onChange={(e) => {
                     setComposeFrom(e.target.value);
                     const idObj = identities.find((i) => i.email === e.target.value);
@@ -1181,7 +1270,7 @@ export default function MailboxManager() {
                   }}
                 >
                   {identities.length === 0 ? (
-                    <option value="">No sender identities configured — Add via Sender Identities</option>
+                    <option value="">No authorized sender addresses available</option>
                   ) : (
                     identities.map((id) => (
                       <option key={id.id} value={id.email}>
@@ -1437,7 +1526,7 @@ export default function MailboxManager() {
                   type="button"
                   className="btn btn-primary"
                   onClick={() => handleSendOrDraft(false)}
-                  disabled={sendingEmail}
+                  disabled={sendingEmail || identities.length === 0 || !composeFrom}
                 >
                   {sendingEmail ? (
                     <>
@@ -1454,7 +1543,7 @@ export default function MailboxManager() {
                   type="button"
                   className="btn btn-secondary btn-sm"
                   onClick={() => handleSendOrDraft(true)}
-                  disabled={sendingEmail}
+                  disabled={sendingEmail || identities.length === 0 || !composeFrom}
                 >
                   <i className="fa-solid fa-floppy-disk"></i> Save Draft
                 </button>

@@ -572,10 +572,13 @@ function setStorageItem(key, val) {
                 data.allowed_tabs ||
                 userMeta.allowed_tabs ||
                 (isSuper ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'] : ['overview', 'gallery', 'inquiries', 'mailbox']);
-            data.allowed_emails =
-                data.allowed_emails ||
-                userMeta.allowed_emails ||
-                (isSuper ? ['*'] : ['info@idi.lk']);
+            const resolvedEmails = Array.isArray(data.allowed_emails)
+                ? data.allowed_emails
+                : Array.isArray(userMeta.allowed_emails)
+                ? userMeta.allowed_emails
+                : (isSuper ? ['*'] : []);
+
+            data.allowed_emails = isSuper ? ['*'] : resolvedEmails;
 
             return data;
         } catch {
@@ -872,7 +875,9 @@ function setStorageItem(key, val) {
                     status: admin.status || 'active',
                     full_name: admin.full_name || (isSuper ? 'Super Administrator' : (admin.email?.split('@')[0] || 'Admin')),
                     allowed_tabs: admin.allowed_tabs || (isSuper ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'] : ['overview', 'gallery', 'inquiries', 'mailbox']),
-                    allowed_emails: admin.allowed_emails || (isSuper ? ['*'] : ['info@idi.lk']),
+                    allowed_emails: isSuper
+                        ? ['*']
+                        : (Array.isArray(admin.allowed_emails) ? admin.allowed_emails : []),
                     must_change_password: Boolean(admin.must_change_password),
                 };
             });

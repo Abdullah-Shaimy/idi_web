@@ -51,6 +51,11 @@ export async function PATCH(
 
   try {
     const { id } = await params;
+    const existing = await getEmailById(id, auth.allowedEmails);
+    if (!existing.email) {
+      return NextResponse.json({ success: false, error: 'Email not found or access denied.' }, { status: 404 });
+    }
+
     const body = await request.json();
 
     const updates: { is_read?: boolean; is_starred?: boolean; folder?: FolderType } = {};
@@ -77,6 +82,11 @@ export async function DELETE(
 
   try {
     const { id } = await params;
+    const existing = await getEmailById(id, auth.allowedEmails);
+    if (!existing.email) {
+      return NextResponse.json({ success: false, error: 'Email not found or access denied.' }, { status: 404 });
+    }
+
     const permanent = request.nextUrl.searchParams.get('permanent') === 'true';
 
     const action = permanent ? 'delete_permanently' : 'trash';

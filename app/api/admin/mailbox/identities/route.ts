@@ -26,6 +26,12 @@ export async function POST(request: NextRequest) {
   if (!auth.authorized) {
     return NextResponse.json({ success: false, error: auth.error }, { status: 401 });
   }
+  if (auth.role !== 'super_admin') {
+    return NextResponse.json(
+      { success: false, error: 'Access denied: Only Super Administrators can configure Sender Identities.' },
+      { status: 403 }
+    );
+  }
 
   try {
     const body = await request.json();
@@ -47,6 +53,12 @@ export async function DELETE(request: NextRequest) {
   const auth = await verifyAdminRequest(request);
   if (!auth.authorized) {
     return NextResponse.json({ success: false, error: auth.error }, { status: 401 });
+  }
+  if (auth.role !== 'super_admin') {
+    return NextResponse.json(
+      { success: false, error: 'Access denied: Only Super Administrators can delete Sender Identities.' },
+      { status: 403 }
+    );
   }
 
   const id = request.nextUrl.searchParams.get('id');

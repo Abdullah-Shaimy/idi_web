@@ -84,10 +84,13 @@ export async function GET(request: NextRequest) {
           (isSuper
             ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins']
             : ['overview', 'gallery', 'inquiries', 'mailbox']),
-        allowed_emails:
-          admin.allowed_emails ||
-          userMeta.allowed_emails ||
-          (isSuper ? ['*'] : ['info@idi.lk']),
+        allowed_emails: isSuper
+          ? ['*']
+          : (Array.isArray(admin.allowed_emails)
+              ? admin.allowed_emails
+              : Array.isArray(userMeta.allowed_emails)
+              ? userMeta.allowed_emails
+              : []),
         must_change_password: Boolean(admin.must_change_password),
       };
     });

@@ -94,7 +94,10 @@ export default function AdminMailboxPage() {
             <p>Direct portal to send, receive, compose, and organize domain emails</p>
           </div>
         </div>
-        <MailboxManager />
+        <MailboxManager
+          adminProfile={adminProfile}
+          isSuperAdmin={adminProfile?.role === 'super_admin'}
+        />
       </main>
     </div>
   );

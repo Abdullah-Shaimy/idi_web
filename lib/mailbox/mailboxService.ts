@@ -140,7 +140,10 @@ export function isEmailAccessible(
   email: { from_address?: string; to_recipients?: string[] | any; folder?: string },
   allowedEmails?: string[]
 ): boolean {
-  if (!allowedEmails || allowedEmails.length === 0 || allowedEmails.includes('*')) {
+  if (!allowedEmails || allowedEmails.length === 0) {
+    return false;
+  }
+  if (allowedEmails.includes('*')) {
     return true;
   }
   const normalizedAllowed = allowedEmails.map((e) => e.toLowerCase().trim());
@@ -169,6 +172,11 @@ export function isEmailAccessible(
  * Get folder summary count badges
  */
 export async function getFolderCounts(allowedEmails?: string[]): Promise<Record<FolderType, number> & { unreadInbox: number }> {
+  const emptyCounts = { inbox: 0, sent: 0, drafts: 0, starred: 0, archived: 0, spam: 0, trash: 0, unreadInbox: 0 };
+  if (!allowedEmails || allowedEmails.length === 0) {
+    return emptyCounts;
+  }
+
   const supabase = getAdminSupabase();
   const hasDb = supabase && (await tableExists('mailbox_emails'));
 
@@ -251,6 +259,11 @@ export async function getEmails(params: {
   const limit = Math.max(1, Math.min(100, params.limit || 25));
   const offset = (page - 1) * limit;
 
+  // If no emails are permitted for this admin account, return empty list immediately
+  if (!params.allowedEmails || params.allowedEmails.length === 0) {
+    return { emails: [], total: 0, page: 1, totalPages: 1 };
+  }
+
   const supabase = getAdminSupabase();
   const hasDb = supabase && (await tableExists('mailbox_emails'));
 
@@ -318,11 +331,29 @@ export async function getEmails(params: {
       query = query.or(`subject.ilike.${q},from_address.ilike.${q},from_name.ilike.${q},snippet.ilike.${q}`);
     }
 
-    query = query
-      .order('created_at', { ascending: false })
-      .range(offset, offset + limit - 1);
+    query = query.order('created_at', { ascending: false });
 
-    const { data, count, error } = await query;
+    // If wildcard super admin, database range pagination can be applied directly
+    if (params.allowedEmails.includes('*')) {
+      query = query.range(offset, offset + limit - 1);
+      const { data, count, error } = await query;
+      if (error) throw error;
+
+      const formatted: MailboxEmail[] = (data || []).map((row: any) => ({
+        ...row,
+        to_recipients: Array.isArray(row.to_recipients) ? row.to_recipients : [],
+        cc_recipients: Array.isArray(row.cc_recipients) ? row.cc_recipients : [],
+        bcc_recipients: Array.isArray(row.bcc_recipients) ? row.bcc_recipients : [],
+        attachments: row.mailbox_attachments || [],
+      }));
+
+      const total = count || formatted.length;
+      const totalPages = Math.ceil(total / limit) || 1;
+      return { emails: formatted, total, page, totalPages };
+    }
+
+    // For non-super admins with restricted email permissions, fetch matching rows and filter accurately
+    const { data, error } = await query;
     if (error) throw error;
 
     let formatted: MailboxEmail[] = (data || []).map((row: any) => ({
@@ -333,14 +364,13 @@ export async function getEmails(params: {
       attachments: row.mailbox_attachments || [],
     }));
 
-    if (params.allowedEmails && !params.allowedEmails.includes('*')) {
-      formatted = formatted.filter((e) => isEmailAccessible(e, params.allowedEmails));
-    }
+    formatted = formatted.filter((e) => isEmailAccessible(e, params.allowedEmails));
 
-    const total = count || formatted.length;
+    const total = formatted.length;
     const totalPages = Math.ceil(total / limit) || 1;
+    const paged = formatted.slice(offset, offset + limit);
 
-    return { emails: formatted, total, page, totalPages };
+    return { emails: paged, total, page, totalPages };
   } catch (err) {
     console.warn('[Mailbox Service] DB error, falling back to memory:', err);
     const fallback = MEMORY_EMAILS.filter((e) => isEmailAccessible(e, params.allowedEmails));
@@ -465,8 +495,14 @@ export async function composeAndSendEmail(params: {
   allowedEmails?: string[];
 }): Promise<{ success: boolean; email?: MailboxEmail; error?: string; isSimulated?: boolean }> {
   try {
-    // Authorization Check: sender email address must be in allowedEmails for non-super admins
-    if (params.allowedEmails && !params.allowedEmails.includes('*')) {
+    // Authorization Check: sender email address must be in allowedEmails
+    if (!params.allowedEmails || params.allowedEmails.length === 0) {
+      return {
+        success: false,
+        error: 'Permission Denied: Your administrator account has not been granted permission for any institutional email address.',
+      };
+    }
+    if (!params.allowedEmails.includes('*')) {
       const normalizedAllowed = params.allowedEmails.map((e) => e.toLowerCase().trim());
       const cleanFrom = (params.from || '').toLowerCase().trim();
       if (!normalizedAllowed.includes(cleanFrom)) {
@@ -963,12 +999,18 @@ export async function getIdentities(allowedEmails?: string[]): Promise<MailboxId
     }
   }
 
-  if (allowedEmails && !allowedEmails.includes('*')) {
-    const normalized = allowedEmails.map((e) => e.toLowerCase().trim());
-    return identities.filter((i) => normalized.includes(i.email.toLowerCase().trim()));
+  // Super Admin wildcard allows all sender identities
+  if (allowedEmails && allowedEmails.includes('*')) {
+    return identities;
   }
 
-  return identities;
+  // If no allowed emails granted to this admin, return empty list (no identities accessible)
+  if (!allowedEmails || allowedEmails.length === 0) {
+    return [];
+  }
+
+  const normalized = allowedEmails.map((e) => e.toLowerCase().trim());
+  return identities.filter((i) => normalized.includes(i.email.toLowerCase().trim()));
 }
 
 export async function upsertIdentity(identity: Partial<MailboxIdentity>): Promise<MailboxIdentity> {

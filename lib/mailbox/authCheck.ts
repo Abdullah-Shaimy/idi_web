@@ -95,7 +95,7 @@ export async function verifyAdminRequest(request: NextRequest): Promise<AdminAut
       return { authorized: false, error: 'Invalid or expired session token.' };
     }
 
-    // Verify role in admin_users table
+    // Verify role in admin_users table and auth user_metadata
     let adminRecord: any = null;
     try {
       const { data, error } = await supabase
@@ -108,12 +108,18 @@ export async function verifyAdminRequest(request: NextRequest): Promise<AdminAut
       // Ignore schema cache errors
     }
 
-    const isDev =
-      user.email?.toLowerCase() === 'dev@idi.lk' ||
-      user.email?.toLowerCase() === 'dev@abdullahshaimy.lk';
-    const isSuper = isDev || adminRecord?.role === 'super_admin';
+    const userMeta = ((user as any)?.user_metadata || {}) as Record<string, any>;
+    const emailLower = (user.email || '').toLowerCase().trim();
+    const isDevFallback = emailLower === 'dev@idi.lk';
 
-    if (!adminRecord && !isDev && !user.email?.endsWith('@idi.lk')) {
+    // Respect explicit role in admin_users table or user_metadata
+    const effectiveRole =
+      adminRecord?.role ||
+      userMeta.role ||
+      (isDevFallback ? 'super_admin' : 'admin');
+    const isSuper = effectiveRole === 'super_admin';
+
+    if (!adminRecord && !isDevFallback && !user.email?.endsWith('@idi.lk') && !userMeta.role) {
       return { authorized: false, error: 'Unauthorized: User is not an active administrator.' };
     }
 
@@ -123,11 +129,22 @@ export async function verifyAdminRequest(request: NextRequest): Promise<AdminAut
 
     const allowedTabs = isSuper
       ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins']
-      : adminRecord?.allowed_tabs || ['overview', 'gallery', 'inquiries', 'mailbox'];
+      : (Array.isArray(adminRecord?.allowed_tabs)
+          ? adminRecord.allowed_tabs
+          : Array.isArray(userMeta.allowed_tabs)
+          ? userMeta.allowed_tabs
+          : ['overview', 'gallery', 'inquiries', 'mailbox']);
 
-    const allowedEmails = isSuper
-      ? ['*']
-      : adminRecord?.allowed_emails || ['info@idi.lk'];
+    let allowedEmails: string[];
+    if (isSuper) {
+      allowedEmails = ['*'];
+    } else if (Array.isArray(adminRecord?.allowed_emails)) {
+      allowedEmails = adminRecord.allowed_emails;
+    } else if (Array.isArray(userMeta.allowed_emails)) {
+      allowedEmails = userMeta.allowed_emails;
+    } else {
+      allowedEmails = [];
+    }
 
     return {
       authorized: true,

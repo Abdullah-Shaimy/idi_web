@@ -511,9 +511,9 @@ export default function AdminDashboardPage() {
         : ['overview', 'gallery', 'inquiries', 'mailbox']
     );
     setEditAdminAllowedEmails(
-      Array.isArray(admin.allowed_emails) && admin.allowed_emails.length > 0
+      Array.isArray(admin.allowed_emails)
         ? admin.allowed_emails
-        : ['info@idi.lk']
+        : []
     );
     setEditAdminModal(true);
   };
@@ -1452,7 +1452,7 @@ export default function AdminDashboardPage() {
                 <p>Send, receive, compose, and organize custom domain emails with Resend</p>
               </div>
             </div>
-            <MailboxManager />
+            <MailboxManager adminProfile={adminProfile} isSuperAdmin={isSuperAdmin} />
           </section>
         )}
 
