@@ -52,24 +52,42 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ success: false, error: error.message }, { status: 500 });
     }
 
+    // Also fetch auth users to retrieve user_metadata if columns are pending migration
+    let authUsers: any[] = [];
+    try {
+      const { data: authUsersData } = await supabase.auth.admin.listUsers();
+      authUsers = (authUsersData?.users as any[]) || [];
+    } catch (e) {
+      console.warn('[Admin API] Could not list auth users for metadata:', e);
+    }
+
     const normalized = (data || []).map((admin) => {
       const emailLower = (admin.email || '').toLowerCase();
-      const isSuper =
-        admin.role === 'super_admin' ||
-        emailLower === 'dev@idi.lk' ||
-        emailLower === 'dev@abdullahshaimy.lk';
+      const authUser = authUsers.find(
+        (u) => u.id === admin.user_id || u.email?.toLowerCase() === emailLower
+      );
+      const userMeta = authUser?.user_metadata || {};
+
+      // Respect explicit role in admin_users or user_metadata, only defaulting to super_admin if dev@idi.lk
+      const effectiveRole =
+        admin.role || userMeta.role || (emailLower === 'dev@idi.lk' ? 'super_admin' : 'admin');
+      const isSuper = effectiveRole === 'super_admin';
 
       return {
         ...admin,
-        role: isSuper ? 'super_admin' : admin.role || 'admin',
+        role: isSuper ? 'super_admin' : 'admin',
         status: admin.status || 'active',
-        full_name: admin.full_name || emailLower.split('@')[0],
+        full_name: admin.full_name || userMeta.full_name || emailLower.split('@')[0],
         allowed_tabs:
           admin.allowed_tabs ||
+          userMeta.allowed_tabs ||
           (isSuper
             ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins']
             : ['overview', 'gallery', 'inquiries', 'mailbox']),
-        allowed_emails: admin.allowed_emails || (isSuper ? ['*'] : ['info@idi.lk']),
+        allowed_emails:
+          admin.allowed_emails ||
+          userMeta.allowed_emails ||
+          (isSuper ? ['*'] : ['info@idi.lk']),
         must_change_password: Boolean(admin.must_change_password),
       };
     });
@@ -131,16 +149,20 @@ export async function POST(request: NextRequest) {
     const passwordToUse =
       cleanPassword || `idi-${Math.random().toString(36).substring(2, 10)}`;
 
+    const metaPayload = {
+      full_name: cleanName || cleanEmail.split('@')[0],
+      role: cleanRole,
+      allowed_tabs: cleanTabs,
+      allowed_emails: cleanEmails,
+    };
+
     if (!authUser) {
       // Create user directly in auth.users with auto-confirmed email
       const { data: created, error: createAuthErr } = await supabase.auth.admin.createUser({
         email: cleanEmail,
         password: passwordToUse,
         email_confirm: true,
-        user_metadata: {
-          full_name: cleanName || cleanEmail.split('@')[0],
-          role: cleanRole,
-        },
+        user_metadata: metaPayload,
       });
 
       if (createAuthErr || !created?.user) {
@@ -157,17 +179,18 @@ export async function POST(request: NextRequest) {
 
       authUser = created.user;
     } else {
-      // If user already exists in auth.users, update password if requested
+      // Always sync metadata to auth.users, and password if provided
+      const updateAuthPayload: any = {
+        email_confirm: true,
+        user_metadata: {
+          ...(authUser.user_metadata || {}),
+          ...metaPayload,
+        },
+      };
       if (cleanPassword) {
-        await supabase.auth.admin.updateUserById(authUser.id, {
-          password: cleanPassword,
-          email_confirm: true,
-          user_metadata: {
-            full_name: cleanName || authUser.user_metadata?.full_name || cleanEmail.split('@')[0],
-            role: cleanRole,
-          },
-        });
+        updateAuthPayload.password = cleanPassword;
       }
+      await supabase.auth.admin.updateUserById(authUser.id, updateAuthPayload);
     }
 
     // 2. Insert or upsert into public.admin_users
@@ -274,11 +297,33 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Admin record not found' }, { status: 404 });
     }
 
-    // Update password in auth.users if provided
-    if (password && password.length >= 6 && currentAdmin.user_id) {
-      await supabase.auth.admin.updateUserById(currentAdmin.user_id, {
-        password: password.trim(),
-      });
+    // Update auth.users metadata and password if user_id exists
+    if (currentAdmin.user_id) {
+      const updateAuthPayload: any = {};
+      if (password && password.length >= 6) {
+        updateAuthPayload.password = password.trim();
+      }
+      const newMeta: any = {};
+      if (role !== undefined) newMeta.role = role;
+      if (full_name !== undefined) newMeta.full_name = full_name;
+      if (allowed_tabs !== undefined) newMeta.allowed_tabs = allowed_tabs;
+      if (allowed_emails !== undefined) newMeta.allowed_emails = allowed_emails;
+
+      if (Object.keys(newMeta).length > 0) {
+        try {
+          const { data: userAuthData } = await supabase.auth.admin.getUserById(currentAdmin.user_id);
+          updateAuthPayload.user_metadata = {
+            ...(userAuthData?.user?.user_metadata || {}),
+            ...newMeta,
+          };
+        } catch {
+          updateAuthPayload.user_metadata = newMeta;
+        }
+      }
+
+      if (Object.keys(updateAuthPayload).length > 0) {
+        await supabase.auth.admin.updateUserById(currentAdmin.user_id, updateAuthPayload);
+      }
     }
 
     const payload: Record<string, any> = {

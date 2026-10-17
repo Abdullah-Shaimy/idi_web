@@ -562,15 +562,20 @@ function setStorageItem(key, val) {
                 return null;
             }
 
-            if (isKnownSuper || data.role === 'super_admin') {
-                data.role = 'super_admin';
-                data.status = 'active';
-                data.allowed_tabs = data.allowed_tabs || ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'];
-                data.allowed_emails = data.allowed_emails || ['*'];
-            } else {
-                data.allowed_tabs = data.allowed_tabs || ['overview', 'gallery', 'inquiries', 'mailbox'];
-                data.allowed_emails = data.allowed_emails || ['info@idi.lk'];
-            }
+            const userMeta = ((user as any)?.user_metadata || {}) as Record<string, any>;
+            const roleFromRecord = data.role || userMeta.role;
+            const isSuper = roleFromRecord === 'super_admin' || (!roleFromRecord && isKnownSuper);
+
+            data.role = isSuper ? 'super_admin' : 'admin';
+            data.status = data.status || 'active';
+            data.allowed_tabs =
+                data.allowed_tabs ||
+                userMeta.allowed_tabs ||
+                (isSuper ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'] : ['overview', 'gallery', 'inquiries', 'mailbox']);
+            data.allowed_emails =
+                data.allowed_emails ||
+                userMeta.allowed_emails ||
+                (isSuper ? ['*'] : ['info@idi.lk']);
 
             return data;
         } catch {
@@ -860,12 +865,12 @@ function setStorageItem(key, val) {
 
             // Normalize records if schema migration hasn't been executed yet
             const normalized = (data || []).map((admin) => {
-                const isSuper = admin.role === 'super_admin' || isKnownSuperAdminEmail(admin.email);
+                const isSuper = admin.role === 'super_admin' || (!admin.role && isKnownSuperAdminEmail(admin.email));
                 return {
                     ...admin,
-                    role: isSuper ? 'super_admin' : (admin.role || 'admin'),
+                    role: isSuper ? 'super_admin' : 'admin',
                     status: admin.status || 'active',
-                    full_name: admin.full_name || (isKnownSuperAdminEmail(admin.email) ? 'Super Administrator' : (admin.email?.split('@')[0] || 'Admin')),
+                    full_name: admin.full_name || (isSuper ? 'Super Administrator' : (admin.email?.split('@')[0] || 'Admin')),
                     allowed_tabs: admin.allowed_tabs || (isSuper ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'] : ['overview', 'gallery', 'inquiries', 'mailbox']),
                     allowed_emails: admin.allowed_emails || (isSuper ? ['*'] : ['info@idi.lk']),
                     must_change_password: Boolean(admin.must_change_password),

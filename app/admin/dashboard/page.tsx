@@ -491,6 +491,16 @@ export default function AdminDashboardPage() {
   };
 
   // 6. Admin Management Actions
+  const openAddAdminModal = () => {
+    setNewAdminFullName('');
+    setNewAdminEmail('');
+    setNewAdminRole('admin');
+    setNewAdminPassword('');
+    setNewAdminAllowedTabs(['overview', 'gallery', 'inquiries', 'mailbox']);
+    setNewAdminAllowedEmails(['info@idi.lk']);
+    setAddAdminModal(true);
+  };
+
   const openEditAdmin = (admin: any) => {
     setEditingAdmin(admin);
     setEditAdminRole(admin.role || 'admin');
@@ -1471,7 +1481,7 @@ export default function AdminDashboardPage() {
                     <h2>Administrator Accounts</h2>
                     <p>Manage system administrators, assign roles, and control administrative access</p>
                   </div>
-                  <button className="btn btn-primary" onClick={() => setAddAdminModal(true)}>
+                  <button className="btn btn-primary" onClick={openAddAdminModal}>
                     <i className="fa-solid fa-user-plus"></i> Add New Admin
                   </button>
                 </div>
@@ -2006,16 +2016,72 @@ export default function AdminDashboardPage() {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="new-admin-role" className="form-label">Administrative Role *</label>
-                  <select
-                    id="new-admin-role"
-                    className="form-input"
-                    value={newAdminRole}
-                    onChange={(e) => setNewAdminRole(e.target.value)}
-                  >
-                    <option value="admin">Standard Admin (Configurable Permissions)</option>
-                    <option value="super_admin">Super Admin (Full System &amp; All Tabs/Emails Control)</option>
-                  </select>
+                  <label className="form-label" style={{ fontWeight: 600 }}>Administrative Role *</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem', marginTop: '0.25rem' }}>
+                    <div
+                      onClick={() => setNewAdminRole('admin')}
+                      style={{
+                        padding: '0.85rem 1rem',
+                        borderRadius: 'var(--radius-sm)',
+                        border: newAdminRole === 'admin' ? '2px solid var(--accent-emerald)' : '1px solid var(--border-color)',
+                        background: newAdminRole === 'admin' ? 'rgba(0,109,68,0.06)' : 'var(--bg-card)',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.75rem',
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="new-admin-role-radio"
+                        id="new-role-admin"
+                        checked={newAdminRole === 'admin'}
+                        onChange={() => setNewAdminRole('admin')}
+                        style={{ marginTop: '0.2rem', accentColor: 'var(--accent-emerald)', cursor: 'pointer' }}
+                      />
+                      <div>
+                        <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <i className="fa-solid fa-user-gear" style={{ color: 'var(--accent-emerald)' }}></i> Standard Admin
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.25rem', lineHeight: 1.35 }}>
+                          Configurable dashboard tabs &amp; assigned mailbox access.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => setNewAdminRole('super_admin')}
+                      style={{
+                        padding: '0.85rem 1rem',
+                        borderRadius: 'var(--radius-sm)',
+                        border: newAdminRole === 'super_admin' ? '2px solid var(--accent-gold)' : '1px solid var(--border-color)',
+                        background: newAdminRole === 'super_admin' ? 'rgba(184,134,11,0.08)' : 'var(--bg-card)',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.75rem',
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="new-admin-role-radio"
+                        id="new-role-super"
+                        checked={newAdminRole === 'super_admin'}
+                        onChange={() => setNewAdminRole('super_admin')}
+                        style={{ marginTop: '0.2rem', accentColor: 'var(--accent-gold)', cursor: 'pointer' }}
+                      />
+                      <div>
+                        <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <i className="fa-solid fa-shield-halved" style={{ color: 'var(--accent-gold)' }}></i> Super Admin
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.25rem', lineHeight: 1.35 }}>
+                          Full system control, manage admins, unrestricted access to all tabs &amp; emails.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="form-group">
                   <label htmlFor="new-admin-pw" className="form-label">Initial Password (Optional)</label>
@@ -2178,16 +2244,72 @@ export default function AdminDashboardPage() {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="edit-admin-role-sel" className="form-label">Role</label>
-                  <select
-                    id="edit-admin-role-sel"
-                    className="form-input"
-                    value={editAdminRole}
-                    onChange={(e) => setEditAdminRole(e.target.value)}
-                  >
-                    <option value="admin">Standard Admin (Configurable Permissions)</option>
-                    <option value="super_admin">Super Admin (Full System &amp; All Tabs/Emails Control)</option>
-                  </select>
+                  <label className="form-label" style={{ fontWeight: 600 }}>Administrative Role *</label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '0.75rem', marginTop: '0.25rem' }}>
+                    <div
+                      onClick={() => setEditAdminRole('admin')}
+                      style={{
+                        padding: '0.85rem 1rem',
+                        borderRadius: 'var(--radius-sm)',
+                        border: editAdminRole === 'admin' ? '2px solid var(--accent-emerald)' : '1px solid var(--border-color)',
+                        background: editAdminRole === 'admin' ? 'rgba(0,109,68,0.06)' : 'var(--bg-card)',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.75rem',
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="edit-admin-role-radio"
+                        id="edit-role-admin"
+                        checked={editAdminRole === 'admin'}
+                        onChange={() => setEditAdminRole('admin')}
+                        style={{ marginTop: '0.2rem', accentColor: 'var(--accent-emerald)', cursor: 'pointer' }}
+                      />
+                      <div>
+                        <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <i className="fa-solid fa-user-gear" style={{ color: 'var(--accent-emerald)' }}></i> Standard Admin
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.25rem', lineHeight: 1.35 }}>
+                          Configurable dashboard tabs &amp; assigned mailbox access.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div
+                      onClick={() => setEditAdminRole('super_admin')}
+                      style={{
+                        padding: '0.85rem 1rem',
+                        borderRadius: 'var(--radius-sm)',
+                        border: editAdminRole === 'super_admin' ? '2px solid var(--accent-gold)' : '1px solid var(--border-color)',
+                        background: editAdminRole === 'super_admin' ? 'rgba(184,134,11,0.08)' : 'var(--bg-card)',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s ease',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '0.75rem',
+                      }}
+                    >
+                      <input
+                        type="radio"
+                        name="edit-admin-role-radio"
+                        id="edit-role-super"
+                        checked={editAdminRole === 'super_admin'}
+                        onChange={() => setEditAdminRole('super_admin')}
+                        style={{ marginTop: '0.2rem', accentColor: 'var(--accent-gold)', cursor: 'pointer' }}
+                      />
+                      <div>
+                        <div style={{ fontWeight: 600, color: 'var(--text-main)', fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <i className="fa-solid fa-shield-halved" style={{ color: 'var(--accent-gold)' }}></i> Super Admin
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.25rem', lineHeight: 1.35 }}>
+                          Full system control, manage admins, unrestricted access to all tabs &amp; emails.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
                 <div className="form-group">
                   <label htmlFor="edit-admin-status-sel" className="form-label">Account Status</label>
