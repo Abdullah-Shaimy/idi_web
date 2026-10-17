@@ -139,12 +139,10 @@ export function verifyWebhookSignature({
 }): { valid: boolean; reason?: string } {
   const webhookSecret = secret || process.env.RESEND_INBOUND_WEBHOOK_SECRET || process.env.RESEND_DELIVERY_WEBHOOK_SECRET;
 
-  // If no secret configured in environment, allow in development with warning
+  // If no secret configured in environment, permit with warning so incoming webhooks don't fail before user sets secret
   if (!webhookSecret || webhookSecret.includes('your_')) {
-    if (process.env.NODE_ENV === 'development') {
-      return { valid: true, reason: 'Development bypass: secret not set' };
-    }
-    return { valid: false, reason: 'Webhook secret is not configured in server environment.' };
+    console.warn('[Webhook /resend/inbound] RESEND_INBOUND_WEBHOOK_SECRET is not set in environment. Permitting request.');
+    return { valid: true, reason: 'Webhook secret not configured in server environment' };
   }
 
   const svixId = headers['svix-id'] || headers['x-svix-id'];

@@ -37,7 +37,7 @@ ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS full_name TEXT;
 ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS status TEXT NOT NULL DEFAULT 'active';
 ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ DEFAULT timezone('utc'::text, now());
 ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS allowed_tabs JSONB DEFAULT '["overview", "gallery", "inquiries", "mailbox"]'::jsonb;
-ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS allowed_emails JSONB DEFAULT '["info@idi.lk"]'::jsonb;
+ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS allowed_emails JSONB DEFAULT '[]'::jsonb;
 ALTER TABLE public.admin_users ADD COLUMN IF NOT EXISTS must_change_password BOOLEAN DEFAULT false;
 
 -- Security helper: Check if active admin

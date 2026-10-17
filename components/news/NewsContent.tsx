@@ -253,17 +253,7 @@ export default function NewsContent() {
   return (
     <>
       {/* Hero Section */}
-      <section
-        className="hero news-hero"
-        style={{
-          height: '55vh',
-          minHeight: '480px',
-          backgroundImage: "url('/assets/images/about_hero.webp')",
-          backgroundPosition: 'center',
-          backgroundSize: 'cover',
-          position: 'relative',
-        }}
-      >
+      <section className="hero page-head news-hero">
         <div className="hero-overlay"></div>
         <div className="hero-content page-enter" style={{ position: 'relative', zIndex: 2 }}>
           <span className="subtitle" style={{ color: 'var(--accent-gold)', letterSpacing: '2px' }}>

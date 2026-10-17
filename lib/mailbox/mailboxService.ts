@@ -3,9 +3,15 @@
  * Manages email threads, messages, attachments, sender identities, templates, and audit logs.
  */
 
+import { randomUUID } from 'crypto';
 import { createClient } from '@supabase/supabase-js';
-import { sendEmailViaResend } from './resendService';
+import { sendEmailViaResend, getResendClient, isResendConfigured } from './resendService';
 import { extractSnippet, sanitizeEmailHtml, plainTextToSafeHtml } from './sanitize';
+
+export function isValidUuid(val?: string | null): boolean {
+  if (!val || typeof val !== 'string') return false;
+  return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(val);
+}
 
 export type FolderType = 'inbox' | 'sent' | 'drafts' | 'starred' | 'archived' | 'spam' | 'trash';
 export type DeliveryStatus = 'draft' | 'queued' | 'sent' | 'delivered' | 'bounced' | 'failed' | 'complained';
@@ -522,7 +528,8 @@ export async function composeAndSendEmail(params: {
     const snippet = extractSnippet(params.text || params.html || '', 160);
 
     const messageId = `<out-${Date.now()}-${Math.random().toString(36).substring(2, 9)}@idi.lk>`;
-    const threadId = params.threadId || `thread-${Date.now()}`;
+    const finalThreadId = isValidUuid(params.threadId) ? params.threadId! : randomUUID();
+    const finalEmailId = isValidUuid(params.draftId) ? params.draftId! : randomUUID();
 
     let providerMessageId: string | undefined = undefined;
     let isSimulated = false;
@@ -563,8 +570,8 @@ export async function composeAndSendEmail(params: {
     }
 
     const newEmail: MailboxEmail = {
-      id: params.draftId || `email-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`,
-      thread_id: threadId,
+      id: finalEmailId,
+      thread_id: finalThreadId,
       direction: 'outbound',
       folder,
       status,
@@ -587,9 +594,9 @@ export async function composeAndSendEmail(params: {
       provider_message_id: providerMessageId,
       sent_at: !isDraft ? new Date().toISOString() : undefined,
       created_at: new Date().toISOString(),
-      attachments: params.attachments?.map((a, idx) => ({
-        id: `att-${Date.now()}-${idx}`,
-        email_id: params.draftId || `email-${Date.now()}`,
+      attachments: params.attachments?.map((a) => ({
+        id: randomUUID(),
+        email_id: finalEmailId,
         filename: a.filename,
         file_size: a.file_size || 0,
         content_type: a.content_type || 'application/octet-stream',
@@ -603,10 +610,15 @@ export async function composeAndSendEmail(params: {
     const hasDb = supabase && (await tableExists('mailbox_emails'));
 
     if (hasDb) {
+      // If transitioning from draft to sent, clean up draft record
+      if (params.draftId && isValidUuid(params.draftId) && !isDraft) {
+        await supabase!.from('mailbox_emails').delete().eq('id', params.draftId);
+      }
+
       // Upsert or insert thread
       await supabase!.from('mailbox_threads').upsert(
         {
-          id: threadId,
+          id: finalThreadId,
           subject: params.subject || '(No Subject)',
           snippet,
           last_message_at: new Date().toISOString(),
@@ -620,8 +632,8 @@ export async function composeAndSendEmail(params: {
       const { data: inserted, error: insertErr } = await supabase!
         .from('mailbox_emails')
         .insert({
-          id: newEmail.id,
-          thread_id: threadId,
+          id: finalEmailId,
+          thread_id: finalThreadId,
           direction: 'outbound',
           folder,
           status,
@@ -636,13 +648,13 @@ export async function composeAndSendEmail(params: {
           body_text: plainText,
           body_html: safeHtml,
           message_id: messageId,
-          in_reply_to: params.inReplyTo,
-          references_header: params.references,
+          in_reply_to: params.inReplyTo || null,
+          references_header: params.references || null,
           is_read: true,
           is_starred: false,
           has_attachments: newEmail.has_attachments,
-          provider_message_id: providerMessageId,
-          sent_at: newEmail.sent_at,
+          provider_message_id: providerMessageId || null,
+          sent_at: newEmail.sent_at || null,
           created_at: newEmail.created_at,
         })
         .select()
@@ -650,16 +662,18 @@ export async function composeAndSendEmail(params: {
 
       if (insertErr) {
         console.error('[Mailbox Service] Database email insert failed:', insertErr);
+        throw new Error('Database insert failed: ' + insertErr.message);
       }
 
       // Insert attachments if present
       if (params.attachments && params.attachments.length > 0) {
         const attRows = params.attachments.map((a) => ({
-          email_id: newEmail.id,
+          id: randomUUID(),
+          email_id: finalEmailId,
           filename: a.filename,
           file_size: a.file_size || 0,
           content_type: a.content_type || 'application/octet-stream',
-          storage_path: a.storage_path || `attachments/${newEmail.id}/${a.filename}`,
+          storage_path: a.storage_path || `attachments/${finalEmailId}/${a.filename}`,
         }));
         await supabase!.from('mailbox_attachments').insert(attRows);
       }
@@ -801,32 +815,57 @@ export async function bulkUpdateEmails(
  */
 export async function processInboundEmailWebhook(payload: any): Promise<{ success: boolean; duplicate?: boolean; id?: string }> {
   try {
+    const event = payload;
+    const data = event?.data || event || {};
+
     // Extract fields from Resend / standard inbound event
-    const fromStr = payload.from || payload.sender || payload.headers?.from || 'unknown@domain.com';
-    const toRecipients: string[] = Array.isArray(payload.to)
-      ? payload.to
-      : typeof payload.to === 'string'
-      ? payload.to.split(',').map((s: string) => s.trim())
+    const fromStr = data.from || data.sender || data.headers?.from || 'unknown@domain.com';
+    const toRecipients: string[] = Array.isArray(data.to)
+      ? data.to
+      : typeof data.to === 'string'
+      ? data.to.split(',').map((s: string) => s.trim())
       : ['info@idi.lk'];
 
-    const subject = payload.subject || '(No Subject)';
-    const textBody = payload.text || payload.plain || '';
-    const htmlBody = payload.html || plainTextToSafeHtml(textBody);
-    const messageId = payload.headers?.['message-id'] || payload.message_id || `<in-${Date.now()}@resend.inbound>`;
-    const inReplyTo = payload.headers?.['in-reply-to'] || payload.in_reply_to;
-    const references = payload.headers?.['references'] || payload.references;
-    const providerMessageId = payload.email_id || payload.id;
+    const subject = data.subject || '(No Subject)';
+    let textBody = data.text || data.plain || '';
+    let htmlBody = data.html || '';
+    const providerMessageId = data.email_id || data.id;
+
+    // If body text/html is missing but email_id is present, fetch full email via Resend receiving API
+    if (!textBody && !htmlBody && providerMessageId) {
+      const resend = getResendClient();
+      if (resend && (resend as any).emails?.receiving?.get) {
+        try {
+          const recRes = await (resend as any).emails.receiving.get(providerMessageId);
+          if (recRes?.data) {
+            if (recRes.data.html) htmlBody = recRes.data.html;
+            if (recRes.data.text) textBody = recRes.data.text;
+          }
+        } catch (fetchErr) {
+          console.warn('[Mailbox Service] Could not fetch email body from Resend receiving API:', fetchErr);
+        }
+      }
+    }
+
+    if (!htmlBody && textBody) htmlBody = plainTextToSafeHtml(textBody);
+    if (!textBody && htmlBody) textBody = extractSnippet(htmlBody, 5000);
+
+    const messageId = data.headers?.['message-id'] || data.message_id || `<in-${Date.now()}@resend.inbound>`;
+    const inReplyTo = data.headers?.['in-reply-to'] || data.in_reply_to;
+    const references = data.headers?.['references'] || data.references;
 
     // Check duplicate
     const supabase = getAdminSupabase();
     const hasDb = supabase && (await tableExists('mailbox_emails'));
 
     if (hasDb && (providerMessageId || messageId)) {
-      const { data: existing } = await supabase!
-        .from('mailbox_emails')
-        .select('id')
-        .or(`provider_message_id.eq.${providerMessageId},message_id.eq.${messageId}`)
-        .limit(1);
+      let dupQuery = supabase!.from('mailbox_emails').select('id');
+      if (providerMessageId) {
+        dupQuery = dupQuery.eq('provider_message_id', providerMessageId);
+      } else {
+        dupQuery = dupQuery.eq('message_id', messageId);
+      }
+      const { data: existing } = await dupQuery.limit(1);
 
       if (existing && existing.length > 0) {
         console.info('[Mailbox Service] Inbound email already processed (duplicate). Skipping.');
@@ -834,8 +873,8 @@ export async function processInboundEmailWebhook(payload: any): Promise<{ succes
       }
     }
 
-    // Determine thread ID: match by In-Reply-To / References or create new
-    let threadId = `thread-${Date.now()}`;
+    // Determine thread ID: match by In-Reply-To / References or Subject
+    let threadId: string | null = null;
     if (hasDb && inReplyTo) {
       const { data: parent } = await supabase!
         .from('mailbox_emails')
@@ -843,13 +882,30 @@ export async function processInboundEmailWebhook(payload: any): Promise<{ succes
         .eq('message_id', inReplyTo)
         .limit(1);
 
-      if (parent && parent.length > 0 && parent[0].thread_id) {
+      if (parent && parent.length > 0 && isValidUuid(parent[0].thread_id)) {
         threadId = parent[0].thread_id;
       }
     }
 
+    if (hasDb && !threadId && subject) {
+      const cleanSubject = subject.replace(/^(re|fwd|fw):\s*/i, '').trim();
+      if (cleanSubject.length > 3) {
+        const { data: parentBySub } = await supabase!
+          .from('mailbox_threads')
+          .select('id')
+          .ilike('subject', `%${cleanSubject}%`)
+          .order('last_message_at', { ascending: false })
+          .limit(1);
+
+        if (parentBySub && parentBySub.length > 0 && isValidUuid(parentBySub[0].id)) {
+          threadId = parentBySub[0].id;
+        }
+      }
+    }
+
+    const finalThreadId = threadId || randomUUID();
+    const finalEmailId = randomUUID();
     const snippet = extractSnippet(textBody || htmlBody, 160);
-    const emailId = `inbound-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`;
 
     // Parse sender display name
     let fromAddress = fromStr;
@@ -861,15 +917,16 @@ export async function processInboundEmailWebhook(payload: any): Promise<{ succes
     }
 
     const newEmail: MailboxEmail = {
-      id: emailId,
-      thread_id: threadId,
+      id: finalEmailId,
+      thread_id: finalThreadId,
       direction: 'inbound',
       folder: 'inbox',
       status: 'delivered',
       from_address: fromAddress,
       from_name: fromName,
       to_recipients: toRecipients,
-      cc_recipients: Array.isArray(payload.cc) ? payload.cc : [],
+      cc_recipients: Array.isArray(data.cc) ? data.cc : [],
+      bcc_recipients: Array.isArray(data.bcc) ? data.bcc : [],
       subject,
       snippet,
       body_text: textBody,
@@ -879,7 +936,7 @@ export async function processInboundEmailWebhook(payload: any): Promise<{ succes
       references_header: references,
       is_read: false,
       is_starred: false,
-      has_attachments: Boolean(payload.attachments && payload.attachments.length > 0),
+      has_attachments: Boolean(data.attachments && data.attachments.length > 0),
       provider_message_id: providerMessageId,
       created_at: new Date().toISOString(),
     };
@@ -888,7 +945,7 @@ export async function processInboundEmailWebhook(payload: any): Promise<{ succes
       // Upsert thread
       await supabase!.from('mailbox_threads').upsert(
         {
-          id: threadId,
+          id: finalThreadId,
           subject,
           snippet,
           last_message_at: new Date().toISOString(),
@@ -899,16 +956,108 @@ export async function processInboundEmailWebhook(payload: any): Promise<{ succes
       );
 
       // Insert email
-      await supabase!.from('mailbox_emails').insert(newEmail);
+      const { error: insertErr } = await supabase!.from('mailbox_emails').insert({
+        id: finalEmailId,
+        thread_id: finalThreadId,
+        direction: 'inbound',
+        folder: 'inbox',
+        status: 'delivered',
+        from_address: fromAddress,
+        from_name: fromName,
+        to_recipients: toRecipients,
+        cc_recipients: Array.isArray(data.cc) ? data.cc : [],
+        bcc_recipients: Array.isArray(data.bcc) ? data.bcc : [],
+        subject,
+        snippet,
+        body_text: textBody,
+        body_html: sanitizeEmailHtml(htmlBody),
+        message_id: messageId,
+        in_reply_to: inReplyTo || null,
+        references_header: references || null,
+        is_read: false,
+        is_starred: false,
+        has_attachments: Boolean(data.attachments && data.attachments.length > 0),
+        provider_message_id: providerMessageId || null,
+        created_at: new Date().toISOString(),
+      });
+
+      if (insertErr) {
+        console.error('[Mailbox Service] Error inserting inbound email to database:', insertErr);
+        throw insertErr;
+      }
     } else {
       MEMORY_EMAILS.unshift(newEmail);
     }
 
-    await logAudit(null, 'inbound_email_received', 'email', emailId, { from: fromAddress, subject });
-    return { success: true, id: emailId };
+    await logAudit(null, 'inbound_email_received', 'email', finalEmailId, { from: fromAddress, subject });
+    return { success: true, id: finalEmailId };
   } catch (err: any) {
     console.error('[Mailbox Service] Error processing inbound webhook:', err);
     return { success: false };
+  }
+}
+
+/**
+ * Polls & Synchronizes received emails from Resend Receiving API
+ * Ensures received domain emails are automatically imported into Inbox
+ */
+export async function syncInboundEmailsFromResend(): Promise<{ count: number }> {
+  const resend = getResendClient();
+  if (!resend || !(resend as any).emails?.receiving?.list) {
+    return { count: 0 };
+  }
+
+  try {
+    const listRes = await (resend as any).emails.receiving.list();
+    const items = listRes?.data?.data || listRes?.data || [];
+    if (!Array.isArray(items) || items.length === 0) {
+      return { count: 0 };
+    }
+
+    let importedCount = 0;
+    const supabase = getAdminSupabase();
+    const hasDb = supabase && (await tableExists('mailbox_emails'));
+
+    for (const item of items) {
+      const emailId = item.id;
+      if (!emailId) continue;
+
+      if (hasDb) {
+        const { data: existing } = await supabase!
+          .from('mailbox_emails')
+          .select('id')
+          .eq('provider_message_id', emailId)
+          .limit(1);
+
+        if (existing && existing.length > 0) continue;
+      }
+
+      try {
+        let fullData = item;
+        try {
+          const full = await (resend as any).emails.receiving.get(emailId);
+          if (full?.data) fullData = full.data;
+        } catch {
+          // Use item directly if get fails
+        }
+
+        await processInboundEmailWebhook({
+          type: 'email.received',
+          data: {
+            ...fullData,
+            email_id: emailId,
+          },
+        });
+        importedCount++;
+      } catch (err) {
+        console.warn(`[Mailbox Sync] Failed to process receiving email ${emailId}:`, err);
+      }
+    }
+
+    return { count: importedCount };
+  } catch (err) {
+    console.warn('[Mailbox Sync] Error listing receiving emails from Resend:', err);
+    return { count: 0 };
   }
 }
 
@@ -1116,10 +1265,13 @@ export async function getSignatures(): Promise<MailboxSignature[]> {
 }
 
 export async function upsertSignature(sig: Partial<MailboxSignature>): Promise<MailboxSignature> {
+  const finalId = isValidUuid(sig.id) ? sig.id! : randomUUID();
+  const identityId = isValidUuid(sig.identity_id) ? sig.identity_id! : undefined;
+
   const item: MailboxSignature = {
-    id: sig.id || `sig-${Date.now()}`,
+    id: finalId,
     name: sig.name || 'Madrasa Signature',
-    identity_id: sig.identity_id,
+    identity_id: identityId,
     full_name: sig.full_name,
     title: sig.title,
     company: sig.company || 'Institute of Da\'wa Islamiyya',
@@ -1140,7 +1292,15 @@ export async function upsertSignature(sig: Partial<MailboxSignature>): Promise<M
     return item;
   }
 
-  const { data } = await supabase!.from('mailbox_signatures').upsert(item).select().single();
+  const payload: any = { ...item };
+  if (!isValidUuid(sig.id)) delete payload.id;
+  if (!isValidUuid(payload.identity_id)) payload.identity_id = null;
+
+  const { data, error } = await supabase!.from('mailbox_signatures').upsert(payload).select().single();
+  if (error) {
+    console.error('Error upserting signature:', error);
+    throw error;
+  }
   return data || item;
 }
 
@@ -1171,8 +1331,10 @@ export async function getTemplates(): Promise<MailboxTemplate[]> {
 }
 
 export async function upsertTemplate(tmpl: Partial<MailboxTemplate>): Promise<MailboxTemplate> {
+  const finalId = isValidUuid(tmpl.id) ? tmpl.id! : randomUUID();
+
   const item: MailboxTemplate = {
-    id: tmpl.id || `tmpl-${Date.now()}`,
+    id: finalId,
     name: tmpl.name || 'New Template',
     subject: tmpl.subject || '',
     body_html: tmpl.body_html || '',
@@ -1189,7 +1351,14 @@ export async function upsertTemplate(tmpl: Partial<MailboxTemplate>): Promise<Ma
     return item;
   }
 
-  const { data } = await supabase!.from('mailbox_templates').upsert(item).select().single();
+  const payload: any = { ...item };
+  if (!isValidUuid(tmpl.id)) delete payload.id;
+
+  const { data, error } = await supabase!.from('mailbox_templates').upsert(payload).select().single();
+  if (error) {
+    console.error('Error upserting template:', error);
+    throw error;
+  }
   return data || item;
 }
 
@@ -1216,7 +1385,7 @@ export async function logAudit(
 ) {
   try {
     const logItem = {
-      user_id: userId,
+      user_id: isValidUuid(userId) ? userId : null,
       action,
       entity_type: entityType,
       entity_id: entityId,

@@ -10,6 +10,7 @@ import {
   getFolderCounts,
   composeAndSendEmail,
   bulkUpdateEmails,
+  syncInboundEmailsFromResend,
   FolderType,
 } from '@/lib/mailbox/mailboxService';
 
@@ -28,6 +29,15 @@ export async function GET(request: NextRequest) {
     const search = searchParams.get('q') || searchParams.get('search') || undefined;
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '25', 10);
+
+    // Sync incoming emails from Resend Receiving if viewing inbox or on explicit sync
+    if (!folder || folder === 'inbox' || searchParams.get('sync') === 'true') {
+      try {
+        await syncInboundEmailsFromResend();
+      } catch (syncErr) {
+        console.warn('[API /api/admin/mailbox/emails GET] Inbound sync warning:', syncErr);
+      }
+    }
 
     const [emailsResult, counts] = await Promise.all([
       getEmails({

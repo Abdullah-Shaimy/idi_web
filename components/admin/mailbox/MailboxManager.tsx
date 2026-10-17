@@ -554,6 +554,19 @@ export default function MailboxManager({ adminProfile: propProfile, isSuperAdmin
         );
         setComposeOpen(false);
         loadEmails();
+
+        // If an email thread was open, immediately refresh the thread so the sent message shows in conversation chat
+        if (selectedEmailId) {
+          authFetch(`/api/admin/mailbox/emails/${selectedEmailId}`)
+            .then((r) => r.json())
+            .then((threadData) => {
+              if (threadData.success && threadData.email) {
+                setSelectedEmail(threadData.email);
+                setThreadMessages(threadData.threadEmails || [threadData.email]);
+              }
+            })
+            .catch((e) => console.warn('Could not reload thread:', e));
+        }
       } else {
         showToast(data.error || 'Failed to dispatch email.', 'danger');
       }

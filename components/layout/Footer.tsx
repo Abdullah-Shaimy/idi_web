@@ -35,7 +35,7 @@ export default function Footer() {
           <h3>{t('common.footer.quickLinks', 'Quick Links')}</h3>
           <ul className="footer-links">
             <li><Link href="/about">{t('common.footer.aboutUs', 'About Us')}</Link></li>
-            <li><Link href="/hifz">{t('common.nav.hifz', 'Hifz Program')}</Link></li>
+            <li><Link href="/hifz">{t('common.nav.programs', t('common.nav.hifz', 'Our Programs'))}</Link></li>
             <li><Link href="/students">{t('common.footer.studentLife', 'Journey')}</Link></li>
             <li><Link href="/events">{t('common.nav.events', 'Events')}</Link></li>
             <li><Link href="/news">{t('common.nav.news', 'News')}</Link></li>

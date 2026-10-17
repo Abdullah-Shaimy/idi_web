@@ -35,7 +35,7 @@ export default function Header() {
   const navLinks = [
     { href: '/', label: t('common.nav.home', 'Home') },
     { href: '/about', label: t('common.nav.about', 'About') },
-    { href: '/hifz', label: t('common.nav.hifz', 'Hifz Program') },
+    { href: '/hifz', label: t('common.nav.programs', t('common.nav.hifz', 'Our Programs')) },
     { href: '/students', label: t('common.nav.students', 'Journey') },
     { href: '/alumni', label: t('common.nav.alumni', 'Alumni') },
     { href: '/events', label: t('common.nav.events', 'Events') },
@@ -43,8 +43,9 @@ export default function Header() {
     { href: '/contact', label: t('common.nav.contact', 'Contact') },
   ];
 
-  const isActive = (href) => {
+  const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
+    if (href === '/hifz') return pathname === '/hifz' || pathname === '/programs' || pathname.startsWith('/hifz/') || pathname.startsWith('/programs/');
     return pathname === href || pathname.startsWith(href + '/');
   };
 

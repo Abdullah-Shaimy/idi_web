@@ -766,8 +766,9 @@ header.scrolled .lang-switch-btn.active {
   background-color: #000;
 }
 
-/* Subpage Head / Hero Section (Website Theme Emerald #022419 + Custom Islamic Vectors) */
+/* Subpage Head / Hero Section (Website Theme Emerald #022419 + Custom Islamic Geometric Pattern) */
 .hero.page-head,
+.hero.news-hero,
 .hero[style*="min-height: 500px"],
 .hero[style*="min-height: 520px"] {
   height: 52vh !important;
@@ -775,15 +776,16 @@ header.scrolled .lang-switch-btn.active {
   padding-top: 85px !important;
   background-color: #022419 !important;
   background-image: 
-    radial-gradient(ellipse at 50% 50%, rgba(2, 36, 25, 0.2) 0%, rgba(1, 20, 14, 0.72) 100%),
+    radial-gradient(ellipse at 50% 50%, rgba(2, 36, 25, 0.25) 0%, rgba(1, 18, 12, 0.78) 100%),
     url('/assets/images/islamic-pattern.svg') !important;
   background-position: center center, center center !important;
   background-repeat: no-repeat, repeat !important;
-  background-size: cover, 180px 180px !important;
-  border-bottom: 2px solid rgba(218, 165, 32, 0.3);
+  background-size: cover, 204px 204px !important;
+  border-bottom: 2px solid rgba(218, 165, 32, 0.35);
 }
 
 .hero.page-head .hero-overlay,
+.hero.news-hero .hero-overlay,
 .hero[style*="min-height: 500px"] .hero-overlay,
 .hero[style*="min-height: 520px"] .hero-overlay {
   display: none !important;
@@ -791,9 +793,10 @@ header.scrolled .lang-switch-btn.active {
 
 @media (max-width: 991px) {
   .hero.page-head,
+  .hero.news-hero,
   .hero[style*="min-height: 500px"],
   .hero[style*="min-height: 520px"] {
-    background-size: cover, 140px 140px !important;
+    background-size: cover, 160px 160px !important;
     background-position: center center, center center !important;
     min-height: 440px !important;
     height: auto !important;
@@ -803,14 +806,16 @@ header.scrolled .lang-switch-btn.active {
 
 @media (max-width: 768px) {
   .hero.page-head,
+  .hero.news-hero,
   .hero[style*="min-height: 500px"],
   .hero[style*="min-height: 520px"] {
-    background-size: cover, 120px 120px !important;
+    background-size: cover, 130px 130px !important;
     min-height: 420px !important;
     padding-top: 95px !important;
     padding-bottom: 3rem !important;
   }
 }
+
 
 
 
@@ -4828,6 +4833,542 @@ html[lang="ta"] .article-modal-title {
     height: 220px;
   }
 }
+
+/* ==============================================================================
+   Our Programs (Dual-Track: Tahfeez-ul-Quran & School Studies)
+   ============================================================================== */
+.programs-filter-section {
+  background: white;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.program-tabs-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.program-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem 1.6rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-light);
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.program-tab-btn:hover {
+  background: white;
+  color: var(--accent-emerald);
+  border-color: var(--accent-emerald);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.program-tab-btn.active {
+  background: var(--accent-emerald);
+  color: white;
+  border-color: var(--accent-emerald);
+  box-shadow: 0 4px 14px rgba(2, 60, 41, 0.25);
+}
+
+.program-tab-btn.active i {
+  color: var(--accent-gold);
+}
+
+/* Overview Card */
+.program-overview-card {
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 2.75rem 2.25rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.program-overview-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-emerald), var(--accent-gold));
+}
+
+.overview-title {
+  font-size: 2rem;
+  color: var(--accent-emerald);
+  margin-top: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.overview-copy {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.75;
+  max-width: 850px;
+  margin-bottom: 1.5rem;
+}
+
+.overview-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.track-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-full);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Category Sections */
+.program-category-wrapper {
+  padding: 4.5rem 0;
+}
+
+.category-header {
+  text-align: center;
+  max-width: 820px;
+  margin: 0 auto 3rem;
+}
+
+.category-meta-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.45rem 1.25rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+}
+
+.category-meta-badge.badge-emerald {
+  background: rgba(2, 60, 41, 0.08);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(2, 60, 41, 0.2);
+}
+
+.category-meta-badge.badge-gold {
+  background: rgba(184, 134, 11, 0.1);
+  color: #946908;
+  border: 1px solid rgba(184, 134, 11, 0.25);
+}
+
+.category-main-title {
+  font-size: 2.35rem;
+  color: var(--accent-emerald);
+  margin-bottom: 0.5rem;
+}
+
+.category-subtitle {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--accent-gold);
+  margin-bottom: 1rem;
+}
+
+.category-description {
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: var(--text-secondary);
+}
+
+/* Highlights Banner */
+.highlights-banner {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 1.5rem 2rem;
+  margin-bottom: 3.5rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.highlight-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.highlight-icon {
+  width: 38px;
+  height: 38px;
+  background: rgba(2, 60, 41, 0.07);
+  color: var(--accent-emerald);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+/* Subsection Titles */
+.subsection-title-wrap {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.subsection-title {
+  font-size: 1.85rem;
+  color: var(--accent-emerald);
+  margin-top: 0.25rem;
+}
+
+/* Program Card Customization */
+.program-card {
+  transition: var(--transition);
+  border: 1px solid var(--border-light);
+}
+
+.program-card:hover {
+  transform: translateY(-6px);
+  border-color: var(--accent-gold);
+  box-shadow: var(--shadow-md);
+}
+
+/* Level Progression Box */
+.level-progression-box {
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.level-progression-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.levels-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.level-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  position: relative;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.level-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--accent-gold);
+  background: white;
+  box-shadow: var(--shadow-md);
+}
+
+.level-card-number {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--accent-gold);
+  margin-bottom: 0.25rem;
+  line-height: 1;
+}
+
+.level-card-year {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--accent-emerald);
+  margin-bottom: 0.5rem;
+}
+
+.level-card-badge {
+  display: inline-block;
+  align-self: center;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: rgba(2, 60, 41, 0.08);
+  color: var(--accent-emerald);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.75rem;
+}
+
+.level-card-juz {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+}
+
+.level-card-text {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Subjects Section */
+.subjects-section-wrap {
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 3rem 2.25rem;
+  box-shadow: var(--shadow-sm);
+}
+
+.subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.subject-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1.25rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  transition: var(--transition);
+}
+
+.subject-card:hover {
+  background: white;
+  border-color: var(--accent-gold);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.subject-icon-box {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-sm);
+  background: rgba(184, 134, 11, 0.12);
+  color: var(--accent-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.subject-info {
+  flex: 1;
+}
+
+.subject-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-emerald);
+  margin-bottom: 0.25rem;
+}
+
+.subject-desc {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  margin: 0;
+}
+
+/* Routine Grid */
+.routine-timeline-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.5rem;
+}
+
+.routine-slot-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition);
+}
+
+.routine-slot-card:hover {
+  border-color: var(--accent-emerald);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.routine-tag {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.82rem;
+  font-weight: 700;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.routine-tag-hifz {
+  background: rgba(2, 60, 41, 0.1);
+  color: var(--accent-emerald);
+  border: 1px solid rgba(2, 60, 41, 0.2);
+}
+
+.routine-tag-school {
+  background: rgba(184, 134, 11, 0.12);
+  color: #946908;
+  border: 1px solid rgba(184, 134, 11, 0.25);
+}
+
+.routine-tag-routine {
+  background: var(--bg-secondary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.routine-body {
+  flex: 1;
+}
+
+.routine-title {
+  font-size: 1.05rem;
+  color: var(--accent-emerald);
+  margin-bottom: 0.35rem;
+}
+
+.routine-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Admissions Card */
+.admissions-card {
+  background: white;
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 3.5rem 3rem;
+  box-shadow: var(--shadow-sm);
+  position: relative;
+  overflow: hidden;
+}
+
+.admissions-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 6px;
+  background: var(--accent-gold);
+}
+
+.requirements-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: 2.25rem;
+}
+
+.req-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1rem;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.req-check {
+  color: var(--accent-emerald);
+  font-size: 1.15rem;
+  flex-shrink: 0;
+}
+
+.admissions-actions {
+  display: flex;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+
+/* Media Queries for Programs */
+@media (max-width: 1024px) {
+  .highlights-banner {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .levels-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .subjects-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .program-tabs-wrapper {
+    flex-direction: column;
+    width: 100%;
+  }
+  .program-tab-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .highlights-banner {
+    grid-template-columns: 1fr;
+    padding: 1.25rem;
+  }
+  .levels-grid {
+    grid-template-columns: 1fr;
+  }
+  .subjects-grid {
+    grid-template-columns: 1fr;
+  }
+  .routine-timeline-grid {
+    grid-template-columns: 1fr;
+  }
+  .routine-slot-card {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .admissions-card {
+    padding: 2.25rem 1.5rem;
+  }
+  .admissions-actions {
+    flex-direction: column;
+  }
+  .admissions-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 
 
 
