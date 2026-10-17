@@ -1017,46 +1017,86 @@ export async function upsertIdentity(identity: Partial<MailboxIdentity>): Promis
   const supabase = getAdminSupabase();
   const hasDb = supabase && (await tableExists('mailbox_identities'));
 
-  const item: MailboxIdentity = {
-    id: identity.id || `identity-${Date.now()}`,
-    email: identity.email?.toLowerCase().trim() || 'info@idi.lk',
-    display_name: identity.display_name?.trim() || 'Institute of Da\'wa Islamiyya',
-    reply_to: identity.reply_to || identity.email,
-    is_default: Boolean(identity.is_default),
-    is_verified: true,
-    status: identity.status || 'active',
-    signature_id: identity.signature_id,
-  };
+  const email = identity.email?.toLowerCase().trim() || 'info@idi.lk';
+  const displayName = identity.display_name?.trim() || email.split('@')[0];
 
   if (!hasDb) {
+    const item: MailboxIdentity = {
+      id: identity.id || `identity-${Date.now()}`,
+      email,
+      display_name: displayName,
+      reply_to: identity.reply_to || email,
+      is_default: Boolean(identity.is_default),
+      is_verified: true,
+      status: identity.status || 'active',
+      signature_id: identity.signature_id,
+    };
     if (item.is_default) {
       MEMORY_IDENTITIES.forEach((i) => (i.is_default = false));
     }
-    const idx = MEMORY_IDENTITIES.findIndex((i) => i.id === item.id);
+    const idx = MEMORY_IDENTITIES.findIndex((i) => i.id === item.id || i.email === item.email);
     if (idx >= 0) {
-      MEMORY_IDENTITIES[idx] = item;
+      MEMORY_IDENTITIES[idx] = { ...MEMORY_IDENTITIES[idx], ...item };
+      return MEMORY_IDENTITIES[idx];
     } else {
       MEMORY_IDENTITIES.push(item);
+      return item;
     }
-    return item;
   }
 
-  if (item.is_default) {
-    await supabase!.from('mailbox_identities').update({ is_default: false }).neq('id', item.id);
+  // Check if identity already exists by id or email
+  let existingQuery = supabase!.from('mailbox_identities').select('*');
+  if (identity.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identity.id)) {
+    existingQuery = existingQuery.eq('id', identity.id);
+  } else {
+    existingQuery = existingQuery.eq('email', email);
+  }
+  const { data: existing } = await existingQuery.maybeSingle();
+
+  const payload: any = {
+    email,
+    display_name: displayName,
+    reply_to: identity.reply_to || email,
+    is_default: Boolean(identity.is_default),
+    is_verified: true,
+    status: identity.status || 'active',
+    signature_id: identity.signature_id || null,
+  };
+
+  if (existing?.id) {
+    payload.id = existing.id;
+  } else if (identity.id && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(identity.id)) {
+    payload.id = identity.id;
   }
 
-  const { data } = await supabase!.from('mailbox_identities').upsert(item).select().single();
-  return data || item;
+  if (payload.is_default && payload.id) {
+    await supabase!.from('mailbox_identities').update({ is_default: false }).neq('id', payload.id);
+  }
+
+  const { data, error } = await supabase!
+    .from('mailbox_identities')
+    .upsert(payload, { onConflict: 'email' })
+    .select()
+    .single();
+
+  if (error) {
+    console.error('Error upserting mailbox identity:', error);
+    throw new Error(error.message);
+  }
+
+  return data;
 }
 
-export async function deleteIdentity(id: string): Promise<boolean> {
+export async function deleteIdentity(idOrEmail: string): Promise<boolean> {
   const supabase = getAdminSupabase();
   const hasDb = supabase && (await tableExists('mailbox_identities'));
   if (!hasDb) {
-    MEMORY_IDENTITIES = MEMORY_IDENTITIES.filter((i) => i.id !== id);
+    MEMORY_IDENTITIES = MEMORY_IDENTITIES.filter((i) => i.id !== idOrEmail && i.email !== idOrEmail);
     return true;
   }
-  const { error } = await supabase!.from('mailbox_identities').delete().eq('id', id);
+  const isUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(idOrEmail);
+  const query = supabase!.from('mailbox_identities').delete();
+  const { error } = isUuid ? await query.eq('id', idOrEmail) : await query.eq('email', idOrEmail);
   return !error;
 }
 

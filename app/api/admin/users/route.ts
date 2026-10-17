@@ -130,7 +130,7 @@ export async function POST(request: NextRequest) {
         ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins']
         : ['overview', 'gallery', 'inquiries', 'mailbox']);
     const cleanEmails =
-      body.allowed_emails || (cleanRole === 'super_admin' ? ['*'] : ['info@idi.lk']);
+      cleanRole === 'super_admin' ? ['*'] : (Array.isArray(body.allowed_emails) ? body.allowed_emails : []);
 
     if (!cleanEmail || !cleanEmail.includes('@')) {
       return NextResponse.json(

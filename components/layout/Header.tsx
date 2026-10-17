@@ -39,6 +39,7 @@ export default function Header() {
     { href: '/students', label: t('common.nav.students', 'Journey') },
     { href: '/alumni', label: t('common.nav.alumni', 'Alumni') },
     { href: '/events', label: t('common.nav.events', 'Events') },
+    { href: '/news', label: t('common.nav.news', 'News') },
     { href: '/contact', label: t('common.nav.contact', 'Contact') },
   ];
 

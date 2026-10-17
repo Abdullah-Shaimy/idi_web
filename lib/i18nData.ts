@@ -20,6 +20,7 @@
                     alumni: 'Alumni',
                     events: 'Events',
                     gallery: 'Events',
+                    news: 'News',
                     contact: 'Contact',
                 },
                 footer: {
@@ -776,6 +777,7 @@
                     alumni: 'பழைய மாணவர்கள்',
                     events: 'நிகழ்வுகள்',
                     gallery: 'நிகழ்வுகள்',
+                    news: 'செய்திகள்',
                     contact: 'தொடர்பு',
                 },
                 footer: {

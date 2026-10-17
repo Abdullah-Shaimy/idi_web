@@ -62,10 +62,11 @@ export async function DELETE(request: NextRequest) {
   }
 
   const id = request.nextUrl.searchParams.get('id');
-  if (!id) {
-    return NextResponse.json({ success: false, error: 'Identity ID is required' }, { status: 400 });
+  const email = request.nextUrl.searchParams.get('email');
+  if (!id && !email) {
+    return NextResponse.json({ success: false, error: 'Identity ID or Email is required' }, { status: 400 });
   }
 
-  const ok = await deleteIdentity(id);
+  const ok = await deleteIdentity(id || email!);
   return NextResponse.json({ success: ok });
 }

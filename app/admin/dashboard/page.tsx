@@ -15,12 +15,6 @@ const SYSTEM_TABS = [
   { id: 'mailbox', label: 'Mailbox', icon: 'fa-inbox' },
 ];
 
-// Configurable institutional domain emails for administrator access
-const AVAILABLE_DOMAIN_EMAILS = [
-  { email: 'info@idi.lk', label: 'info@idi.lk (Institutional Primary Inbox)' },
-  { email: 'support@idi.lk', label: 'support@idi.lk (Support & Inquiries Desk)' },
-  { email: 'admin@idi.lk', label: 'admin@idi.lk (Principal Administration)' },
-];
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -91,9 +85,11 @@ export default function AdminDashboardPage() {
     'inquiries',
     'mailbox',
   ]);
-  const [newAdminAllowedEmails, setNewAdminAllowedEmails] = useState<string[]>([
-    'info@idi.lk',
-  ]);
+  const [newAdminAllowedEmails, setNewAdminAllowedEmails] = useState<string[]>([]);
+  const [availableMailboxEmails, setAvailableMailboxEmails] = useState<Array<{ id?: string; email: string; label: string }>>([]);
+  const [loadingMailboxEmails, setLoadingMailboxEmails] = useState(false);
+  const [customNewEmailInput, setCustomNewEmailInput] = useState('');
+  const [customEditEmailInput, setCustomEditEmailInput] = useState('');
 
   const [editAdminModal, setEditAdminModal] = useState(false);
   const [editingAdmin, setEditingAdmin] = useState(null);
@@ -229,6 +225,108 @@ export default function AdminDashboardPage() {
     }
   }, []);
 
+  const loadAvailableMailboxEmails = useCallback(async () => {
+    setLoadingMailboxEmails(true);
+    try {
+      let token = '';
+      const session = await IDISupabase.getSession();
+      if (session?.access_token) token = session.access_token;
+
+      const res = await fetch('/api/admin/mailbox/identities', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const data = await res.json();
+      if (data.success && Array.isArray(data.identities)) {
+        const items = data.identities.map((id: any) => ({
+          id: id.id,
+          email: id.email.toLowerCase().trim(),
+          label: `${id.email}${id.display_name && id.display_name !== id.email ? ` (${id.display_name})` : ''}`,
+        }));
+        setAvailableMailboxEmails(items);
+      }
+    } catch (err) {
+      console.warn('Failed to load mailbox identities:', err);
+    } finally {
+      setLoadingMailboxEmails(false);
+    }
+  }, []);
+
+  const handleAddCustomEmail = async (mode: 'new' | 'edit') => {
+    const raw = mode === 'new' ? customNewEmailInput : customEditEmailInput;
+    const email = raw.trim().toLowerCase();
+
+    if (!email || !email.includes('@') || !email.includes('.')) {
+      showToast('Please enter a valid email address (e.g. principal@idi.lk)', 'warning');
+      return;
+    }
+
+    // 1. Add to availableMailboxEmails list immediately
+    setAvailableMailboxEmails((prev) => {
+      if (prev.some((item) => item.email === email)) return prev;
+      return [...prev, { email, label: email }];
+    });
+
+    // 2. Automatically select/check for current modal
+    if (mode === 'new') {
+      setNewAdminAllowedEmails((prev) => Array.from(new Set([...prev, email])));
+      setCustomNewEmailInput('');
+    } else {
+      setEditAdminAllowedEmails((prev) => Array.from(new Set([...prev, email])));
+      setCustomEditEmailInput('');
+    }
+
+    // 3. Persist to mailbox_identities table in database via API
+    try {
+      let token = '';
+      const session = await IDISupabase.getSession();
+      if (session?.access_token) token = session.access_token;
+
+      const res = await fetch('/api/admin/mailbox/identities', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({
+          email,
+          display_name: email.split('@')[0],
+          is_default: false,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.identity?.id) {
+        setAvailableMailboxEmails((prev) =>
+          prev.map((item) => (item.email === email ? { ...item, id: data.identity.id } : item))
+        );
+      }
+      showToast(`Added ${email} to authorized domain addresses.`);
+    } catch {
+      showToast(`Added ${email} to permission list.`);
+    }
+  };
+
+  const handleRemoveCustomEmail = async (emailToRemove: string) => {
+    const item = availableMailboxEmails.find((i) => i.email === emailToRemove);
+
+    setNewAdminAllowedEmails((prev) => prev.filter((e) => e !== emailToRemove));
+    setEditAdminAllowedEmails((prev) => prev.filter((e) => e !== emailToRemove));
+    setAvailableMailboxEmails((prev) => prev.filter((e) => e.email !== emailToRemove));
+
+    const param = item?.id ? `id=${encodeURIComponent(item.id)}` : `email=${encodeURIComponent(emailToRemove)}`;
+    try {
+      let token = '';
+      const session = await IDISupabase.getSession();
+      if (session?.access_token) token = session.access_token;
+      await fetch(`/api/admin/mailbox/identities?${param}`, {
+        method: 'DELETE',
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+    } catch (err) {
+      console.warn('Failed to delete identity from backend:', err);
+    }
+    showToast(`Removed ${emailToRemove} from list.`);
+  };
+
   useEffect(() => {
     if (!authLoading && currentUser) {
       loadFolders();
@@ -236,9 +334,10 @@ export default function AdminDashboardPage() {
       loadMailboxStats();
       if (isSuperAdmin) {
         loadAdmins();
+        loadAvailableMailboxEmails();
       }
     }
-  }, [authLoading, currentUser, isSuperAdmin, loadFolders, loadInquiries, loadAdmins, loadMailboxStats]);
+  }, [authLoading, currentUser, isSuperAdmin, loadFolders, loadInquiries, loadAdmins, loadMailboxStats, loadAvailableMailboxEmails]);
 
   // Load photos when a folder is selected
   const openFolderDetail = async (folder) => {
@@ -497,7 +596,9 @@ export default function AdminDashboardPage() {
     setNewAdminRole('admin');
     setNewAdminPassword('');
     setNewAdminAllowedTabs(['overview', 'gallery', 'inquiries', 'mailbox']);
-    setNewAdminAllowedEmails(['info@idi.lk']);
+    setNewAdminAllowedEmails([]);
+    setCustomNewEmailInput('');
+    loadAvailableMailboxEmails();
     setAddAdminModal(true);
   };
 
@@ -510,11 +611,20 @@ export default function AdminDashboardPage() {
         ? admin.allowed_tabs
         : ['overview', 'gallery', 'inquiries', 'mailbox']
     );
-    setEditAdminAllowedEmails(
-      Array.isArray(admin.allowed_emails)
-        ? admin.allowed_emails
-        : []
-    );
+    const existingEmails = Array.isArray(admin.allowed_emails) ? admin.allowed_emails : [];
+    setEditAdminAllowedEmails(existingEmails);
+    setCustomEditEmailInput('');
+    loadAvailableMailboxEmails();
+    // Ensure any previously assigned emails are included in the available options
+    setAvailableMailboxEmails((prev) => {
+      const merged = [...prev];
+      existingEmails.forEach((em: string) => {
+        if (em && em !== '*' && !merged.some((m) => m.email === em)) {
+          merged.push({ email: em, label: em });
+        }
+      });
+      return merged;
+    });
     setEditAdminModal(true);
   };
 
@@ -543,7 +653,8 @@ export default function AdminDashboardPage() {
       setNewAdminRole('admin');
       setNewAdminPassword('');
       setNewAdminAllowedTabs(['overview', 'gallery', 'inquiries', 'mailbox']);
-      setNewAdminAllowedEmails(['info@idi.lk']);
+      setNewAdminAllowedEmails([]);
+      setCustomNewEmailInput('');
       loadAdmins();
     } catch (err: any) {
       showToast('Failed to create admin: ' + err.message, 'danger');
@@ -1561,12 +1672,9 @@ export default function AdminDashboardPage() {
                               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', fontSize: '0.75rem', background: 'rgba(217,119,6,0.1)', color: 'var(--accent-gold)', padding: '2px 8px', borderRadius: '999px', fontWeight: 600 }}>
                                 <i className="fa-solid fa-at"></i> All Emails (*)
                               </span>
-                            ) : (
+                            ) : admin.allowed_emails && admin.allowed_emails.length > 0 ? (
                               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', maxWidth: '240px' }}>
-                                {(admin.allowed_emails && admin.allowed_emails.length > 0
-                                  ? admin.allowed_emails
-                                  : ['info@idi.lk']
-                                ).map((em) => (
+                                {admin.allowed_emails.map((em) => (
                                   <span
                                     key={em}
                                     style={{
@@ -1586,6 +1694,10 @@ export default function AdminDashboardPage() {
                                   </span>
                                 ))}
                               </div>
+                            ) : (
+                              <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>
+                                No Email Access
+                              </span>
                             )}
                           </td>
                           <td>
@@ -2161,40 +2273,104 @@ export default function AdminDashboardPage() {
                       Super Admins can view and dispatch emails from all institutional addresses (*).
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      {AVAILABLE_DOMAIN_EMAILS.map((item) => (
-                        <label
-                          key={item.email}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            fontSize: '0.85rem',
-                            padding: '8px 12px',
-                            background: 'var(--bg-card)',
-                            borderRadius: '4px',
-                            border: newAdminAllowedEmails.includes(item.email)
-                              ? '1px solid var(--accent-gold)'
-                              : '1px solid var(--border-color)',
-                            cursor: 'pointer',
-                            fontWeight: newAdminAllowedEmails.includes(item.email) ? 600 : 400,
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={newAdminAllowedEmails.includes(item.email)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setNewAdminAllowedEmails((prev) => [...prev, item.email]);
-                              } else {
-                                setNewAdminAllowedEmails((prev) => prev.filter((em) => em !== item.email));
-                              }
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                      {loadingMailboxEmails ? (
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', padding: '0.5rem 0' }}>
+                          <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '6px' }}></i> Loading available email addresses...
+                        </div>
+                      ) : availableMailboxEmails.length === 0 ? (
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'var(--bg-card)', padding: '0.6rem 0.85rem', borderRadius: '4px', border: '1px dashed var(--border-color)' }}>
+                          No domain email addresses registered yet. Enter an email below (e.g. <code>info@idi.lk</code>) to add it.
+                        </div>
+                      ) : (
+                        availableMailboxEmails.map((item) => (
+                          <div
+                            key={item.email}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              padding: '8px 12px',
+                              background: 'var(--bg-card)',
+                              borderRadius: '4px',
+                              border: newAdminAllowedEmails.includes(item.email)
+                                ? '1px solid var(--accent-gold)'
+                                : '1px solid var(--border-color)',
                             }}
-                          />
-                          <i className="fa-solid fa-at" style={{ color: 'var(--accent-gold)' }}></i>
-                          <span>{item.label}</span>
-                        </label>
-                      ))}
+                          >
+                            <label
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                fontSize: '0.85rem',
+                                cursor: 'pointer',
+                                fontWeight: newAdminAllowedEmails.includes(item.email) ? 600 : 400,
+                                flex: 1,
+                                margin: 0,
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={newAdminAllowedEmails.includes(item.email)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setNewAdminAllowedEmails((prev) => [...prev, item.email]);
+                                  } else {
+                                    setNewAdminAllowedEmails((prev) => prev.filter((em) => em !== item.email));
+                                  }
+                                }}
+                              />
+                              <i className="fa-solid fa-at" style={{ color: 'var(--accent-gold)' }}></i>
+                              <span>{item.label}</span>
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveCustomEmail(item.email)}
+                              title="Delete from available addresses"
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                padding: '2px 6px',
+                                fontSize: '0.75rem',
+                                borderRadius: '4px',
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--danger)')}
+                              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
+                            >
+                              <i className="fa-solid fa-trash-can"></i>
+                            </button>
+                          </div>
+                        ))
+                      )}
+
+                      {/* Add Custom Email Address Input */}
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '0.35rem' }}>
+                        <input
+                          type="email"
+                          placeholder="Add new email address (e.g. principal@idi.lk)"
+                          className="form-control"
+                          style={{ fontSize: '0.82rem', padding: '6px 10px' }}
+                          value={customNewEmailInput}
+                          onChange={(e) => setCustomNewEmailInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              handleAddCustomEmail('new');
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-sm"
+                          style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          onClick={() => handleAddCustomEmail('new')}
+                        >
+                          <i className="fa-solid fa-plus"></i> Add
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -2390,40 +2566,104 @@ export default function AdminDashboardPage() {
                       Super Admins can access and send from all institutional addresses (*).
                     </div>
                   ) : (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-                      {AVAILABLE_DOMAIN_EMAILS.map((item) => (
-                        <label
-                          key={item.email}
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            fontSize: '0.85rem',
-                            padding: '8px 12px',
-                            background: 'var(--bg-card)',
-                            borderRadius: '4px',
-                            border: editAdminAllowedEmails.includes(item.email)
-                              ? '1px solid var(--accent-gold)'
-                              : '1px solid var(--border-color)',
-                            cursor: 'pointer',
-                            fontWeight: editAdminAllowedEmails.includes(item.email) ? 600 : 400,
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            checked={editAdminAllowedEmails.includes(item.email)}
-                            onChange={(e) => {
-                              if (e.target.checked) {
-                                setEditAdminAllowedEmails((prev) => [...prev, item.email]);
-                              } else {
-                                setEditAdminAllowedEmails((prev) => prev.filter((em) => em !== item.email));
-                              }
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+                      {loadingMailboxEmails ? (
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', padding: '0.5rem 0' }}>
+                          <i className="fa-solid fa-spinner fa-spin" style={{ marginRight: '6px' }}></i> Loading available email addresses...
+                        </div>
+                      ) : availableMailboxEmails.length === 0 ? (
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', background: 'var(--bg-card)', padding: '0.6rem 0.85rem', borderRadius: '4px', border: '1px dashed var(--border-color)' }}>
+                          No domain email addresses registered yet. Enter an email below (e.g. <code>info@idi.lk</code>) to add it.
+                        </div>
+                      ) : (
+                        availableMailboxEmails.map((item) => (
+                          <div
+                            key={item.email}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              padding: '8px 12px',
+                              background: 'var(--bg-card)',
+                              borderRadius: '4px',
+                              border: editAdminAllowedEmails.includes(item.email)
+                                ? '1px solid var(--accent-gold)'
+                                : '1px solid var(--border-color)',
                             }}
-                          />
-                          <i className="fa-solid fa-at" style={{ color: 'var(--accent-gold)' }}></i>
-                          <span>{item.label}</span>
-                        </label>
-                      ))}
+                          >
+                            <label
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                fontSize: '0.85rem',
+                                cursor: 'pointer',
+                                fontWeight: editAdminAllowedEmails.includes(item.email) ? 600 : 400,
+                                flex: 1,
+                                margin: 0,
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                checked={editAdminAllowedEmails.includes(item.email)}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setEditAdminAllowedEmails((prev) => [...prev, item.email]);
+                                  } else {
+                                    setEditAdminAllowedEmails((prev) => prev.filter((em) => em !== item.email));
+                                  }
+                                }}
+                              />
+                              <i className="fa-solid fa-at" style={{ color: 'var(--accent-gold)' }}></i>
+                              <span>{item.label}</span>
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveCustomEmail(item.email)}
+                              title="Delete from available addresses"
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                color: 'var(--text-muted)',
+                                cursor: 'pointer',
+                                padding: '2px 6px',
+                                fontSize: '0.75rem',
+                                borderRadius: '4px',
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--danger)')}
+                              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-muted)')}
+                            >
+                              <i className="fa-solid fa-trash-can"></i>
+                            </button>
+                          </div>
+                        ))
+                      )}
+
+                      {/* Add Custom Email Address Input */}
+                      <div style={{ display: 'flex', gap: '8px', marginTop: '0.35rem' }}>
+                        <input
+                          type="email"
+                          placeholder="Add new email address (e.g. principal@idi.lk)"
+                          className="form-control"
+                          style={{ fontSize: '0.82rem', padding: '6px 10px' }}
+                          value={customEditEmailInput}
+                          onChange={(e) => setCustomEditEmailInput(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                              e.preventDefault();
+                              handleAddCustomEmail('edit');
+                            }
+                          }}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-secondary btn-sm"
+                          style={{ whiteSpace: 'nowrap', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                          onClick={() => handleAddCustomEmail('edit')}
+                        >
+                          <i className="fa-solid fa-plus"></i> Add
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>

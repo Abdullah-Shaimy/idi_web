@@ -38,6 +38,7 @@ export default function Footer() {
             <li><Link href="/hifz">{t('common.nav.hifz', 'Hifz Program')}</Link></li>
             <li><Link href="/students">{t('common.footer.studentLife', 'Journey')}</Link></li>
             <li><Link href="/events">{t('common.nav.events', 'Events')}</Link></li>
+            <li><Link href="/news">{t('common.nav.news', 'News')}</Link></li>
           </ul>
         </div>
 

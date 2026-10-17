@@ -898,7 +898,7 @@ function setStorageItem(key, val) {
         const cleanRole = role === 'super_admin' ? 'super_admin' : 'admin';
         const cleanName = (full_name || '').trim();
         const cleanTabs = allowed_tabs || (cleanRole === 'super_admin' ? ['overview', 'gallery', 'inquiries', 'mailbox', 'admins'] : ['overview', 'gallery', 'inquiries', 'mailbox']);
-        const cleanEmails = allowed_emails || (cleanRole === 'super_admin' ? ['*'] : ['info@idi.lk']);
+        const cleanEmails = cleanRole === 'super_admin' ? ['*'] : (Array.isArray(allowed_emails) ? allowed_emails : []);
 
         if (!cleanEmail) {
             throw new Error('Valid email address is required.');
