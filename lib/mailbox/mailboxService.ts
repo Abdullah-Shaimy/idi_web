@@ -138,8 +138,9 @@ async function tableExists(tableName: string): Promise<boolean> {
 
   const supabase = getAdminSupabase();
   if (!supabase) return false;
+
   try {
-    const { error } = await supabase.from(tableName).select('id', { head: true, count: 'exact' });
+    const { error } = await supabase.from(tableName).select('id').limit(1);
     const exists = !error;
     tableCache.set(tableName, { exists, expiresAt: now + 5 * 60 * 1000 });
     return exists;
@@ -324,7 +325,7 @@ export async function getEmails(params: {
   }
 
   try {
-    const listFields = 'id, message_id, thread_id, folder, from_address, from_name, to_recipients, cc_recipients, bcc_recipients, subject, snippet, is_read, is_starred, is_draft, has_attachments, delivery_status, created_at, updated_at';
+    const listFields = 'id, message_id, thread_id, folder, status, from_address, from_name, to_recipients, cc_recipients, bcc_recipients, subject, snippet, is_read, is_starred, has_attachments, created_at, updated_at';
     let query = supabase!
       .from('mailbox_emails')
       .select(listFields, { count: 'exact' });
@@ -390,7 +391,12 @@ export async function getEmails(params: {
     return { emails: paged, total, page, totalPages };
   } catch (err) {
     console.warn('[Mailbox Service] DB error, falling back to memory:', err);
-    const fallback = MEMORY_EMAILS.filter((e) => isEmailAccessible(e, params.allowedEmails));
+    let fallback = MEMORY_EMAILS.filter((e) => isEmailAccessible(e, params.allowedEmails));
+    if (params.isStarred) {
+      fallback = fallback.filter((e) => e.is_starred && e.folder !== 'trash');
+    } else if (params.folder) {
+      fallback = fallback.filter((e) => e.folder === params.folder);
+    }
     return { emails: fallback, total: fallback.length, page: 1, totalPages: 1 };
   }
 }
