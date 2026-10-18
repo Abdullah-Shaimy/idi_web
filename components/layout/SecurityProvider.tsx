@@ -32,6 +32,30 @@ export default function SecurityProvider({ children }) {
   };
 
   useEffect(() => {
+    const cleanupTranslateBanners = () => {
+      const banners = document.querySelectorAll(
+        '.goog-te-banner-frame, .skiptranslate, #goog-gt-tt, .goog-te-balloon-frame, iframe[id^=":"], div[id^=":"][id$=".banner"]'
+      );
+      banners.forEach((el) => {
+        try {
+          el.remove();
+        } catch (e) {}
+      });
+      if (document.body && document.body.style.top && document.body.style.top !== '0px') {
+        document.body.style.top = '0px';
+      }
+    };
+
+    cleanupTranslateBanners();
+    const observer = new MutationObserver(cleanupTranslateBanners);
+    if (typeof document !== 'undefined' && document.body) {
+      observer.observe(document.body, { childList: true, subtree: true });
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     // Don't enforce protections in admin routes or open route if needed
     if (pathname.startsWith('/admin')) {
       return;

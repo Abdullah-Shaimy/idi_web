@@ -79,29 +79,36 @@ export default function Header() {
           </nav>
 
           {/* Desktop Language Switch */}
-          <div className="lang-switch desktop-lang-switch">
+          <div className="lang-switch desktop-lang-switch notranslate" translate="no">
             <button
               type="button"
-              className={`lang-switch-btn ${language === 'en' ? 'active' : ''}`}
+              className={`lang-switch-btn notranslate ${language === 'en' ? 'active' : ''}`}
+              translate="no"
               onClick={() => setLanguage('en', true)}
               title="Switch to English"
             >
-              EN
+              {t('common.switcher.en', 'ENGLISH')}
             </button>
             <button
               type="button"
-              className={`lang-switch-btn ${language === 'ta' ? 'active' : ''}`}
+              className={`lang-switch-btn notranslate ${language === 'ta' ? 'active' : ''}`}
+              translate="no"
               onClick={() => setLanguage('ta', true)}
-              title="தமிழுக்கு மாறவும்"
+              title="Switch to Tamil"
             >
-              தமிழ்
+              <span lang="ta" translate="no" className="notranslate">
+                {t('common.switcher.ta', 'தமிழ்')}
+              </span>
             </button>
           </div>
         </div>
       </header>
 
       {/* Full-Screen Mobile Menu Drawer */}
-      <div className={`mobile-nav-overlay ${mobileMenuOpen ? 'active' : ''}`}>
+      <div
+        className={`mobile-nav-overlay ${mobileMenuOpen ? 'active' : ''}`}
+        aria-hidden={!mobileMenuOpen}
+      >
         <button
           className="close-menu-btn"
           aria-label="Close Menu"
@@ -123,29 +130,35 @@ export default function Header() {
           ))}
 
           {/* Mobile Language Switcher */}
-          <div style={{ marginTop: '2rem', display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
-            <button
-              type="button"
-              className={`btn ${language === 'en' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}
-              onClick={() => {
-                setLanguage('en', true);
-                setMobileMenuOpen(false);
-              }}
-            >
-              English
-            </button>
-            <button
-              type="button"
-              className={`btn ${language === 'ta' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ padding: '0.5rem 1.25rem', fontSize: '0.9rem' }}
-              onClick={() => {
-                setLanguage('ta', true);
-                setMobileMenuOpen(false);
-              }}
-            >
-              தமிழ்
-            </button>
+          <div className="mobile-lang-switch-wrap">
+            <div className="lang-switch notranslate" translate="no">
+              <button
+                type="button"
+                className={`lang-switch-btn notranslate ${language === 'en' ? 'active' : ''}`}
+                translate="no"
+                onClick={() => {
+                  setLanguage('en', true);
+                  setMobileMenuOpen(false);
+                }}
+                title="Switch to English"
+              >
+                {t('common.switcher.en', 'ENGLISH')}
+              </button>
+              <button
+                type="button"
+                className={`lang-switch-btn notranslate ${language === 'ta' ? 'active' : ''}`}
+                translate="no"
+                onClick={() => {
+                  setLanguage('ta', true);
+                  setMobileMenuOpen(false);
+                }}
+                title="Switch to Tamil"
+              >
+                <span lang="ta" translate="no" className="notranslate">
+                  {t('common.switcher.ta', 'தமிழ்')}
+                </span>
+              </button>
+            </div>
           </div>
         </div>
       </div>

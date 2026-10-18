@@ -129,9 +129,11 @@ export default function HomeContent() {
                   fontStyle: isTamil ? 'italic' : 'normal',
                 }}
               >
-                {isTamil
-                  ? t('pages.index.homeAbout.mottoQuoteEn', '"Let us memorize the Holy Quran accurately and completely."')
-                  : t('pages.index.homeAbout.mottoQuoteTa', '"புனித அல்-குர்ஆனை செம்மையாகவும் முழுமையாகவும் மனனம் செய்வோம்"')}
+                <span translate="no" className="notranslate" lang={isTamil ? 'en' : 'ta'}>
+                  {isTamil
+                    ? t('pages.index.homeAbout.mottoQuoteEn', '"Let us memorize the Holy Quran accurately and completely."')
+                    : t('pages.index.homeAbout.mottoQuoteTa', '"புனித அல்-குர்ஆனை செம்மையாகவும் முழுமையாகவும் மனனம் செய்வோம்"')}
+                </span>
               </p>
             </div>
             <div style={{ display: 'flex', gap: '1.5rem', marginBottom: '2.5rem', flexWrap: 'wrap' }}>
@@ -323,125 +325,6 @@ export default function HomeContent() {
         </div>
       </section>
 
-      {/* 3. Short Version: Student Journey & Routine */}
-      <section className="section-container home-section-pad" id="home-journey">
-        <div className="responsive-grid" style={{ alignItems: 'center', gap: '4rem' }}>
-          <div>
-            <span className="subtitle home-journey-sub" style={{ color: 'var(--accent-emerald)' }}>
-              {t('pages.index.homeJourney.subtitle', 'Student Journey')}
-            </span>
-            <h2 className="section-title home-journey-title" style={{ textAlign: 'left', marginTop: '0.75rem', marginBottom: '1.5rem' }}>
-              {t('pages.index.homeJourney.title', 'A Harmonious Balance of Sacred & Secular Knowledge')}
-            </h2>
-            <p className="home-journey-copy" style={{ color: 'var(--text-secondary)', lineHeight: 1.8, marginBottom: '2rem' }}>
-              {t('pages.index.homeJourney.copy', 'At IDI, intellectual growth and spiritual devotion flourish together. Along with rigorous Quranic memorization, our students receive standard national curriculum education from Grade 6 to Grade 11 (O/L), preparing well-rounded scholars with strong ethical character and academic competence.')}
-            </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2.5rem' }}>
-              <div style={{ background: 'var(--bg-secondary)', padding: '1.25rem 1.5rem', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--accent-emerald)' }}>
-                <h4 style={{ fontSize: '1.05rem', marginBottom: '0.3rem' }}>
-                  <i className="fa-solid fa-graduation-cap" style={{ color: 'var(--accent-emerald)', marginRight: '0.5rem' }}></i> {t('pages.index.homeJourney.features.0.title', 'Grade 6 to O/L')}
-                </h4>
-                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: 0 }}>
-                  {t('pages.index.homeJourney.features.0.copy', 'Comprehensive national curriculum school education.')}
-                </p>
-              </div>
-              <div style={{ background: 'var(--bg-secondary)', padding: '1.25rem 1.5rem', borderRadius: 'var(--radius-sm)', borderLeft: '3px solid var(--accent-gold)' }}>
-                <h4 style={{ fontSize: '1.05rem', marginBottom: '0.3rem' }}>
-                  <i className="fa-solid fa-mosque" style={{ color: 'var(--accent-gold)', marginRight: '0.5rem' }}></i> {t('pages.index.homeJourney.features.1.title', 'Islamic Sciences')}
-                </h4>
-                <p style={{ fontSize: '0.88rem', color: 'var(--text-secondary)', margin: 0 }}>
-                  {t('pages.index.homeJourney.features.1.copy', 'Fiqh, Hadith, Seerah, and Arabic studies.')}
-                </p>
-              </div>
-            </div>
-            <div>
-              <Link href="/students" className="btn btn-primary home-journey-cta">
-                {t('pages.index.homeJourney.cta', 'Explore Student Journey')} <i className="fa-solid fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i>
-              </Link>
-            </div>
-          </div>
-
-          <div>
-            <div style={{ background: 'white', borderRadius: 'var(--radius-md)', padding: '2.5rem', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border-light)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
-                <h3 style={{ fontSize: '1.25rem', color: 'var(--accent-emerald)', margin: 0 }}>
-                  <i className="fa-regular fa-clock" style={{ marginRight: '0.5rem', color: 'var(--accent-gold)' }}></i> {t('pages.index.homeJourney.routineTitle', 'Daily Routine Highlights')}
-                </h3>
-                <span style={{ fontSize: '0.75rem', background: 'rgba(0, 109, 68, 0.1)', color: 'var(--accent-emerald)', padding: '0.25rem 0.75rem', borderRadius: '20px', fontWeight: 700 }}>
-                  {t('pages.index.homeJourney.routineDays', 'Mon - Thu')}
-                </span>
-              </div>
-              <div>
-                <div className="home-routine-item">
-                  <span className="home-routine-time" style={{ color: 'var(--accent-gold)' }}>
-                    {t('pages.index.homeJourney.routine.0.time', '04:30 AM')}
-                  </span>
-                  <div>
-                    <strong style={{ fontSize: '0.95rem', display: 'block', color: 'var(--text-primary)' }}>
-                      {t('pages.index.homeJourney.routine.0.title', 'Wake up & Tahajjud')}
-                    </strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      {t('pages.index.homeJourney.routine.0.desc', 'Early rising and spiritual preparation for the day')}
-                    </span>
-                  </div>
-                </div>
-                <div className="home-routine-item">
-                  <span className="home-routine-time" style={{ color: 'var(--accent-emerald)' }}>
-                    {t('pages.index.homeJourney.routine.1.time', '05:15 AM')}
-                  </span>
-                  <div>
-                    <strong style={{ fontSize: '0.95rem', display: 'block', color: 'var(--text-primary)' }}>
-                      {t('pages.index.homeJourney.routine.1.title', 'Fajr & Morning Sabak')}
-                    </strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      {t('pages.index.homeJourney.routine.1.desc', 'Prime memorization hours with fresh, focused minds')}
-                    </span>
-                  </div>
-                </div>
-                <div className="home-routine-item">
-                  <span className="home-routine-time" style={{ color: 'var(--accent-gold)' }}>
-                    {t('pages.index.homeJourney.routine.2.time', '08:00 AM')}
-                  </span>
-                  <div>
-                    <strong style={{ fontSize: '0.95rem', display: 'block', color: 'var(--text-primary)' }}>
-                      {t('pages.index.homeJourney.routine.2.title', 'Academic Schooling')}
-                    </strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      {t('pages.index.homeJourney.routine.2.desc', 'Structured school subjects until 1:00 PM')}
-                    </span>
-                  </div>
-                </div>
-                <div className="home-routine-item">
-                  <span className="home-routine-time" style={{ color: 'var(--accent-emerald)' }}>
-                    {t('pages.index.homeJourney.routine.3.time', '04:15 PM')}
-                  </span>
-                  <div>
-                    <strong style={{ fontSize: '0.95rem', display: 'block', color: 'var(--text-primary)' }}>
-                      {t('pages.index.homeJourney.routine.3.title', 'Asr & Dour Revision')}
-                    </strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      {t('pages.index.homeJourney.routine.3.desc', 'Systematic cumulative revision for permanent retention')}
-                    </span>
-                  </div>
-                </div>
-                <div className="home-routine-item">
-                  <span className="home-routine-time" style={{ color: 'var(--accent-gold)' }}>
-                    {t('pages.index.homeJourney.routine.4.time', '06:30 PM')}
-                  </span>
-                  <div>
-                    <strong style={{ fontSize: '0.95rem', display: 'block', color: 'var(--text-primary)' }}>
-                      {t('pages.index.homeJourney.routine.4.title', 'Maghrib & Night Sabak')}
-                    </strong>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-                      {t('pages.index.homeJourney.routine.4.desc', 'Next day preparation followed by Isha & rest')}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Featured Section: Why Choose IDI? */}
       <section className="bg-secondary" style={{ backgroundColor: 'var(--accent-emerald-dark)', color: 'white' }}>
@@ -555,9 +438,12 @@ export default function HomeContent() {
             </div>
           </div>
 
-          <div className="home-preview-cta">
-            <Link href="/alumni" className="btn btn-primary home-alumni-cta">
-              {t('pages.index.homeAlumni.cta', 'Browse Complete Alumni Directory')} <i className="fa-solid fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i>
+          <div className="home-preview-cta" style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+            <Link href="/students#graduates" className="btn btn-primary home-alumni-cta">
+              {t('pages.students.graduates.title', 'Our Graduated Huffaz')} <i className="fa-solid fa-arrow-right" style={{ marginLeft: '0.5rem' }}></i>
+            </Link>
+            <Link href="/alumni" className="btn btn-secondary home-alumni-cta">
+              <i className="fa-solid fa-user-plus" style={{ marginRight: '0.5rem' }}></i> {t('pages.alumni.hero.title', 'Alumni Registration')}
             </Link>
           </div>
         </div>

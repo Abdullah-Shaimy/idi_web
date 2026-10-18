@@ -260,6 +260,8 @@ function setStorageItem(key, val) {
         }
     ];
 
+    let MOCK_ALUMNI_REGISTRATIONS = [];
+
     let MOCK_ADMINS = [
         {
             id: 'mock-admin-1',
@@ -701,6 +703,99 @@ function setStorageItem(key, val) {
             };
             MOCK_INQUIRIES.unshift(mockEntry);
             return { success: true, error: null, isMock: true };
+        }
+    }
+
+    /**
+     * Submit an Alumni Registration from public website
+     */
+    async function submitAlumniRegistration(registrationData: Record<string, any>) {
+        const payload = {
+            full_name: (registrationData.full_name || '').trim(),
+            name_tamil: (registrationData.name_tamil || '').trim() || null,
+            title: (registrationData.title || '').trim() || null,
+            completion_year: (registrationData.completion_year || '').trim(),
+            program: (registrationData.program || '').trim(),
+            student_id: (registrationData.student_id || '').trim() || null,
+            is_hafiz: Boolean(registrationData.is_hafiz),
+            phone: (registrationData.phone || '').trim(),
+            email: (registrationData.email || '').trim(),
+            city: (registrationData.city || '').trim(),
+            country: (registrationData.country || 'Sri Lanka').trim(),
+            address: (registrationData.address || '').trim() || null,
+            occupation: (registrationData.occupation || '').trim(),
+            organization: (registrationData.organization || '').trim() || null,
+            higher_education: (registrationData.higher_education || '').trim() || null,
+            interests: Array.isArray(registrationData.interests) ? registrationData.interests : [],
+            message: (registrationData.message || '').trim() || null,
+            status: 'submitted',
+            created_at: new Date().toISOString(),
+        };
+
+        if (!payload.full_name || !payload.phone || !payload.email) {
+            throw new Error('Full Name, Phone number, and Email are required.');
+        }
+
+        const supabase = getClient();
+        if (!supabase || !isConfigured()) {
+            const mockEntry = {
+                id: 'alumni-reg-' + Date.now(),
+                ...payload,
+            };
+            MOCK_ALUMNI_REGISTRATIONS.unshift(mockEntry);
+            return { data: mockEntry, error: null, isMock: true };
+        }
+
+        try {
+            // Try inserting into dedicated alumni_registrations table if it exists
+            const { data, error } = await supabase
+                .from('alumni_registrations')
+                .insert([payload])
+                .select()
+                .maybeSingle();
+
+            if (!error) {
+                return { data, error: null, isMock: false };
+            }
+
+            console.warn('[IDI Supabase] alumni_registrations insert note:', error.message);
+            // Fallback: also log to contact_inquiries so admins see it immediately in dashboard
+            const formattedMessage = [
+                `--- ALUMNI REGISTRATION DETAILS ---`,
+                `Full Name: ${payload.full_name} (${payload.name_tamil || 'N/A'})`,
+                `Title: ${payload.title || 'N/A'}`,
+                `Batch / Year: ${payload.completion_year || 'N/A'}`,
+                `Program: ${payload.program || 'N/A'}`,
+                `Hifz Completed: ${payload.is_hafiz ? 'Yes' : 'No'}`,
+                `Phone / WhatsApp: ${payload.phone}`,
+                `Email: ${payload.email}`,
+                `Location: ${payload.city}, ${payload.country}`,
+                `Address: ${payload.address || 'N/A'}`,
+                `Occupation: ${payload.occupation} (${payload.organization || 'N/A'})`,
+                `Higher Education: ${payload.higher_education || 'N/A'}`,
+                `Interests: ${payload.interests.join(', ') || 'General'}`,
+                `Message / Memories: ${payload.message || 'None provided'}`,
+            ].join('\n');
+
+            await supabase.from('contact_inquiries').insert([{
+                name: payload.full_name,
+                email: payload.email,
+                phone: payload.phone,
+                city: payload.city,
+                subject: `[Alumni Registration] ${payload.full_name} (Batch ${payload.completion_year || 'N/A'})`,
+                message: formattedMessage,
+                status: 'new',
+            }]);
+
+            return { data: payload, error: null, isMock: false };
+        } catch (err: any) {
+            console.warn('[IDI Supabase] Fallback on alumni registration:', err.message || err);
+            const mockEntry = {
+                id: 'alumni-reg-' + Date.now(),
+                ...payload,
+            };
+            MOCK_ALUMNI_REGISTRATIONS.unshift(mockEntry);
+            return { data: mockEntry, error: null, isMock: true };
         }
     }
 
@@ -1395,6 +1490,7 @@ export const IDISupabase = {
     checkIsSuperAdmin,
     getCurrentAdminProfile,
     submitContactInquiry,
+    submitAlumniRegistration,
     fetchContactInquiries,
     updateInquiryStatus,
     deleteInquiry,
@@ -1430,6 +1526,7 @@ export {
     checkIsSuperAdmin,
     getCurrentAdminProfile,
     submitContactInquiry,
+    submitAlumniRegistration,
     fetchContactInquiries,
     updateInquiryStatus,
     deleteInquiry,

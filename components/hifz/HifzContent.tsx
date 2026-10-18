@@ -193,65 +193,6 @@ export default function HifzContent() {
     },
   ];
 
-  // Daily Schedule
-  const dailySchedule = [
-    {
-      time: '04:30 AM – 06:30 AM',
-      title: t('pages.hifz.dailyRoutine.schedule.0.title', isTamil ? 'தஹஜ்ஜுத், பஜ்ர் & சபக் (புதிய பாடம்)' : 'Tahajjud, Fajr & Sabak (New Lesson)'),
-      desc: t('pages.hifz.dailyRoutine.schedule.0.desc', isTamil ? 'அதிகாலை அமைதியில் புதிய குர்ஆன் பகுதிகளைக் கவனமாக மனனம் செய்தல்.' : 'Quiet morning focus dedicated to memorizing new Quranic portions.'),
-      category: 'hifz',
-      icon: 'fa-sun',
-    },
-    {
-      time: '07:00 AM – 08:00 AM',
-      title: t('pages.hifz.dailyRoutine.schedule.1.title', isTamil ? 'காலை உணவு & பாடசாலைக்கான ஆயத்தம்' : 'Breakfast & Morning Routine'),
-      desc: t('pages.hifz.dailyRoutine.schedule.1.desc', isTamil ? 'சத்தான காலை உணவு மற்றும் பாடசாலை வகுப்புகளுக்குத் தயாராதல்.' : 'Nutritious breakfast and personal preparation for school.'),
-      category: 'routine',
-      icon: 'fa-utensils',
-    },
-    {
-      time: '08:00 AM – 01:30 PM',
-      title: t('pages.hifz.dailyRoutine.schedule.2.title', isTamil ? 'முறையான பாடசாலை வகுப்புகள் (தரம் 6–11)' : 'Formal School Classes (Grades 6–11)'),
-      desc: t('pages.hifz.dailyRoutine.schedule.2.desc', isTamil ? 'தேசிய பாடத்திட்டப் பாடங்கள், அரபு மொழி மற்றும் இஸ்லாமியக் கலைகள்.' : 'Core academic subjects, national syllabus classes, and Arabic studies.'),
-      category: 'school',
-      icon: 'fa-school',
-    },
-    {
-      time: '01:30 PM – 03:00 PM',
-      title: t('pages.hifz.dailyRoutine.schedule.3.title', isTamil ? 'ளுஹர் தொழுகை, மதிய உணவு & ஓய்வு' : 'Zuhr Prayer, Lunch & Rest (Qaylulah)'),
-      desc: t('pages.hifz.dailyRoutine.schedule.3.desc', isTamil ? 'ஜமாஅத் தொழுகை, சுவையான மதிய உணவு மற்றும் பிற்பகல் ஓய்வு.' : 'Congregational prayer, hot lunch, and restorative afternoon rest.'),
-      category: 'routine',
-      icon: 'fa-bed',
-    },
-    {
-      time: '03:30 PM – 05:00 PM',
-      title: t('pages.hifz.dailyRoutine.schedule.4.title', isTamil ? 'சப்கி திருப்புதல் & அஸர் தொழுகை' : 'Sabki Revision & Asr Prayer'),
-      desc: t('pages.hifz.dailyRoutine.schedule.4.desc', isTamil ? 'ஆசிரியரின் நேரடி மேற்பார்வையில் முந்தைய பாடங்களை மீட்டல்.' : 'Reinforcing recent memorization portions under teacher supervision.'),
-      category: 'hifz',
-      icon: 'fa-book-open',
-    },
-    {
-      time: '05:00 PM – 06:15 PM',
-      title: t('pages.hifz.dailyRoutine.schedule.5.title', isTamil ? 'விளையாட்டு & உடற்பயிற்சி' : 'Physical Recreation & Sports'),
-      desc: t('pages.hifz.dailyRoutine.schedule.5.desc', isTamil ? 'கைப்பந்து, பூப்பந்து, உடற்பயிற்சி மற்றும் புத்துணர்ச்சி நேரங்கள்.' : 'Volleyball, badminton, outdoor sports, and relaxation on campus.'),
-      category: 'routine',
-      icon: 'fa-futbol',
-    },
-    {
-      time: '06:30 PM – 08:30 PM',
-      title: t('pages.hifz.dailyRoutine.schedule.6.title', isTamil ? 'மஃரிப், தௌர் (கூட்டு மீட்டல்) & இஷா' : 'Maghrib, Dour (Cycle Revision) & Isha'),
-      desc: t('pages.hifz.dailyRoutine.schedule.6.desc', isTamil ? 'குழுவாக அமர்ந்து தொடர்ச்சியான திருப்புப் பயிற்சி மற்றும் இரவுத் தொழுகை.' : 'Group cumulative revision cycles and night prayer.'),
-      category: 'hifz',
-      icon: 'fa-moon',
-    },
-    {
-      time: '08:30 PM – 09:30 PM',
-      title: t('pages.hifz.dailyRoutine.schedule.7.title', isTamil ? 'இரவு உணவு, தர்பிய்யா & நித்திரை' : 'Dinner, Tarbiyah Assembly & Lights Out'),
-      desc: t('pages.hifz.dailyRoutine.schedule.7.desc', isTamil ? 'சத்தான இரவு உணவு, ஆன்மிக நற்போதனை, துஆ மற்றும் நிம்மதியான உறக்கம்.' : 'Nutritious dinner, ethical mentoring, Dua, and restful sleep.'),
-      category: 'routine',
-      icon: 'fa-hands-praying',
-    },
-  ];
 
   return (
     <>
@@ -558,53 +499,7 @@ export default function HifzContent() {
         </section>
       )}
 
-      {/* ============================================================== */}
-      {/* INTEGRATED DAILY BALANCE / ROUTINE                            */}
-      {/* ============================================================== */}
-      <section className="section-container" style={{ paddingBottom: '4rem' }}>
-        <div className="section-title-wrapper">
-          <span className="subtitle">
-            {t('pages.hifz.dailyRoutine.badge', isTamil ? 'ஒருங்கிணைந்த அட்டவணை' : 'Daily Balance')}
-          </span>
-          <h2 className="section-title">
-            {t('pages.hifz.dailyRoutine.title', isTamil ? 'தினசரி வாழ்க்கை சமநிலை' : 'Integrated Daily Routine')}
-          </h2>
-          <p style={{ maxWidth: '760px', margin: '0.75rem auto 0', color: 'var(--text-secondary)', fontSize: '1.05rem', lineHeight: '1.7' }}>
-            {t(
-              'pages.hifz.dailyRoutine.copy',
-              isTamil
-                ? 'ஆன்மிக வணக்கம், குர்ஆன் மனனம், பாடசாலைக் கல்வி, ஆரோக்கியமான உணவு, விளையாட்டு மற்றும் ஓய்வு ஆகியவற்றை சமநிலைப்படுத்தும் வகையில் எமது தினசரி ஒழுங்கு அமைக்கப்பட்டுள்ளது.'
-                : 'Our disciplined schedule provides a healthy balance between spiritual worship, intensive Quranic memorization, formal school classes, nutritious meals, recreation, and restful sleep.'
-            )}
-          </p>
-        </div>
 
-        <div className="routine-timeline-grid">
-          {dailySchedule.map((slot, index) => {
-            const badgeClass =
-              slot.category === 'hifz'
-                ? 'routine-tag-hifz'
-                : slot.category === 'school'
-                ? 'routine-tag-school'
-                : 'routine-tag-routine';
-
-            return (
-              <div key={index} className="routine-slot-card">
-                <div className="routine-time-box">
-                  <span className={`routine-tag ${badgeClass}`}>
-                    <i className={`fa-solid ${slot.icon}`} style={{ marginRight: '6px' }}></i>
-                    {slot.time}
-                  </span>
-                </div>
-                <div className="routine-body">
-                  <h4 className="routine-title">{slot.title}</h4>
-                  <p className="routine-desc">{slot.desc}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
 
       {/* ============================================================== */}
       {/* ADMISSIONS & REQUIREMENTS CTA BANNER                           */}

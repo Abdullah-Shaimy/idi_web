@@ -778,23 +778,23 @@ export default function StudentsContent() {
           >
             <div>
               <span className="subtitle" style={{ color: 'var(--accent-gold)' }}>
-                {t('pages.students.graduates.portalSubtitle', isTamil ? 'முழுமையான தரவுத்தளம்' : 'Comprehensive Network')}
+                {t('pages.students.graduates.portalSubtitle', isTamil ? 'உலகளாவிய வலையமைப்பு' : 'Global Alumni Network')}
               </span>
               <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', marginTop: '0.25rem', color: 'var(--text-primary)' }}>
-                {t('pages.students.graduates.portalTitle', isTamil ? 'பழைய மாணவர் பிரத்தியேக தளம்' : 'Looking for the Dedicated Alumni Directory?')}
+                {t('pages.students.graduates.portalTitle', isTamil ? 'பழைய மாணவர் மன்றத்தில் இணையுங்கள்' : 'Are You an Alumnus of IDI?')}
               </h3>
               <p style={{ color: 'var(--text-secondary)', fontSize: '0.92rem', marginTop: '0.4rem' }}>
                 {t(
                   'pages.students.graduates.portalCopy',
                   isTamil
-                    ? 'எமது பட்டதாரிகள் மற்றும் பழைய மாணவர்களின் முழுமையான விபரங்களையும் அவர்களின் பணிகளையும் விரிவாக பார்வையிடுங்கள்.'
-                    : 'Explore the full alumni portal to browse convocations, verify certificates, and stay connected with our graduated Huffaz.'
+                    ? 'நிறுவனத்தில் கல்வி பயின்ற பழைய மாணவர்களுக்கான உத்தியோகபூர்வ மன்றத்தில் உங்களைப் பதிவு செய்து, எம்முடன் இணைந்திருங்கள்.'
+                    : 'Register your details in the official IDI Alumni Network to reconnect with peers, update your profile, and support our community.'
                 )}
               </p>
             </div>
             <Link href="/alumni" className="btn btn-primary" style={{ whiteSpace: 'nowrap' }}>
-              <i className="fa-solid fa-users" style={{ marginRight: '0.6rem' }}></i>
-              {t('pages.students.graduates.viewFullAlumni', isTamil ? 'முழுமையான பழைய மாணவர் தளம்' : 'Explore Full Alumni Portal')}
+              <i className="fa-solid fa-user-plus" style={{ marginRight: '0.6rem' }}></i>
+              {t('pages.students.graduates.viewFullAlumni', isTamil ? 'பழைய மாணவர் பதிவு' : 'Register as Alumni')}
             </Link>
           </div>
         </div>

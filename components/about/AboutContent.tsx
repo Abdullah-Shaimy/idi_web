@@ -68,9 +68,11 @@ export default function AboutContent() {
                 opacity: 0.9,
               }}
             >
-              {isTamil
-                ? '"Let us memorize the Holy Quran accurately and completely."'
-                : '"புனித அல்-குர்ஆனை செம்மையாகவும் முழுமையாகவும் மனனம் செய்வோம்"'}
+              <span translate="no" className="notranslate" lang={isTamil ? 'en' : 'ta'}>
+                {isTamil
+                  ? '"Let us memorize the Holy Quran accurately and completely."'
+                  : '"புனித அல்-குர்ஆனை செம்மையாகவும் முழுமையாகவும் மனனம் செய்வோம்"'}
+              </span>
             </p>
           </div>
 

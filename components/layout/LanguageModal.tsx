@@ -143,10 +143,10 @@ export default function LanguageModal() {
             }}
             onClick={() => handleSelect('ta')}
           >
-            <span style={{ fontSize: '1.1rem', fontWeight: '700' }}>
+            <span translate="no" className="notranslate" lang="ta" style={{ fontSize: '1.1rem', fontWeight: '700' }}>
               {t('common.modal.tamilTitle', 'தமிழ்')}
             </span>
-            <span style={{ fontSize: '0.75rem', opacity: 0.85 }}>
+            <span translate="no" className="notranslate" lang="ta" style={{ fontSize: '0.75rem', opacity: 0.85 }}>
               {t('common.modal.tamilCopy', 'தமிழில் தொடரவும்')}
             </span>
           </button>

@@ -25,6 +25,8 @@ export function LanguageProvider({ children }) {
       if (stored && SUPPORTED_LANGUAGES.includes(stored)) {
         setLanguageState(stored);
         document.documentElement.lang = stored;
+        document.documentElement.setAttribute('translate', 'no');
+        document.documentElement.classList.add('notranslate');
       } else {
         setShowModal(true);
       }
@@ -39,6 +41,8 @@ export function LanguageProvider({ children }) {
     setLanguageState(validLang);
     if (typeof document !== 'undefined') {
       document.documentElement.lang = validLang;
+      document.documentElement.setAttribute('translate', 'no');
+      document.documentElement.classList.add('notranslate');
     }
     if (persist) {
       try {
