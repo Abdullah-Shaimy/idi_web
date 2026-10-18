@@ -51,6 +51,28 @@ export default function AdminLoginPage() {
         return;
       }
 
+      // Record audit log for login
+      try {
+        await fetch('/api/admin/logs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(data?.session?.access_token ? { Authorization: `Bearer ${data.session.access_token}` } : {}),
+          },
+          body: JSON.stringify({
+            action: 'admin_login',
+            entity_type: 'auth',
+            entity_id: data?.user?.id || null,
+            details: {
+              email: email.trim(),
+              user_agent: typeof navigator !== 'undefined' ? navigator.userAgent : null,
+            },
+          }),
+        });
+      } catch (logErr) {
+        console.warn('Could not record login log:', logErr);
+      }
+
       router.replace('/admin/dashboard');
     } catch (err) {
       setErrorMessage(

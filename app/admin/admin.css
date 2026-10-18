@@ -1688,3 +1688,214 @@ header.admin-navbar,
     }
 }
 
+/* -------------------------------------------------------------------------
+   SUPER ADMIN AUDIT & ACTIVITY LOGS
+   ------------------------------------------------------------------------- */
+.audit-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.audit-stat-card {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+}
+
+.audit-stat-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: rgba(0, 109, 68, 0.3);
+}
+
+.audit-stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    flex-shrink: 0;
+}
+
+.audit-stat-icon.emerald { background: rgba(0, 109, 68, 0.1); color: var(--accent-emerald); }
+.audit-stat-icon.gold { background: rgba(184, 134, 11, 0.1); color: var(--accent-gold); }
+.audit-stat-icon.blue { background: rgba(37, 99, 235, 0.1); color: #2563eb; }
+.audit-stat-icon.purple { background: rgba(124, 58, 237, 0.1); color: #7c3aed; }
+
+.audit-stat-info h5 {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--text-muted);
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.audit-stat-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    line-height: 1;
+}
+
+.segmented-control {
+    display: inline-flex;
+    background: rgba(0, 0, 0, 0.04);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    gap: 4px;
+}
+
+.segmented-btn {
+    border: none;
+    background: transparent;
+    padding: 0.45rem 1rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-secondary);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+}
+
+.segmented-btn.active {
+    background: var(--bg-surface);
+    color: var(--accent-emerald);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+.audit-filter-bar {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1.15rem;
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+}
+
+.audit-search-wrap {
+    position: relative;
+    flex: 1 1 260px;
+}
+
+.audit-search-wrap i {
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.audit-search-input {
+    width: 100%;
+    padding: 0.55rem 0.85rem 0.55rem 2.25rem;
+    font-size: 0.88rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: var(--bg-main);
+    color: var(--text-primary);
+    outline: none;
+    transition: var(--transition);
+}
+
+.audit-search-input:focus {
+    border-color: var(--accent-emerald);
+    background: var(--bg-surface);
+    box-shadow: 0 0 0 3px rgba(0, 109, 68, 0.1);
+}
+
+.audit-filters-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.audit-select {
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    font-size: 0.84rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-sm);
+    background: var(--bg-main);
+    color: var(--text-primary);
+    font-weight: 500;
+    cursor: pointer;
+    outline: none;
+}
+
+.audit-action-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.audit-pill-send { background: rgba(0, 109, 68, 0.1); color: var(--accent-emerald); border: 1px solid rgba(0, 109, 68, 0.2); }
+.audit-pill-inbound { background: rgba(37, 99, 235, 0.1); color: #2563eb; border: 1px solid rgba(37, 99, 235, 0.2); }
+.audit-pill-archive { background: rgba(217, 119, 6, 0.1); color: #d97706; border: 1px solid rgba(217, 119, 6, 0.2); }
+.audit-pill-trash { background: rgba(220, 38, 38, 0.1); color: #dc2626; border: 1px solid rgba(220, 38, 38, 0.2); }
+.audit-pill-auth { background: rgba(124, 58, 237, 0.1); color: #7c3aed; border: 1px solid rgba(124, 58, 237, 0.2); }
+.audit-pill-admin { background: rgba(13, 148, 136, 0.1); color: #0d9488; border: 1px solid rgba(13, 148, 136, 0.2); }
+.audit-pill-inquiry { background: rgba(79, 70, 229, 0.1); color: #4f46e5; border: 1px solid rgba(79, 70, 229, 0.2); }
+.audit-pill-gallery { background: rgba(184, 134, 11, 0.1); color: var(--accent-gold); border: 1px solid rgba(184, 134, 11, 0.2); }
+
+.audit-admin-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.audit-avatar {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #006d44, #004d30);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.audit-avatar.system {
+    background: linear-gradient(135deg, #475569, #334155);
+}
+
+.audit-json-box {
+    background: #0f172a;
+    color: #38bdf8;
+    padding: 1rem;
+    border-radius: var(--radius-sm);
+    font-family: monospace;
+    font-size: 0.82rem;
+    max-height: 320px;
+    overflow-y: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+}
+
+

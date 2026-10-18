@@ -117,6 +117,20 @@ export default function AdminDashboardPage() {
   const [uploadPercent, setUploadPercent] = useState(0);
   const [uploadStatusText, setUploadStatusText] = useState('');
 
+  // Activity / Audit Logs State (Super Admin)
+  const [logs, setLogs] = useState<any[]>([]);
+  const [loadingLogs, setLoadingLogs] = useState(false);
+  const [logsTotal, setLogsTotal] = useState(0);
+  const [logsPage, setLogsPage] = useState(1);
+  const [logsTotalPages, setLogsTotalPages] = useState(1);
+  const [logsAdminFilter, setLogsAdminFilter] = useState('all');
+  const [logsActionFilter, setLogsActionFilter] = useState('all');
+  const [logsSearch, setLogsSearch] = useState('');
+  const [logsStats, setLogsStats] = useState<any>(null);
+  const [logsAdminsList, setLogsAdminsList] = useState<any[]>([]);
+  const [selectedLogDetail, setSelectedLogDetail] = useState<any>(null);
+  const [adminViewMode, setAdminViewMode] = useState<'users' | 'logs'>('users');
+
   const fileInputRef = useRef(null);
   const createCoverInputRef = useRef(null);
   const editCoverInputRef = useRef(null);
@@ -125,7 +139,7 @@ export default function AdminDashboardPage() {
   const isTabPermitted = useCallback(
     (tabKey: string) => {
       if (isSuperAdmin) return true;
-      if (tabKey === 'admins') return false; // Non-super admins never access admins management
+      if (tabKey === 'admins' || tabKey === 'logs') return false; // Non-super admins never access
       const allowed = (adminProfile as any)?.allowed_tabs || ['overview', 'gallery', 'inquiries', 'mailbox'];
       return allowed.includes(tabKey);
     },
@@ -327,6 +341,178 @@ export default function AdminDashboardPage() {
     showToast(`Removed ${emailToRemove} from list.`);
   };
 
+  const logAdminAction = useCallback(
+    async (action: string, entityType: string, entityId?: string | null, details?: any) => {
+      try {
+        const session = await IDISupabase.getSession();
+        const token = session?.access_token;
+        await fetch('/api/admin/logs', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            action,
+            entity_type: entityType,
+            entity_id: entityId || null,
+            details: {
+              ...(details || {}),
+              admin_name: (adminProfile as any)?.full_name || currentUser?.email?.split('@')[0],
+            },
+          }),
+        });
+      } catch (e) {
+        console.warn('[Admin Dashboard] Log action error:', e);
+      }
+    },
+    [adminProfile, currentUser]
+  );
+
+  const loadLogs = useCallback(
+    async (page = 1, adminFilter = logsAdminFilter, actionFilter = logsActionFilter, search = logsSearch) => {
+      if (!isSuperAdmin) return;
+      setLoadingLogs(true);
+      try {
+        const session = await IDISupabase.getSession();
+        const token = session?.access_token;
+        const params = new URLSearchParams({
+          page: String(page),
+          limit: '25',
+          ...(adminFilter !== 'all' ? { admin_id: adminFilter } : {}),
+          ...(actionFilter !== 'all' ? { action: actionFilter } : {}),
+          ...(search && search.trim() ? { search: search.trim() } : {}),
+        });
+
+        const res = await fetch(`/api/admin/logs?${params.toString()}`, {
+          headers: token ? { Authorization: `Bearer ${token}` } : {},
+        });
+        const data = await res.json();
+        if (data.success) {
+          setLogs(data.logs || []);
+          setLogsTotal(data.total || 0);
+          setLogsPage(data.page || 1);
+          setLogsTotalPages(data.totalPages || 1);
+          setLogsStats(data.stats || null);
+          if (data.admins) setLogsAdminsList(data.admins);
+        }
+      } catch (err) {
+        console.error('Error fetching logs:', err);
+      } finally {
+        setLoadingLogs(false);
+      }
+    },
+    [isSuperAdmin, logsAdminFilter, logsActionFilter, logsSearch]
+  );
+
+  const viewAdminLogs = (admin: any) => {
+    const adminIdentifier = admin.email || admin.user_id || admin.id;
+    setLogsAdminFilter(adminIdentifier);
+    setAdminViewMode('logs');
+    setActiveTab('logs');
+    loadLogs(1, adminIdentifier, 'all', '');
+  };
+
+  const handleExportLogsCsv = async () => {
+    try {
+      const session = await IDISupabase.getSession();
+      const token = session?.access_token;
+      const res = await fetch('/api/admin/logs?export_csv=true', {
+        headers: token ? { Authorization: `Bearer ${token}` } : {},
+      });
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `idi_admin_audit_logs_${new Date().toISOString().slice(0, 10)}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('Activity logs exported successfully!', 'success');
+    } catch {
+      showToast('Failed to export activity logs.', 'danger');
+    }
+  };
+
+  const getActionInfo = (action: string) => {
+    switch (action) {
+      case 'send_email':
+        return { label: 'Sent Email', pillClass: 'audit-pill-send', icon: 'fa-paper-plane' };
+      case 'inbound_email_received':
+        return { label: 'Received Email', pillClass: 'audit-pill-inbound', icon: 'fa-envelope-open' };
+      case 'bulk_archive':
+      case 'archive_email':
+        return { label: 'Archived Email', pillClass: 'audit-pill-archive', icon: 'fa-box-archive' };
+      case 'bulk_trash':
+      case 'trash_email':
+        return { label: 'Trashed Email', pillClass: 'audit-pill-trash', icon: 'fa-trash-can' };
+      case 'bulk_restore':
+      case 'restore_email':
+        return { label: 'Restored Email', pillClass: 'audit-pill-send', icon: 'fa-trash-arrow-up' };
+      case 'bulk_delete_permanent':
+      case 'delete_email_permanent':
+        return { label: 'Permanently Deleted', pillClass: 'audit-pill-trash', icon: 'fa-trash-xmark' };
+      case 'save_draft':
+        return { label: 'Saved Draft', pillClass: 'audit-pill-gallery', icon: 'fa-file-lines' };
+      case 'admin_login':
+        return { label: 'Admin Login', pillClass: 'audit-pill-auth', icon: 'fa-arrow-right-to-bracket' };
+      case 'admin_logout':
+        return { label: 'Admin Logout', pillClass: 'audit-pill-auth', icon: 'fa-arrow-right-from-bracket' };
+      case 'create_admin':
+        return { label: 'Created Administrator', pillClass: 'audit-pill-admin', icon: 'fa-user-plus' };
+      case 'update_admin':
+        return { label: 'Updated Administrator', pillClass: 'audit-pill-admin', icon: 'fa-user-pen' };
+      case 'delete_admin':
+        return { label: 'Revoked Administrator', pillClass: 'audit-pill-trash', icon: 'fa-user-xmark' };
+      case 'update_inquiry':
+        return { label: 'Updated Inquiry', pillClass: 'audit-pill-inquiry', icon: 'fa-envelope-open-text' };
+      case 'delete_inquiry':
+        return { label: 'Deleted Inquiry', pillClass: 'audit-pill-trash', icon: 'fa-trash' };
+      case 'create_album':
+        return { label: 'Created Album', pillClass: 'audit-pill-gallery', icon: 'fa-folder-plus' };
+      case 'update_album':
+        return { label: 'Updated Album', pillClass: 'audit-pill-gallery', icon: 'fa-folder-gear' };
+      case 'delete_album':
+        return { label: 'Deleted Album', pillClass: 'audit-pill-trash', icon: 'fa-folder-minus' };
+      case 'upload_photos':
+        return { label: 'Uploaded Photos', pillClass: 'audit-pill-gallery', icon: 'fa-cloud-arrow-up' };
+      case 'delete_photo':
+        return { label: 'Deleted Photo', pillClass: 'audit-pill-trash', icon: 'fa-image-slash' };
+      case 'change_password':
+        return { label: 'Password Changed', pillClass: 'audit-pill-auth', icon: 'fa-key' };
+      default:
+        return {
+          label: action.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()),
+          pillClass: 'audit-pill-admin',
+          icon: 'fa-circle-dot',
+        };
+    }
+  };
+
+  const formatLogTime = (dateStr: string) => {
+    try {
+      const d = new Date(dateStr);
+      const now = new Date();
+      const diffMs = now.getTime() - d.getTime();
+      const diffMins = Math.floor(diffMs / (1000 * 60));
+      const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+      let relative = '';
+      if (diffMins < 1) relative = 'Just now';
+      else if (diffMins < 60) relative = `${diffMins}m ago`;
+      else if (diffHours < 24) relative = `${diffHours}h ago`;
+      else if (diffDays === 1) relative = 'Yesterday';
+      else if (diffDays < 7) relative = `${diffDays}d ago`;
+      else relative = d.toLocaleDateString();
+
+      const timeStr = d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      return { relative, full: `${d.toLocaleDateString()} ${timeStr}` };
+    } catch {
+      return { relative: dateStr, full: dateStr };
+    }
+  };
+
   useEffect(() => {
     if (!authLoading && currentUser) {
       loadFolders();
@@ -335,9 +521,10 @@ export default function AdminDashboardPage() {
       if (isSuperAdmin) {
         loadAdmins();
         loadAvailableMailboxEmails();
+        loadLogs();
       }
     }
-  }, [authLoading, currentUser, isSuperAdmin, loadFolders, loadInquiries, loadAdmins, loadMailboxStats, loadAvailableMailboxEmails]);
+  }, [authLoading, currentUser, isSuperAdmin, loadFolders, loadInquiries, loadAdmins, loadMailboxStats, loadAvailableMailboxEmails, loadLogs]);
 
   // Load photos when a folder is selected
   const openFolderDetail = async (folder) => {
@@ -372,6 +559,7 @@ export default function AdminDashboardPage() {
       }
 
       await IDISupabase.createFolder({ name: newFolderName.trim(), description: newFolderDesc.trim(), cover_image_url: coverUrl });
+      logAdminAction('create_album', 'gallery', newFolderName.trim(), { name: newFolderName.trim(), description: newFolderDesc.trim() });
       showToast('Album created successfully!');
       setCreateFolderModal(false);
       setNewFolderName('');
@@ -399,6 +587,7 @@ export default function AdminDashboardPage() {
         cover_image_url: coverUrl,
       });
 
+      logAdminAction('update_album', 'gallery', editFolderData.id, { name: editFolderData.name.trim() });
       showToast('Album updated successfully!');
       setEditFolderModal(false);
       if (selectedFolder && selectedFolder.id === editFolderData.id) {
@@ -421,6 +610,7 @@ export default function AdminDashboardPage() {
       action: async () => {
         try {
           await IDISupabase.deleteFolder(folder.id);
+          logAdminAction('delete_album', 'gallery', folder.id, { name: folder.name });
           showToast(`Album "${folder.name}" deleted.`);
           setDeleteModal(false);
           if (selectedFolder && selectedFolder.id === folder.id) {
@@ -506,6 +696,7 @@ export default function AdminDashboardPage() {
       action: async () => {
         try {
           await IDISupabase.deletePhoto(photo.id, photo.storage_path);
+          logAdminAction('delete_photo', 'gallery', photo.id, { title: photo.title || 'Untitled' });
           showToast('Photo deleted.');
           setDeleteModal(false);
           setFolderPhotos((prev) => prev.filter((p) => p.id !== photo.id));
@@ -529,6 +720,12 @@ export default function AdminDashboardPage() {
     if (!selectedInquiry) return;
     try {
       await IDISupabase.updateInquiryStatus(selectedInquiry.id, inquiryStatusVal, inquiryNotesVal);
+      logAdminAction('update_inquiry', 'inquiry', selectedInquiry.id, {
+        from_name: selectedInquiry.full_name,
+        email: selectedInquiry.email,
+        status: inquiryStatusVal,
+        notes: inquiryNotesVal,
+      });
       showToast('Inquiry status and notes saved.');
       setInquiryDetailModal(false);
       setInquiries((prev) =>
@@ -549,6 +746,10 @@ export default function AdminDashboardPage() {
       action: async () => {
         try {
           await IDISupabase.deleteInquiry(inquiry.id);
+          logAdminAction('delete_inquiry', 'inquiry', inquiry.id, {
+            from_name: inquiry.full_name,
+            email: inquiry.email,
+          });
           showToast('Inquiry deleted.');
           setDeleteModal(false);
           setInquiryDetailModal(false);
@@ -740,6 +941,7 @@ export default function AdminDashboardPage() {
         showToast('Error updating password: ' + res.error, 'danger');
       } else {
         showToast('Password updated successfully!');
+        logAdminAction('change_password', 'auth', currentUser?.id, { email: currentUser?.email });
         setPasswordModalOpen(false);
         setIsForcedPasswordChange(false);
         setNewPasswordVal('');
@@ -773,6 +975,332 @@ export default function AdminDashboardPage() {
 
   const totalPhotosCount = folders.reduce((sum, f) => sum + (f.photo_count || 0), 0);
   const newInquiriesCount = inquiries.filter((i) => !i.status || i.status === 'new').length;
+
+  const renderActivityLogsSection = () => (
+    <div>
+      {/* Header with Switcher & Actions */}
+      <div className="admin-section-header" style={{ marginBottom: '1.25rem' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem' }}>
+            <h2 style={{ margin: 0 }}>Administrator Audit &amp; Activity Logs</h2>
+            <span className="super-tag" style={{ fontSize: '0.75rem', padding: '2px 8px' }}>Super Admin</span>
+          </div>
+          <p style={{ margin: 0, color: 'var(--text-muted)' }}>
+            Complete operational trail and tamper-evident records of all administrator actions across the platform.
+          </p>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          {activeTab === 'admins' && (
+            <div className="segmented-control">
+              <button
+                type="button"
+                className={`segmented-btn ${adminViewMode === 'users' ? 'active' : ''}`}
+                onClick={() => setAdminViewMode('users')}
+              >
+                <i className="fa-solid fa-users"></i> Accounts ({adminUsers.length})
+              </button>
+              <button
+                type="button"
+                className={`segmented-btn ${adminViewMode === 'logs' ? 'active' : ''}`}
+                onClick={() => { setAdminViewMode('logs'); loadLogs(1); }}
+              >
+                <i className="fa-solid fa-clock-rotate-left"></i> Activity Logs ({logsTotal || 'All'})
+              </button>
+            </div>
+          )}
+          <button
+            type="button"
+            className="btn btn-secondary btn-sm"
+            onClick={() => loadLogs(logsPage)}
+            disabled={loadingLogs}
+            title="Refresh activity logs"
+          >
+            <i className={`fa-solid fa-arrows-rotate ${loadingLogs ? 'fa-spin' : ''}`}></i> Refresh
+          </button>
+          <button
+            type="button"
+            className="btn btn-primary btn-sm"
+            onClick={handleExportLogsCsv}
+            title="Download full CSV export of audit logs"
+          >
+            <i className="fa-solid fa-file-export"></i> Export CSV
+          </button>
+        </div>
+      </div>
+
+      {/* Metric Summary Cards */}
+      <div className="audit-stats-grid">
+        <div className="audit-stat-card">
+          <div className="audit-stat-icon emerald">
+            <i className="fa-solid fa-list-check"></i>
+          </div>
+          <div className="audit-stat-info">
+            <h5>Total Events</h5>
+            <div className="audit-stat-val">{logsStats?.totalLogs ?? logsTotal}</div>
+          </div>
+        </div>
+
+        <div className="audit-stat-card">
+          <div className="audit-stat-icon gold">
+            <i className="fa-solid fa-calendar-day"></i>
+          </div>
+          <div className="audit-stat-info">
+            <h5>Actions Today</h5>
+            <div className="audit-stat-val">{logsStats?.todayLogs ?? 0}</div>
+          </div>
+        </div>
+
+        <div className="audit-stat-card">
+          <div className="audit-stat-icon purple">
+            <i className="fa-solid fa-user-shield"></i>
+          </div>
+          <div className="audit-stat-info">
+            <h5>Active Admins</h5>
+            <div className="audit-stat-val">{logsStats?.activeAdminsCount ?? adminUsers.length}</div>
+          </div>
+        </div>
+
+        <div className="audit-stat-card">
+          <div className="audit-stat-icon blue">
+            <i className="fa-solid fa-envelope"></i>
+          </div>
+          <div className="audit-stat-info">
+            <h5>Email Operations</h5>
+            <div className="audit-stat-val">{logsStats?.emailActionsCount ?? 0}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Search & Filter Toolbar */}
+      <div className="audit-filter-bar">
+        <div className="audit-search-wrap">
+          <i className="fa-solid fa-magnifying-glass"></i>
+          <input
+            type="text"
+            className="audit-search-input"
+            placeholder="Search action, administrator, email, or details..."
+            value={logsSearch}
+            onChange={(e) => {
+              setLogsSearch(e.target.value);
+              loadLogs(1, logsAdminFilter, logsActionFilter, e.target.value);
+            }}
+          />
+        </div>
+
+        <div className="audit-filters-group">
+          {/* Admin selector */}
+          <select
+            className="audit-select"
+            value={logsAdminFilter}
+            onChange={(e) => {
+              setLogsAdminFilter(e.target.value);
+              loadLogs(1, e.target.value, logsActionFilter, logsSearch);
+            }}
+          >
+            <option value="all">All Administrators</option>
+            {logsAdminsList.map((adm) => (
+              <option key={adm.email} value={adm.email}>
+                {adm.name} ({adm.email})
+              </option>
+            ))}
+            <option value="system">System / Inbound Webhook</option>
+          </select>
+
+          {/* Action selector */}
+          <select
+            className="audit-select"
+            value={logsActionFilter}
+            onChange={(e) => {
+              setLogsActionFilter(e.target.value);
+              loadLogs(1, logsAdminFilter, e.target.value, logsSearch);
+            }}
+          >
+            <option value="all">All Action Types</option>
+            <option value="send_email">Sent Email</option>
+            <option value="inbound_email_received">Received Email</option>
+            <option value="save_draft">Saved Draft</option>
+            <option value="bulk_archive">Archived Email</option>
+            <option value="bulk_trash">Trashed Email</option>
+            <option value="bulk_delete_permanent">Permanently Deleted</option>
+            <option value="admin_login">Admin Login</option>
+            <option value="create_admin">Created Administrator</option>
+            <option value="update_admin">Updated Administrator</option>
+            <option value="delete_admin">Revoked Administrator</option>
+            <option value="update_inquiry">Updated Inquiry</option>
+            <option value="delete_inquiry">Deleted Inquiry</option>
+            <option value="create_album">Created Album</option>
+            <option value="delete_album">Deleted Album</option>
+          </select>
+
+          {(logsAdminFilter !== 'all' || logsActionFilter !== 'all' || logsSearch) && (
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              onClick={() => {
+                setLogsAdminFilter('all');
+                setLogsActionFilter('all');
+                setLogsSearch('');
+                loadLogs(1, 'all', 'all', '');
+              }}
+            >
+              <i className="fa-solid fa-xmark"></i> Clear Filters
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* Activity Logs Table */}
+      <div className="table-responsive">
+        <table className="admin-data-table">
+          <thead>
+            <tr>
+              <th style={{ width: '180px' }}>Timestamp</th>
+              <th style={{ width: '220px' }}>Administrator</th>
+              <th style={{ width: '170px' }}>Action</th>
+              <th>Target / Summary</th>
+              <th style={{ textAlign: 'right', width: '100px' }}>Details</th>
+            </tr>
+          </thead>
+          <tbody>
+            {logs.map((log) => {
+              const info = getActionInfo(log.action);
+              const time = formatLogTime(log.created_at);
+              const isSystem = log.admin_role === 'system';
+
+              return (
+                <tr key={log.id || `${log.created_at}-${Math.random()}`}>
+                  <td>
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span style={{ fontWeight: 600, fontSize: '0.84rem' }}>{time.relative}</span>
+                      <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)' }}>{time.full}</span>
+                    </div>
+                  </td>
+                  <td>
+                    <div className="audit-admin-cell">
+                      <div className={`audit-avatar ${isSystem ? 'system' : ''}`}>
+                        {isSystem ? (
+                          <i className="fa-solid fa-server" style={{ fontSize: '0.75rem' }}></i>
+                        ) : (
+                          (log.admin_name || 'A').charAt(0).toUpperCase()
+                        )}
+                      </div>
+                      <div style={{ minWidth: 0 }}>
+                        <div style={{ fontWeight: 600, fontSize: '0.88rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                          {log.admin_name || 'Administrator'}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <span>{log.admin_email}</span>
+                          {log.admin_role === 'super_admin' && (
+                            <span className="super-tag" style={{ fontSize: '0.62rem', padding: '1px 4px' }}>Super</span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span className={`audit-action-pill ${info.pillClass}`}>
+                      <i className={`fa-solid ${info.icon}`}></i> {info.label}
+                    </span>
+                  </td>
+                  <td>
+                    <div style={{ fontSize: '0.84rem', color: 'var(--text-primary)', maxWidth: '450px' }}>
+                      {log.details?.subject ? (
+                        <div>
+                          <strong>Subject:</strong> {log.details.subject}
+                        </div>
+                      ) : null}
+                      {log.details?.to ? (
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                          <strong>To:</strong> {Array.isArray(log.details.to) ? log.details.to.join(', ') : log.details.to}
+                        </div>
+                      ) : null}
+                      {log.details?.from ? (
+                        <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)' }}>
+                          <strong>From:</strong> {log.details.from}
+                        </div>
+                      ) : null}
+                      {log.details?.created_email ? (
+                        <div>
+                          <strong>Account:</strong> {log.details.created_email} ({log.details.created_role || 'admin'})
+                        </div>
+                      ) : null}
+                      {log.details?.target_email ? (
+                        <div>
+                          <strong>Target:</strong> {log.details.target_email}
+                        </div>
+                      ) : null}
+                      {log.details?.revoked_email ? (
+                        <div>
+                          <strong>Revoked:</strong> {log.details.revoked_email}
+                        </div>
+                      ) : null}
+                      {log.details?.name ? (
+                        <div>
+                          <strong>Name:</strong> {log.details.name}
+                        </div>
+                      ) : null}
+                      {!log.details?.subject && !log.details?.to && !log.details?.from && !log.details?.created_email && !log.details?.target_email && !log.details?.name ? (
+                        <span style={{ color: 'var(--text-muted)', fontStyle: 'italic', fontSize: '0.8rem' }}>
+                          {log.entity_type} {log.entity_id ? `(#${String(log.entity_id).slice(0, 8)})` : ''}
+                        </span>
+                      ) : null}
+                    </div>
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-secondary"
+                      onClick={() => setSelectedLogDetail(log)}
+                      title="View full log record and payload"
+                    >
+                      <i className="fa-solid fa-code"></i> Inspect
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+
+      {logs.length === 0 && !loadingLogs && (
+        <div className="empty-state-box" style={{ padding: '3rem 1rem' }}>
+          <i className="fa-solid fa-clipboard-list" style={{ fontSize: '2.5rem', color: 'var(--text-muted)', marginBottom: '0.75rem' }}></i>
+          <h3>No audit logs match current filter</h3>
+          <p style={{ color: 'var(--text-muted)' }}>
+            Try selecting a different administrator or clearing the search filter.
+          </p>
+        </div>
+      )}
+
+      {/* Pagination Controls */}
+      {logsTotalPages > 1 && (
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '1.25rem', padding: '0.5rem 0' }}>
+          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+            Showing Page {logsPage} of {logsTotalPages} ({logsTotal} total events)
+          </span>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              disabled={logsPage <= 1 || loadingLogs}
+              onClick={() => loadLogs(logsPage - 1)}
+            >
+              <i className="fa-solid fa-chevron-left"></i> Previous
+            </button>
+            <button
+              type="button"
+              className="btn btn-secondary btn-sm"
+              disabled={logsPage >= logsTotalPages || loadingLogs}
+              onClick={() => loadLogs(logsPage + 1)}
+            >
+              Next <i className="fa-solid fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 
   if (authLoading) {
     return (
@@ -909,14 +1437,30 @@ export default function AdminDashboardPage() {
               </button>
             )}
             {isSuperAdmin && (
-              <button
-                className={`admin-nav-item super-admin-nav ${activeTab === 'admins' ? 'active' : ''}`}
-                onClick={() => setActiveTab('admins')}
-              >
-                <i className="fa-solid fa-user-shield"></i>
-                <span>Admins</span>
-                <span className="super-tag">Super</span>
-              </button>
+              <>
+                <button
+                  className={`admin-nav-item super-admin-nav ${activeTab === 'admins' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('admins');
+                    setAdminViewMode('users');
+                  }}
+                >
+                  <i className="fa-solid fa-user-shield"></i>
+                  <span>Admins</span>
+                  <span className="super-tag">Super</span>
+                </button>
+                <button
+                  className={`admin-nav-item super-admin-nav ${activeTab === 'logs' ? 'active' : ''}`}
+                  onClick={() => {
+                    setActiveTab('logs');
+                    loadLogs(1);
+                  }}
+                >
+                  <i className="fa-solid fa-clock-rotate-left"></i>
+                  <span>Activity Logs</span>
+                  <span className="super-tag">Super</span>
+                </button>
+              </>
             )}
           </nav>
         </aside>
@@ -1020,19 +1564,41 @@ export default function AdminDashboardPage() {
               )}
 
               {isSuperAdmin && (
-                <div
-                  className="stat-card"
-                  onClick={() => setActiveTab('admins')}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div className="stat-icon navy">
-                    <i className="fa-solid fa-users-gear"></i>
+                <>
+                  <div
+                    className="stat-card"
+                    onClick={() => {
+                      setActiveTab('admins');
+                      setAdminViewMode('users');
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="stat-icon navy">
+                      <i className="fa-solid fa-users-gear"></i>
+                    </div>
+                    <div className="stat-details">
+                      <h4>Admin Team</h4>
+                      <div className="stat-number">{adminUsers.length || '1+'}</div>
+                    </div>
                   </div>
-                  <div className="stat-details">
-                    <h4>Admin Team</h4>
-                    <div className="stat-number">{adminUsers.length || '1+'}</div>
+
+                  <div
+                    className="stat-card"
+                    onClick={() => {
+                      setActiveTab('logs');
+                      loadLogs(1);
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <div className="stat-icon purple">
+                      <i className="fa-solid fa-clock-rotate-left"></i>
+                    </div>
+                    <div className="stat-details">
+                      <h4>Activity Logs</h4>
+                      <div className="stat-number">{logsTotal || (logs.length ? `${logs.length}+` : 'Logs')}</div>
+                    </div>
                   </div>
-                </div>
+                </>
               )}
 
               <div className="stat-card" onClick={openConfigModal} style={{ cursor: 'pointer' }}>
@@ -1165,6 +1731,82 @@ export default function AdminDashboardPage() {
                 </div>
               </div>
             </div>
+
+            {/* Super Admin Recent Activity Panel */}
+            {isSuperAdmin && (
+              <div className="overview-panel" style={{ marginTop: '1.5rem' }}>
+                <div className="panel-header">
+                  <div>
+                    <h3>
+                      <i className="fa-solid fa-clock-rotate-left" style={{ color: 'var(--accent-emerald)' }}></i>{' '}
+                      Recent Admin Activity &amp; Audit Trail
+                    </h3>
+                    <p>Live stream of actions performed by administrators across the institution</p>
+                  </div>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    onClick={() => {
+                      setActiveTab('logs');
+                      loadLogs(1);
+                    }}
+                  >
+                    View All Activity Logs <i className="fa-solid fa-arrow-right"></i>
+                  </button>
+                </div>
+                <div className="panel-body">
+                  <div className="overview-list">
+                    {logs.slice(0, 5).map((log) => {
+                      const info = getActionInfo(log.action);
+                      const time = formatLogTime(log.created_at);
+                      return (
+                        <div
+                          key={log.id || `${log.created_at}-${Math.random()}`}
+                          className="overview-item"
+                          onClick={() => setSelectedLogDetail(log)}
+                          style={{
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            gap: '1rem',
+                            padding: '0.85rem 1rem',
+                          }}
+                        >
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', minWidth: 0 }}>
+                            <div className={`audit-avatar ${log.admin_role === 'system' ? 'system' : ''}`}>
+                              {log.admin_role === 'system' ? (
+                                <i className="fa-solid fa-server" style={{ fontSize: '0.75rem' }}></i>
+                              ) : (
+                                (log.admin_name || 'A').charAt(0).toUpperCase()
+                              )}
+                            </div>
+                            <div style={{ minWidth: 0 }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+                                <strong style={{ fontSize: '0.9rem' }}>{log.admin_name || 'Administrator'}</strong>
+                                <span className={`audit-action-pill ${info.pillClass}`}>
+                                  <i className={`fa-solid ${info.icon}`}></i> {info.label}
+                                </span>
+                              </div>
+                              <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', margin: '0.15rem 0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                                {log.details?.subject || log.details?.from || log.details?.name || log.details?.created_email || log.details?.target_email || log.entity_type}
+                              </p>
+                            </div>
+                          </div>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>
+                            {time.relative}
+                          </span>
+                        </div>
+                      );
+                    })}
+                    {logs.length === 0 && (
+                      <p style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '2rem' }}>
+                        No admin activity logs recorded yet.
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
           </section>
         )}
 
@@ -1585,16 +2227,44 @@ export default function AdminDashboardPage() {
                   <i className="fa-solid fa-chart-pie"></i> Return to Overview
                 </button>
               </div>
+            ) : adminViewMode === 'logs' ? (
+              renderActivityLogsSection()
             ) : (
               <div>
-                <div className="admin-section-header">
+                <div className="admin-section-header" style={{ marginBottom: '1.25rem' }}>
                   <div>
-                    <h2>Administrator Accounts</h2>
-                    <p>Manage system administrators, assign roles, and control administrative access</p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem' }}>
+                      <h2 style={{ margin: 0 }}>Administrator Accounts</h2>
+                      <span className="super-tag" style={{ fontSize: '0.75rem', padding: '2px 8px' }}>Super Admin</span>
+                    </div>
+                    <p style={{ margin: 0, color: 'var(--text-muted)' }}>
+                      Manage system administrators, assign roles, and monitor administrative activity
+                    </p>
                   </div>
-                  <button className="btn btn-primary" onClick={openAddAdminModal}>
-                    <i className="fa-solid fa-user-plus"></i> Add New Admin
-                  </button>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div className="segmented-control">
+                      <button
+                        type="button"
+                        className="segmented-btn active"
+                        onClick={() => setAdminViewMode('users')}
+                      >
+                        <i className="fa-solid fa-users"></i> Accounts ({adminUsers.length})
+                      </button>
+                      <button
+                        type="button"
+                        className="segmented-btn"
+                        onClick={() => {
+                          setAdminViewMode('logs');
+                          loadLogs(1);
+                        }}
+                      >
+                        <i className="fa-solid fa-clock-rotate-left"></i> Activity Logs ({logsTotal || 'All'})
+                      </button>
+                    </div>
+                    <button className="btn btn-primary" onClick={openAddAdminModal}>
+                      <i className="fa-solid fa-user-plus"></i> Add New Admin
+                    </button>
+                  </div>
                 </div>
 
                 <div className="table-responsive">
@@ -1710,6 +2380,14 @@ export default function AdminDashboardPage() {
                             <div style={{ display: 'inline-flex', gap: '0.4rem' }}>
                               <button
                                 className="btn btn-sm btn-secondary"
+                                onClick={() => viewAdminLogs(admin)}
+                                title={`View Activity Logs for ${admin.full_name || admin.email}`}
+                                style={{ color: 'var(--accent-emerald)', borderColor: 'rgba(0, 109, 68, 0.25)' }}
+                              >
+                                <i className="fa-solid fa-clock-rotate-left"></i>
+                              </button>
+                              <button
+                                className="btn btn-sm btn-secondary"
                                 onClick={() => openEditAdmin(admin)}
                                 title="Edit Admin & Permissions"
                               >
@@ -1740,6 +2418,30 @@ export default function AdminDashboardPage() {
                   </div>
                 )}
               </div>
+            )}
+          </section>
+        )}
+
+        {/* ===================================================================
+            SECTION 5: ACTIVITY & AUDIT LOGS TAB (Super Admin)
+            =================================================================== */}
+        {activeTab === 'logs' && (
+          <section id="tab-section-logs" className="tab-section active">
+            {!isSuperAdmin ? (
+              <div className="empty-state-box" style={{ padding: '4rem 2rem' }}>
+                <div className="lock-icon-wrap" style={{ width: '70px', height: '70px', borderRadius: '50%', background: 'rgba(184, 134, 11, 0.1)', color: 'var(--accent-gold)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem', margin: '0 auto 1.25rem' }}>
+                  <i className="fa-solid fa-shield-halved"></i>
+                </div>
+                <h2>Super Admin Access Required</h2>
+                <p style={{ maxWidth: '500px', margin: '0.5rem auto 1.5rem', color: 'var(--text-muted)' }}>
+                  Only Super Administrators have permissions to view historical activity and audit records.
+                </p>
+                <button className="btn btn-primary" onClick={() => setActiveTab('overview')}>
+                  <i className="fa-solid fa-chart-pie"></i> Return to Overview
+                </button>
+              </div>
+            ) : (
+              renderActivityLogsSection()
             )}
           </section>
         )}
@@ -2831,6 +3533,93 @@ export default function AdminDashboardPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Log Detail Inspection Modal */}
+      {selectedLogDetail && (
+        <div className="modal-backdrop" style={{ display: 'flex', zIndex: 10050 }}>
+          <div className="modal-dialog" style={{ maxWidth: '640px', width: '92%' }}>
+            <div className="modal-header">
+              <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', margin: 0, fontSize: '1.15rem' }}>
+                <i className="fa-solid fa-circle-info" style={{ color: 'var(--accent-emerald)' }}></i>
+                Activity Log Inspection
+              </h3>
+              <button
+                type="button"
+                className="modal-close-btn"
+                onClick={() => setSelectedLogDetail(null)}
+              >
+                &times;
+              </button>
+            </div>
+            <div className="modal-body" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '1.25rem', padding: '1rem', background: 'var(--bg-main)', borderRadius: 'var(--radius-sm)' }}>
+                <div>
+                  <label style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700, display: 'block', marginBottom: '2px' }}>
+                    Timestamp
+                  </label>
+                  <div style={{ fontSize: '0.86rem', fontWeight: 600 }}>
+                    {new Date(selectedLogDetail.created_at).toLocaleString()}
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700, display: 'block', marginBottom: '2px' }}>
+                    Action
+                  </label>
+                  <div>
+                    <span className={`audit-action-pill ${getActionInfo(selectedLogDetail.action).pillClass}`}>
+                      <i className={`fa-solid ${getActionInfo(selectedLogDetail.action).icon}`}></i> {selectedLogDetail.action}
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700, display: 'block', marginBottom: '2px' }}>
+                    Administrator
+                  </label>
+                  <div style={{ fontSize: '0.86rem', fontWeight: 600 }}>
+                    {selectedLogDetail.admin_name} ({selectedLogDetail.admin_email})
+                  </div>
+                </div>
+                <div>
+                  <label style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700, display: 'block', marginBottom: '2px' }}>
+                    Entity &amp; Target ID
+                  </label>
+                  <div style={{ fontSize: '0.82rem', fontFamily: 'monospace', wordBreak: 'break-all' }}>
+                    {selectedLogDetail.entity_type} {selectedLogDetail.entity_id ? `(#${selectedLogDetail.entity_id})` : ''}
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 700, display: 'block', marginBottom: '0.5rem' }}>
+                  Raw Payload &amp; Event Metadata (JSON)
+                </label>
+                <div className="audit-json-box">
+                  {JSON.stringify(selectedLogDetail, null, 2)}
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer" style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <button
+                type="button"
+                className="btn btn-secondary btn-sm"
+                onClick={() => {
+                  navigator.clipboard.writeText(JSON.stringify(selectedLogDetail, null, 2));
+                  showToast('Log JSON copied to clipboard!');
+                }}
+              >
+                <i className="fa-solid fa-copy"></i> Copy JSON
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary btn-sm"
+                onClick={() => setSelectedLogDetail(null)}
+              >
+                Close
+              </button>
+            </div>
           </div>
         </div>
       )}

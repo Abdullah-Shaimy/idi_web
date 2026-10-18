@@ -10,6 +10,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { verifyAdminRequest } from '@/lib/mailbox/authCheck';
+import { recordAuditLog } from '@/lib/auditLogger';
 
 function getAdminSupabase() {
   const supabaseUrl = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -245,6 +246,20 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, error: insertErr.message }, { status: 500 });
     }
 
+    await recordAuditLog({
+      userId: auth.userId,
+      action: 'create_admin',
+      entityType: 'admin_user',
+      entityId: adminRecord?.id,
+      details: {
+        created_email: cleanEmail,
+        created_role: cleanRole,
+        full_name: cleanName || cleanEmail.split('@')[0],
+        allowed_tabs: cleanTabs,
+        allowed_emails: cleanEmails,
+      },
+    });
+
     return NextResponse.json({
       success: true,
       user: adminRecord,
@@ -357,6 +372,25 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ success: false, error: updateErr.message }, { status: 500 });
     }
 
+    await recordAuditLog({
+      userId: auth.userId,
+      action: 'update_admin',
+      entityType: 'admin_user',
+      entityId: id,
+      details: {
+        target_email: currentAdmin.email,
+        target_name: currentAdmin.full_name,
+        changes: {
+          role,
+          status,
+          full_name,
+          allowed_tabs,
+          allowed_emails,
+          password_changed: Boolean(password),
+        },
+      },
+    });
+
     return NextResponse.json({ success: true, user: updated });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message || 'Server error' }, { status: 500 });
@@ -423,6 +457,18 @@ export async function DELETE(request: NextRequest) {
         console.warn('[Admin API] Could not delete auth.users record:', authDelErr);
       }
     }
+
+    await recordAuditLog({
+      userId: auth.userId,
+      action: 'delete_admin',
+      entityType: 'admin_user',
+      entityId: id,
+      details: {
+        revoked_email: targetAdmin.email,
+        revoked_name: targetAdmin.full_name,
+        revoked_role: targetAdmin.role,
+      },
+    });
 
     return NextResponse.json({ success: true });
   } catch (err: any) {
