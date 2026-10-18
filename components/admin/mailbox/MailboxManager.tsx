@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import './mailbox.css';
-import { sanitizeEmailHtml } from '../../../lib/mailbox/sanitize';
+import { sanitizeEmailHtml, plainTextToSafeHtml } from '../../../lib/mailbox/sanitize';
 import { IDISupabase } from '../../../lib/supabaseClient';
 
 export type FolderType = 'inbox' | 'sent' | 'drafts' | 'starred' | 'archived' | 'spam' | 'trash';
@@ -1176,7 +1176,9 @@ export default function MailboxManager({ adminProfile: propProfile, isSuperAdmin
                         <div
                           className="mailbox-message-content"
                           dangerouslySetInnerHTML={{
-                            __html: sanitizeEmailHtml(msg.body_html || msg.body_text || ''),
+                            __html: msg.body_html
+                              ? sanitizeEmailHtml(msg.body_html)
+                              : plainTextToSafeHtml(msg.body_text || ''),
                           }}
                         />
 

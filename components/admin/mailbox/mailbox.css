@@ -7,7 +7,8 @@
     display: flex;
     flex: 1 1 0%;
     min-height: 0;
-    height: auto;
+    height: 100%;
+    max-height: 100%;
     background: var(--bg-surface);
     border-radius: var(--radius-md);
     border: 1px solid var(--border-color);
@@ -28,6 +29,8 @@
     padding: 0.85rem 0.65rem 0.65rem 0.65rem;
     flex-shrink: 0;
     height: 100%;
+    max-height: 100%;
+    min-height: 0;
     overflow: hidden;
 }
 
@@ -182,12 +185,13 @@
    2. EMAIL LIST PANEL
    ------------------------------------------------------------------------- */
 .mailbox-list-pane {
-    flex: 1;
+    flex: 1 1 0%;
     display: flex;
     flex-direction: column;
     min-width: 0;
     min-height: 0;
     height: 100%;
+    max-height: 100%;
     background: var(--bg-surface);
     overflow: hidden;
 }
@@ -419,19 +423,21 @@
     display: flex;
     flex-direction: column;
     background: var(--bg-surface);
-    overflow: hidden;
-    height: 100%;
-    min-height: 0;
+    overflow: hidden !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    min-height: 0 !important;
+    flex-shrink: 0;
 }
 
 .mailbox-reading-header {
-    padding: 1rem 1.5rem;
+    padding: 0.85rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: var(--bg-elevated);
-    flex-shrink: 0;
+    flex-shrink: 0 !important;
 }
 
 .mailbox-reading-title {
@@ -439,45 +445,51 @@
     font-size: 1.25rem;
     color: var(--text-primary);
     line-height: 1.3;
+    flex-shrink: 0;
 }
 
 .mailbox-reading-body {
-    flex: 1;
-    min-height: 0;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 1.5rem;
+    flex: 1 1 0% !important;
+    min-height: 0 !important;
+    height: auto;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    padding: 1.25rem 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
 }
 
-/* Sleek custom scrollbars for red-marked scrollable sections */
+/* Clear, tactile, elegant custom scrollbars */
 .mailbox-sidebar-scroll,
 .mailbox-list-scroll,
 .mailbox-reading-body {
     scrollbar-width: thin;
-    scrollbar-color: rgba(0, 109, 68, 0.25) transparent;
+    scrollbar-color: #94a3b8 #f1f5f9;
 }
 
 .mailbox-sidebar-scroll::-webkit-scrollbar,
 .mailbox-list-scroll::-webkit-scrollbar,
 .mailbox-reading-body::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 8px;
+    height: 8px;
 }
 
 .mailbox-sidebar-scroll::-webkit-scrollbar-track,
 .mailbox-list-scroll::-webkit-scrollbar-track,
 .mailbox-reading-body::-webkit-scrollbar-track {
-    background: transparent;
+    background: #f1f5f9;
+    border-radius: 999px;
 }
 
 .mailbox-sidebar-scroll::-webkit-scrollbar-thumb,
 .mailbox-list-scroll::-webkit-scrollbar-thumb,
 .mailbox-reading-body::-webkit-scrollbar-thumb {
-    background: rgba(0, 109, 68, 0.25);
+    background: #94a3b8;
     border-radius: 999px;
+    border: 2px solid #f1f5f9;
 }
 
 .mailbox-sidebar-scroll::-webkit-scrollbar-thumb:hover,
@@ -492,6 +504,7 @@
     border-radius: var(--radius-md);
     overflow: hidden;
     box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
 }
 
 .mailbox-message-header {
@@ -542,12 +555,14 @@
 }
 
 .mailbox-message-content {
-    padding: 1.5rem;
+    padding: 1.25rem 1.5rem;
     font-size: 0.94rem;
     line-height: 1.7;
     color: var(--text-primary);
     background: white;
     overflow-x: auto;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .mailbox-attachments-container {
@@ -591,11 +606,12 @@
 }
 
 .mailbox-reading-actions {
-    padding: 1rem 1.5rem;
+    padding: 0.85rem 1.5rem;
     border-top: 1px solid var(--border-color);
     display: flex;
     gap: 0.75rem;
     background: var(--bg-elevated);
+    flex-shrink: 0 !important;
 }
 
 /* -------------------------------------------------------------------------

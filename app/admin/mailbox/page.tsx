@@ -52,7 +52,7 @@ export default function AdminMailboxPage() {
   }
 
   return (
-    <div className="admin-portal-wrapper">
+    <div className="admin-portal-wrapper admin-mailbox-view">
       {/* Top Navbar */}
       <header className="admin-navbar">
         <Link href="/admin/dashboard" className="admin-brand">
@@ -85,13 +85,13 @@ export default function AdminMailboxPage() {
       </header>
 
       {/* Main Container */}
-      <main className="admin-container" style={{ marginTop: '1.5rem' }}>
-        <div className="admin-section-header" style={{ marginBottom: '1rem' }}>
+      <main className="admin-container admin-container-mailbox" style={{ padding: '0.85rem 1.25rem' }}>
+        <div className="admin-section-header" style={{ flexShrink: 0, marginBottom: '0.5rem' }}>
           <div>
-            <h2>
+            <h2 style={{ fontSize: '1.2rem' }}>
               <i className="fa-solid fa-inbox" style={{ color: 'var(--accent-emerald)' }}></i> Official Admin Mailbox
             </h2>
-            <p>Direct portal to send, receive, compose, and organize domain emails</p>
+            <p style={{ fontSize: '0.8rem' }}>Direct portal to send, receive, compose, and organize domain emails</p>
           </div>
         </div>
         <MailboxManager
