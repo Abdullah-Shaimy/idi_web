@@ -30,13 +30,19 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1', 10);
     const limit = parseInt(searchParams.get('limit') || '25', 10);
 
-    // Sync incoming emails from Resend Receiving if viewing inbox or on explicit sync
-    if (!folder || folder === 'inbox' || searchParams.get('sync') === 'true') {
+    // Sync incoming emails: if explicit sync (user clicked refresh), await it.
+    // Otherwise, run in background non-blocking so the inbox returns immediately in <100ms!
+    const isExplicitSync = searchParams.get('sync') === 'true';
+    if (isExplicitSync) {
       try {
         await syncInboundEmailsFromResend();
       } catch (syncErr) {
         console.warn('[API /api/admin/mailbox/emails GET] Inbound sync warning:', syncErr);
       }
+    } else if (!folder || folder === 'inbox') {
+      syncInboundEmailsFromResend().catch((syncErr) => {
+        console.warn('[API Inbound background sync]', syncErr);
+      });
     }
 
     const [emailsResult, counts] = await Promise.all([

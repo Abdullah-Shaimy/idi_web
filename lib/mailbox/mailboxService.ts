@@ -124,15 +124,25 @@ let MEMORY_AUDIT_LOGS: any[] = [];
 // Core Mailbox Functions
 // -----------------------------------------------------------------------------
 
+const tableCache = new Map<string, { exists: boolean; expiresAt: number }>();
+
 /**
- * Checks if a table exists in Supabase
+ * Checks if a table exists in Supabase (cached for 5 minutes)
  */
 async function tableExists(tableName: string): Promise<boolean> {
+  const cached = tableCache.get(tableName);
+  const now = Date.now();
+  if (cached && cached.expiresAt > now) {
+    return cached.exists;
+  }
+
   const supabase = getAdminSupabase();
   if (!supabase) return false;
   try {
     const { error } = await supabase.from(tableName).select('id', { head: true, count: 'exact' });
-    return !error;
+    const exists = !error;
+    tableCache.set(tableName, { exists, expiresAt: now + 5 * 60 * 1000 });
+    return exists;
   } catch {
     return false;
   }
@@ -314,9 +324,10 @@ export async function getEmails(params: {
   }
 
   try {
+    const listFields = 'id, message_id, thread_id, folder, from_address, from_name, to_recipients, cc_recipients, bcc_recipients, subject, snippet, is_read, is_starred, is_draft, has_attachments, delivery_status, created_at, updated_at';
     let query = supabase!
       .from('mailbox_emails')
-      .select('*, mailbox_attachments (*)', { count: 'exact' });
+      .select(listFields, { count: 'exact' });
 
     if (params.isStarred) {
       query = query.eq('is_starred', true).neq('folder', 'trash');

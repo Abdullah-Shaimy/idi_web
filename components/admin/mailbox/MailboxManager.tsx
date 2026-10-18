@@ -263,9 +263,25 @@ export default function MailboxManager({ adminProfile: propProfile, isSuperAdmin
     loadMeta();
   }, [authFetch]);
 
+  // In-memory cache for folder emails to make switching instant (0ms)
+  const emailCacheRef = useRef<Map<string, { emails: MailboxEmail[]; total: number; totalPages: number; counts?: any }>>(new Map());
+
   // 2. Fetch Emails List
-  const loadEmails = useCallback(async () => {
-    setLoadingEmails(true);
+  const loadEmails = useCallback(async (explicitSync = false) => {
+    const cacheKey = `${activeFolder}_${filterStarred}_${filterUnread}_${filterHasAttachments}_${searchTerm}_${currentPage}`;
+    const cached = emailCacheRef.current.get(cacheKey);
+
+    // If cached data exists and not an explicit hard refresh, display immediately (0ms delay!)
+    if (cached && !explicitSync) {
+      setEmails(cached.emails);
+      setTotalEmails(cached.total);
+      setTotalPages(cached.totalPages);
+      if (cached.counts) setCounts(cached.counts);
+      setLoadingEmails(false);
+    } else {
+      setLoadingEmails(true);
+    }
+
     try {
       const params = new URLSearchParams();
       if (filterStarred) {
@@ -278,15 +294,25 @@ export default function MailboxManager({ adminProfile: propProfile, isSuperAdmin
       if (searchTerm.trim()) params.set('q', searchTerm.trim());
       params.set('page', currentPage.toString());
       params.set('limit', '25');
+      if (explicitSync) params.set('sync', 'true');
 
       const res = await authFetch(`/api/admin/mailbox/emails?${params.toString()}`);
       const data = await res.json();
 
       if (data.success) {
-        setEmails(data.emails || []);
+        const freshEmails = data.emails || [];
+        setEmails(freshEmails);
         setTotalEmails(data.total || 0);
         setTotalPages(data.totalPages || 1);
         if (data.counts) setCounts(data.counts);
+
+        // Store in local memory cache
+        emailCacheRef.current.set(cacheKey, {
+          emails: freshEmails,
+          total: data.total || 0,
+          totalPages: data.totalPages || 1,
+          counts: data.counts,
+        });
       } else {
         showToast(data.error || 'Failed to fetch emails', 'danger');
       }
@@ -857,7 +883,7 @@ export default function MailboxManager({ adminProfile: propProfile, isSuperAdmin
               title="Select all on this page"
             />
 
-            <button className="mailbox-action-btn" onClick={loadEmails} title="Refresh emails">
+            <button className="mailbox-action-btn" onClick={() => loadEmails(true)} title="Refresh and sync emails">
               <i className="fa-solid fa-rotate-right"></i>
             </button>
 
@@ -938,9 +964,28 @@ export default function MailboxManager({ adminProfile: propProfile, isSuperAdmin
         {/* Email Rows List */}
         <div className="mailbox-list-scroll">
           {loadingEmails ? (
-            <div style={{ textAlign: 'center', padding: '3.5rem' }}>
-              <i className="fa-solid fa-spinner fa-spin fa-2x" style={{ color: 'var(--accent-emerald)' }}></i>
-              <p style={{ marginTop: '0.85rem', color: 'var(--text-muted)' }}>Loading mailbox messages...</p>
+            <div style={{ padding: '1rem', display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+              {[1, 2, 3, 4, 5, 6].map((idx) => (
+                <div
+                  key={idx}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '1rem',
+                    padding: '0.85rem 1rem',
+                    borderRadius: '8px',
+                    background: 'rgba(0, 0, 0, 0.025)',
+                    border: '1px solid rgba(0, 0, 0, 0.04)',
+                    opacity: 1 - idx * 0.12,
+                  }}
+                >
+                  <div style={{ width: '16px', height: '16px', borderRadius: '4px', background: 'rgba(0,0,0,0.06)' }} />
+                  <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: 'rgba(0,0,0,0.06)' }} />
+                  <div style={{ width: '130px', height: '14px', borderRadius: '4px', background: 'rgba(0,0,0,0.08)' }} />
+                  <div style={{ flex: 1, height: '14px', borderRadius: '4px', background: 'rgba(0,0,0,0.05)' }} />
+                  <div style={{ width: '60px', height: '12px', borderRadius: '4px', background: 'rgba(0,0,0,0.06)' }} />
+                </div>
+              ))}
             </div>
           ) : !hasMailboxAccess ? (
             <div className="mailbox-empty-state" style={{ padding: '3.5rem 1.5rem', textAlign: 'center' }}>

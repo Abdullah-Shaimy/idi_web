@@ -16,6 +16,9 @@ export interface AdminAuthResult {
   error?: string;
 }
 
+// In-memory auth cache to prevent hammering Supabase auth on parallel requests
+const authCache = new Map<string, { result: AdminAuthResult; expiresAt: number }>();
+
 /**
  * Validates that the incoming request is from an authenticated, active administrator.
  */
@@ -23,6 +26,13 @@ export async function verifyAdminRequest(request: NextRequest): Promise<AdminAut
   // 1. Extract Bearer token from Authorization header or cookie
   const authHeader = request.headers.get('authorization') || '';
   let token = authHeader.startsWith('Bearer ') ? authHeader.slice(7).trim() : null;
+
+  if (token) {
+    const cached = authCache.get(token);
+    if (cached && cached.expiresAt > Date.now()) {
+      return cached.result;
+    }
+  }
 
   if (!token) {
     // Check cookies for Supabase token
@@ -146,7 +156,7 @@ export async function verifyAdminRequest(request: NextRequest): Promise<AdminAut
       allowedEmails = [];
     }
 
-    return {
+    const authResult: AdminAuthResult = {
       authorized: true,
       userId: user.id,
       email: user.email,
@@ -154,6 +164,12 @@ export async function verifyAdminRequest(request: NextRequest): Promise<AdminAut
       allowedTabs,
       allowedEmails,
     };
+
+    if (token) {
+      authCache.set(token, { result: authResult, expiresAt: Date.now() + 60 * 1000 });
+    }
+
+    return authResult;
   } catch (err: any) {
     console.error('[Mailbox Auth Guard] Authentication verification error:', err);
     return { authorized: false, error: 'Failed to verify administrative authorization.' };
