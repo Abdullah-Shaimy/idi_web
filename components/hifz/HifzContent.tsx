@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -8,6 +8,47 @@ export default function HifzContent() {
   const { t, language } = useLanguage();
   const [activeTab, setActiveTab] = useState<'all' | 'hifz' | 'school'>('all');
   const isTamil = language === 'ta';
+
+  useEffect(() => {
+    const handleUrlHash = () => {
+      if (typeof window === 'undefined') return;
+      const hash = window.location.hash.replace('#', '').toLowerCase();
+      const params = new URLSearchParams(window.location.search);
+      const tabParam = (hash || params.get('tab') || '').toLowerCase();
+
+      if (tabParam === 'hifz' || tabParam === 'category-hifz') {
+        setActiveTab('hifz');
+        setTimeout(() => {
+          const el = document.getElementById('category-hifz');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      } else if (tabParam === 'school' || tabParam === 'category-school') {
+        setActiveTab('school');
+        setTimeout(() => {
+          const el = document.getElementById('category-school');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      } else if (tabParam === 'progression' || tabParam === 'levels') {
+        setActiveTab('hifz');
+        setTimeout(() => {
+          const el = document.getElementById('level-progression-box');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      } else if (tabParam === 'subjects') {
+        setActiveTab('school');
+        setTimeout(() => {
+          const el = document.getElementById('subjects-section-wrap');
+          if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      } else if (tabParam === 'all') {
+        setActiveTab('all');
+      }
+    };
+
+    handleUrlHash();
+    window.addEventListener('hashchange', handleUrlHash);
+    return () => window.removeEventListener('hashchange', handleUrlHash);
+  }, []);
 
   // Category 1: Hifz pillars
   const hifzPillars = [
@@ -352,7 +393,7 @@ export default function HifzContent() {
             </div>
 
             {/* 4-Year Progression Breakdown */}
-            <div className="level-progression-box">
+            <div id="level-progression-box" className="level-progression-box">
               <div className="level-progression-header">
                 <span className="badge-pill badge-gold">
                   <i className="fa-solid fa-clock-rotate-left" style={{ marginRight: '6px' }}></i>
@@ -465,7 +506,7 @@ export default function HifzContent() {
             </div>
 
             {/* Subjects Grid */}
-            <div className="subjects-section-wrap">
+            <div id="subjects-section-wrap" className="subjects-section-wrap">
               <div className="level-progression-header">
                 <span className="badge-pill badge-emerald">
                   <i className="fa-solid fa-book" style={{ marginRight: '6px' }}></i>

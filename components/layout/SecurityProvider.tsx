@@ -70,28 +70,16 @@ export default function SecurityProvider({ children }) {
     };
 
     const handleContextMenu = (e) => {
-      if (isEditable(e.target) || isWhitelisted(e.target)) return;
-      e.preventDefault();
-      e.stopPropagation();
-      showToast('Right-click is disabled on this page.');
-    };
-
-    const handleSelectStart = (e) => {
-      if (isEditable(e.target) || isWhitelisted(e.target)) return;
-      e.preventDefault();
-      showToast('Text selection is disabled on this page.');
-    };
-
-    const handleCopy = (e) => {
-      if (isEditable(e.target) || isWhitelisted(e.target)) return;
-      e.preventDefault();
-      showToast('Copy is disabled on this page.');
-    };
-
-    const handleCut = (e) => {
-      if (isEditable(e.target) || isWhitelisted(e.target)) return;
-      e.preventDefault();
-      showToast('Cut is disabled on this page.');
+      // Allow context menu if text is selected, or on links, buttons, inputs
+      const selection = typeof window !== 'undefined' && window.getSelection ? window.getSelection().toString() : '';
+      if (selection || isEditable(e.target) || isWhitelisted(e.target)) return;
+      
+      // Only protect images or specifically marked protected media
+      if (e.target && (e.target.tagName === 'IMG' || e.target.closest('img, .protected-media'))) {
+        e.preventDefault();
+        e.stopPropagation();
+        showToast('Image saving is disabled.');
+      }
     };
 
     const handleDragStart = (e) => {
@@ -118,11 +106,9 @@ export default function SecurityProvider({ children }) {
       if (!hasCommandKey) return;
 
       const shortcuts = {
-        C: 'Copy is disabled on this page.',
         P: 'Printing is disabled on this page.',
         S: 'Saving the page is disabled on this page.',
         U: 'Viewing source is disabled on this page.',
-        X: 'Cut is disabled on this page.',
       };
 
       if (key === 'P' && isPrintAllowed) {
@@ -140,17 +126,11 @@ export default function SecurityProvider({ children }) {
     };
 
     document.addEventListener('contextmenu', handleContextMenu, true);
-    document.addEventListener('selectstart', handleSelectStart, true);
-    document.addEventListener('copy', handleCopy, true);
-    document.addEventListener('cut', handleCut, true);
     document.addEventListener('dragstart', handleDragStart, true);
     document.addEventListener('keydown', handleKeyDown, true);
 
     return () => {
       document.removeEventListener('contextmenu', handleContextMenu, true);
-      document.removeEventListener('selectstart', handleSelectStart, true);
-      document.removeEventListener('copy', handleCopy, true);
-      document.removeEventListener('cut', handleCut, true);
       document.removeEventListener('dragstart', handleDragStart, true);
       document.removeEventListener('keydown', handleKeyDown, true);
       if (toastTimerRef.current) clearTimeout(toastTimerRef.current);

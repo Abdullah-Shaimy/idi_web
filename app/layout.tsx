@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
           rel="stylesheet"
         />
       </head>
-      <body className="content-protected notranslate" data-sensitive-page="true">
+      <body className="notranslate">
         <LanguageProvider>
           <SecurityProvider>
             <AppChrome>{children}</AppChrome>
